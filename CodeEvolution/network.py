@@ -27,10 +27,27 @@ class Network():
 					if r < self.density:
 						self.population.add_edge(self.AgentList[agentID1], self.AgentList[agentID2])
 						
+	def __getStrategyColours(self):
+		colourMap = []
+		for agent in self.AgentList:
+			colourMap.append(agent.colour)
+		return colourMap
+
+	def chooseTwoAgents(self):
+		agent1 = random.choice(self.AgentList)
+		agent2 = random.choice(self.AgentList)
+		while agent2 == agent1:
+			agent2 = random.choice(self.AgentList)
+		return [agent1.id, agent2.id]
+
+	def __playPrisonersDilemna(self, agent1, agent2):
+		pass	
+
 
 	def show(self):
+		colourMap = self.__getStrategyColours()
 		plt.subplot(111)
-		nx.draw(self.population, with_labels=True, bold_text=True)
+		nx.draw(self.population, with_labels=True, bold_text=True, node_color=colourMap)
 		plt.show()
 
 	def summary(self):
