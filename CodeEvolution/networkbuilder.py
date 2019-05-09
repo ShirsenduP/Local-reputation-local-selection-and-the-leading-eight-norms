@@ -17,4 +17,13 @@ class NetworkBuilder():
 				self.omega = None
 			except yaml.YAMLError as exc:
 				print(exc)
+"""
+TODO:
 
+1. Need to rewrite this to use JSON, not yaml, what is the purpose of this class?
+2. Plan
+
+	Input:
+
+		dictionary containing all parameters 
+"""

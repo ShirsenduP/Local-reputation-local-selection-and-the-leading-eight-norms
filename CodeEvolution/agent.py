@@ -28,7 +28,7 @@ class Agent():
 		pass
 
 	def getOpponentsReputation(self, opponent):
-		pass
+		thirdParty = random.choice(opponent.neighbours)
 		# randomly choose a neighbour of the opponent
 		# return the result of their last interaction
 	
@@ -40,4 +40,17 @@ class Agent():
 	def __str__(self):
 		return str(self.id)
 
+	# def __eq__(self, otherAgent):
+	# 	return self.id == otherAgent.id
 
+"""
+
+TODO:
+
+1. Rewrite self.neighbours to be a dictionary
+	keys are neighbours
+	values are dictionaries
+		keys are chronological interaction
+		values are the record of actions ijX and the resulting reputation for BOTH parties -> another dictionary?
+2. __eq__ method to check if two agents are equal? It breaks the code currently, need to find oput why
+"""

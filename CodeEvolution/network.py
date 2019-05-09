@@ -40,29 +40,30 @@ class Network():
 			colourMap.append(agent.colour)
 		return colourMap
 
+
 	def __playPrisonersDilemna(self, agent1, agent2):
 		agent1.getOpponentReputation(agent2)
 		agent2.getOpponentReputation(agent1)
 		agent1.getMove()
 		agent2.getMove()
-
-
 		#play game
-		#update reputations
+		#update reputations NOTE: from SocialNorm() class
 		#update interaction history
 	
+
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
 		agent2 = random.choice(self.agentList)
+		print(agent2 == agent1)
 		while agent2 == agent1:
 			agent2 = random.choice(self.agentList)
 		return [agent1.id, agent2.id]
 
-	# def runSingleTimestep(self):
+	def runSingleTimestep(self):
+		pass
 	# 	interactionCounter = []
 	# 	r = random.random()
 	# 	while r < omega:
-
 
 
 	def show(self):
@@ -72,11 +73,11 @@ class Network():
 		plt.show()
 		# plt.savefig('/home/localadmin/Dev/CodeEvolution/CodeEvolution/figures/network.png')
 
+
 	def summary(self):
 		print("Network Summary")
 		for agent in self.agentList:
-			print("Agent " + str(agent))
-			s=""
+			s = "Agent " + str(agent) + " has neighbours "
 			for neighbour in agent.neighbours:
 				s += str(neighbour.id)
 			print(s)
@@ -88,8 +89,11 @@ class Network():
     #     self.population = G
 
 
-# TODO:
-# 	- Add random seed to erdos renyi generator function
-#	- Implement load_from_file in constructor
-#	- plotting error
-#		MatplotlibDeprecationWarning: isinstance(..., numbers.Number); if cb.is_numlike(alpha):
+"""
+TODO:
+	
+	- Add random seed to erdos renyi generator function
+	- Implement load_from_file in constructor
+	- plotting error
+		MatplotlibDeprecationWarning: isinstance(..., numbers.Number); if cb.is_numlike(alpha):
+"""
