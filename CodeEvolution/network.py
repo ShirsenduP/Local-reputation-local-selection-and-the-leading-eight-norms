@@ -8,53 +8,76 @@ from agent import Agent
 
 class Network():
 
-	def __init__(self, _size, _density):
+	def __init__(self, _size, _density, _omega):
 		self.size = _size
 		self.density = _density
-		self.AgentList = []
+		self.agentList = []
 		self.population = nx.Graph()
-		self.__erdos_renyi_generator()
+		self.erdosRenyiGenerator()
+		self.omega = _omega
+		self.currentTimeStep = 0
 
-	def __erdos_renyi_generator(self):
+	def erdosRenyiGenerator(self):
 		for agentID in range(self.size):
-			self.AgentList.append(Agent(_id=agentID))
-			self.population.add_node(self.AgentList[agentID])
+			self.agentList.append(Agent(_id=agentID))
+			self.population.add_node(self.agentList[agentID])
 
 		for agentID1 in range(len(self.population)):
 			for agentID2 in range(len(self.population)):
 				if agentID1 != agentID2:
 					r = random.random()
 					if r < self.density:
-						self.population.add_edge(self.AgentList[agentID1], self.AgentList[agentID2])
+						self.population.add_edge(self.agentList[agentID1], self.agentList[agentID2])
+						self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
+						self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
+						
 						
 	def __getStrategyColours(self):
 		colourMap = []
-		for agent in self.AgentList:
+		for agent in self.agentList:
 			colourMap.append(agent.colour)
 		return colourMap
 
+	def __playPrisonersDilemna(self, agent1, agent2):
+		agent1.getOpponentReputation(agent2)
+		agent2.getOpponentReputation(agent1)
+		agent1.getMove()
+		agent2.getMove()
+
+
+		#play game
+		#update reputations
+		#update interaction history
+	
 	def chooseTwoAgents(self):
-		agent1 = random.choice(self.AgentList)
-		agent2 = random.choice(self.AgentList)
+		agent1 = random.choice(self.agentList)
+		agent2 = random.choice(self.agentList)
 		while agent2 == agent1:
-			agent2 = random.choice(self.AgentList)
+			agent2 = random.choice(self.agentList)
 		return [agent1.id, agent2.id]
 
-	def __playPrisonersDilemna(self, agent1, agent2):
-		pass	
+	# def runSingleTimestep(self):
+	# 	interactionCounter = []
+	# 	r = random.random()
+	# 	while r < omega:
+
 
 
 	def show(self):
 		colourMap = self.__getStrategyColours()
 		plt.subplot(111)
 		nx.draw(self.population, with_labels=True, bold_text=True, node_color=colourMap)
-		plt.show()
+		# plt.show()
+		plt.savefig('CodeEvolution/figures/network.png')
 
 	def summary(self):
 		print("Network Summary")
-		for agent in self.AgentList:
-			print(agent.summary())
-
+		for agent in self.agentList:
+			print("Agent " + str(agent))
+			s=""
+			for neighbour in agent.neighbours:
+				s += str(neighbour)
+			print(s)
     # def load_data(self):
     #     with open('tests/data/testfile0') as f:
     #         G = nx.read_adjlist(f, object=Agent)
