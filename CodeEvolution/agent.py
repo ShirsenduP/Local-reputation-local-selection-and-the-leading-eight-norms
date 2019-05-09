@@ -1,11 +1,10 @@
 import random
-import colorsys
 
 class Agent():
 
 	
 	strategies = (1,2,3,4,5,6,7,8)
-	reputation = (-1,1)
+	reputation = (0,1)
 	strategyColour = {
 		1: "tan",
 		2: "palegreen",
@@ -32,9 +31,6 @@ class Agent():
 		pass
 		# randomly choose a neighbour of the opponent
 		# return the result of their last interaction
-
-	def changeReputation(self):
-		self.currentReputation *= -1
 	
 	def summary(self):
 		# s = "Summary of Network\n"

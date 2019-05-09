@@ -4,17 +4,17 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 from agent import Agent
-
+from socialnorm import SocialNorm
 
 class Network():
 
-	def __init__(self, _size, _density, _omega):
+	def __init__(self, _size, _density, _omega, _socialNorm):
 		self.size = _size
 		self.density = _density
+		self.omega = _omega
 		self.agentList = []
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
-		self.omega = _omega
 		self.currentTimeStep = 0
 
 	def erdosRenyiGenerator(self):
@@ -28,8 +28,10 @@ class Network():
 					r = random.random()
 					if r < self.density:
 						self.population.add_edge(self.agentList[agentID1], self.agentList[agentID2])
-						self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
-						self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
+						if self.agentList[agentID2] not in self.agentList[agentID1].neighbours:
+							self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
+						if self.agentList[agentID1] not in self.agentList[agentID2].neighbours:
+							self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
 						
 						
 	def __getStrategyColours(self):
@@ -67,8 +69,8 @@ class Network():
 		colourMap = self.__getStrategyColours()
 		plt.subplot(111)
 		nx.draw(self.population, with_labels=True, bold_text=True, node_color=colourMap)
-		# plt.show()
-		plt.savefig('CodeEvolution/figures/network.png')
+		plt.show()
+		# plt.savefig('/home/localadmin/Dev/CodeEvolution/CodeEvolution/figures/network.png')
 
 	def summary(self):
 		print("Network Summary")
@@ -76,13 +78,18 @@ class Network():
 			print("Agent " + str(agent))
 			s=""
 			for neighbour in agent.neighbours:
-				s += str(neighbour)
+				s += str(neighbour.id)
 			print(s)
+
+
     # def load_data(self):
     #     with open('tests/data/testfile0') as f:
     #         G = nx.read_adjlist(f, object=Agent)
     #     self.population = G
 
-# NOTE:
+
+# TODO:
 # 	- Add random seed to erdos renyi generator function
 #	- Implement load_from_file in constructor
+#	- plotting error
+#		MatplotlibDeprecationWarning: isinstance(..., numbers.Number); if cb.is_numlike(alpha):
