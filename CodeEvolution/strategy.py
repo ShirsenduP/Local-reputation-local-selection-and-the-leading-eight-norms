@@ -25,22 +25,11 @@ class Strategy:
 		self.currentStrategy = dict((key, value) for key, value in zip(self.allStates, self.allOutcomes[newStrategyID]))
 
 
-a = 1
-b = 0
-strat = 0
-
-s = Strategy(strat)
-print(s.currentStrategyID)
-move = s.chooseAction(a, b)
-print("Player chooses " + str(move))
-s.changeStrategy(3)
-print(s.currentStrategyID)
-
-
 """
 
 TODO:
 
 1	Error checking to sanitise inputs
+2	MAYBE change C/D to enumerate types? Not sure if necessary as user will never need to do this manually
 
 """

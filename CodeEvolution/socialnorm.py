@@ -1,5 +1,3 @@
-
-
 class SocialNorm():
 
 	allStates = ['11C', '11D', '10C', '10D', '01C', '01D', '00C', '00D']	

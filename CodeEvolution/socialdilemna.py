@@ -1,7 +1,41 @@
 class SocialDilemna():
 
 	def __init__(self):
+		self.payoff = []
+
+	def playGame(self, agent1Action, agent2Action):
+		# return payoffs to agent 1 and agent 2
+		# assign new reputations using social norms
+
+
 		pass
+
+
+class PrisonersDilemna(SocialDilemna):
+
+	def __init__(self):
+		SocialDilemna.__init__(self)
+
+
+
+
+
+S = PrisonersDilemna()
+
+print(S.payoff)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 """
 TODO:

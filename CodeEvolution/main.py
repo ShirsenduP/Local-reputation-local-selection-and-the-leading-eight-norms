@@ -57,7 +57,7 @@ TODO:
 3. When adding neighbours, don't add if already neighbours! repeated agents in agent.neighbours list!
 4. DOCSTRINGS!!!
 5. SocialDilemna class -> subclasses can be input to network to choose and parameterise the game easily
-
+6. UML diagram to explain class structure
 
 """
 
