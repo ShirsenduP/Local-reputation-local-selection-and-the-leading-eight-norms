@@ -4,29 +4,15 @@ import datetime
 class ConfigBuilder():
 	
 	def __init__(self, _sizes, _densities, _omegas, _saveToDisk):
-		isSingleInput = self.__isSingleInput(_sizes, _densities, _omegas, _saveToDisk)
-		_sizes = [_sizes]
-		_densities = [_densities]
-		_omegas = [_omegas]
+		self.configuration = None
 
-		if isSingleInput:
-			isValid = self.__containsValidParameters(_sizes, _densities, _omegas)
-			if isValid:
-				return self.__generate()
-
-		
-		
-		self.isValid = self.__containsValidParameters(_sizes, _densities, _omegas)
-
-		if not self.isValid:
+		isValid = self.__containsValidParameters(_sizes, _densities, _omegas)
+		if not isValid:
 			raise Exception("Parameters are invalid!")
 		else:
-			self.config = self.__generate(_sizes, _densities, _omegas)
+			self.configuration = self.__generate(_sizes, _densities, _omegas)
 			if _saveToDisk:
 				self.__getJsonConfigFile()
-			else:
-				return self.config	
-			print("Success!")
 
 	def __generate(self, _sizes, _densities, _omegas):
 		config = {}
@@ -67,10 +53,6 @@ class ConfigBuilder():
 		inRange = all(omega > 0 and omega < 1 for omega in _omegas)
 		return True if inRange else False
 
-	def __isSingleInput(self, _size, _density, _omega):
-		isSingle = (type(_size) != list) or (type(_density) != list) or (type(_omega) != list)
-		return True if isSingle else False
-
 """
 TODO:
 
@@ -78,5 +60,4 @@ TODO:
 2. Redo the checking to raise exceptions and not to try to sanitise the input
 
 """
-
 
