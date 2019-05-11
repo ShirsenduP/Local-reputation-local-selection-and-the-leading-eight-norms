@@ -16,10 +16,12 @@ class Network():
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
 		self.currentTimeStep = 0
+		self.socialNorm = SocialNorm(0)
+		self.snapshot = {}
 
 	def erdosRenyiGenerator(self):
 		for agentID in range(self.size):
-			self.agentList.append(Agent(_id=agentID))
+			self.agentList.append(Agent(_id=agentID, _strategy=random.randint(0,7)))
 			self.population.add_node(self.agentList[agentID])
 
 		for agentID1 in range(len(self.population)):
@@ -49,7 +51,8 @@ class Network():
 		#play game
 		#update reputations NOTE: from SocialNorm() class
 		#update interaction history
-	
+		#social dilemnas -> use just b and c to get payoffs -> more general than the PD
+
 
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
@@ -92,7 +95,7 @@ class Network():
 """
 TODO:
 	
-	- Add random seed to erdos renyi generator function
+	- Add random seed to erdos renyi generator function -> predefined list of seeds for all repeated experiments
 	- Implement load_from_file in constructor
 	- plotting error
 		MatplotlibDeprecationWarning: isinstance(..., numbers.Number); if cb.is_numlike(alpha):

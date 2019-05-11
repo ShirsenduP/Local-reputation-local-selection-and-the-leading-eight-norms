@@ -1,11 +1,12 @@
 import random
+from strategy import Strategy
 
 class Agent():
 
 	
-	strategies = (1,2,3,4,5,6,7,8)
 	reputation = (0,1)
 	strategyColour = {
+		0: "orange", 
 		1: "tan",
 		2: "palegreen",
 		3: "turquoise",
@@ -13,19 +14,18 @@ class Agent():
 		5: "royalblue",
 		6: "plum",
 		7: "lightpink",
-		8: "orange", 
 	}
 
-	def __init__(self, _id, _strategy=strategies[1]):
+	def __init__(self, _id, _strategy):
 		self.id = _id
-		self.currentStrategy = random.choice(self.strategies)
+		self.currentStrategy = Strategy(_strategy)
 		self.currentReputation = random.choice(self.reputation)
 		self.neighbours = []
-		self.colour = self.strategyColour[self.currentStrategy]
-		self.history = []
+		self.colour = self.strategyColour[self.currentStrategy.currentStrategyID]
+		# self.history = {} no longer possible -> Get LAST partner for the moment
 
-	def __playStrategy(self, strategy):
-		pass
+	def changeStrategy(self, newStrategyID):
+		self.currentStrategy.changeStrategy(newStrategyID)
 
 	def getOpponentsReputation(self, opponent):
 		thirdParty = random.choice(opponent.neighbours)
