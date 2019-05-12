@@ -8,19 +8,18 @@ from socialnorm import SocialNorm
 
 class Network():
 
-	def __init__(self, _size, _density, _omega, _socialNorm):
-		self.size = _size
-		self.density = _density
-		self.omega = _omega
+	def __init__(self, _config, _socialNorm):
+		self.config = _config
 		self.agentList = []
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
 		self.currentTimeStep = 0
 		self.socialNorm = SocialNorm(0)
 		self.snapshot = {}
+		self.__initialiseAgentHistories()
 
 	def erdosRenyiGenerator(self):
-		for agentID in range(self.size):
+		for agentID in range(self.config['size']):
 			self.agentList.append(Agent(_id=agentID, _strategy=random.randint(0,7)))
 			self.population.add_node(self.agentList[agentID])
 
@@ -28,19 +27,13 @@ class Network():
 			for agentID2 in range(len(self.population)):
 				if agentID1 != agentID2:
 					r = random.random()
-					if r < self.density:
+					if r < self.config['density']:
 						self.population.add_edge(self.agentList[agentID1], self.agentList[agentID2])
 						if self.agentList[agentID2] not in self.agentList[agentID1].neighbours:
 							self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
 						if self.agentList[agentID1] not in self.agentList[agentID2].neighbours:
 							self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
 						
-						
-	def __getStrategyColours(self):
-		colourMap = []
-		for agent in self.agentList:
-			colourMap.append(agent.colour)
-		return colourMap
 
 
 	def __playPrisonersDilemna(self, agent1, agent2):
@@ -69,6 +62,17 @@ class Network():
 	# 	while r < omega:
 
 
+	def __initialiseAgentHistories(self):
+		for agent in self.agentList:
+			agent.initialiseHistory()
+						
+	def __getStrategyColours(self):
+		colourMap = []
+		for agent in self.agentList:
+			colourMap.append(agent.colour)
+		return colourMap
+
+
 	def show(self):
 		colourMap = self.__getStrategyColours()
 		plt.subplot(111)
@@ -80,9 +84,9 @@ class Network():
 	def summary(self):
 		print("Network Summary")
 		for agent in self.agentList:
-			s = "Agent " + str(agent) + " has neighbours "
+			s = "Agent " + str(agent) + " has neighbours \t"
 			for neighbour in agent.neighbours:
-				s += str(neighbour.id)
+				s += "\t" + str(neighbour.id)
 			print(s)
 
 

@@ -15,14 +15,10 @@ if __name__=="__main__":
 	parser.add_argument('--omega', help=sizeOmega, type=float, nargs=1)
 	args = parser.parse_args()
 
-	# size = [args.size]
-	# density = [args.density]
-	# omega = [args.omega]
+	obj = ConfigBuilder(_sizes=args.size, _densities=args.density, _omegas=args.omega)
 
-	# print(size)
+	print(obj.configuration)
 
-
-	obj = ConfigBuilder(_sizes=args.size, _densities=args.density, _omegas=args.omega, _saveToDisk=False)
 	print("NOT IMPLEMENTED")
 
 

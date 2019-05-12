@@ -2,7 +2,7 @@ class SocialDilemna():
 
 	def __init__(self):
 		self.payoff = []
-
+7
 	def playGame(self, agent1Action, agent2Action):
 		# return payoffs to agent 1 and agent 2
 		# assign new reputations using social norms

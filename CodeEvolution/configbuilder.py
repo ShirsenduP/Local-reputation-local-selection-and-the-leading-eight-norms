@@ -3,7 +3,7 @@ import datetime
 
 class ConfigBuilder():
 	
-	def __init__(self, _sizes, _densities, _omegas, _saveToDisk):
+	def __init__(self, _sizes, _densities, _omegas, _singleSimulation=False, _saveToDisk=False):
 		self.configuration = None
 
 		isValid = self.__containsValidParameters(_sizes, _densities, _omegas)
@@ -11,6 +11,9 @@ class ConfigBuilder():
 			raise Exception("Parameters are invalid!")
 		else:
 			self.configuration = self.__generate(_sizes, _densities, _omegas)
+			if _singleSimulation:
+				self.configuration = self.configuration[0]
+
 			if _saveToDisk:
 				self.__getJsonConfigFile()
 

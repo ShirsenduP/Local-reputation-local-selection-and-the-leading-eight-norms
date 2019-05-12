@@ -13,7 +13,7 @@ class Agent():
 		4: "cornflowerblue",
 		5: "royalblue",
 		6: "plum",
-		7: "lightpink",
+		7: "lightpink"
 	}
 
 	def __init__(self, _id, _strategy):
@@ -22,7 +22,7 @@ class Agent():
 		self.currentReputation = random.choice(self.reputation)
 		self.neighbours = []
 		self.colour = self.strategyColour[self.currentStrategy.currentStrategyID]
-		# self.history = {} no longer possible -> Get LAST partner for the moment
+		self.history = {} # get LAST partner
 
 	def changeStrategy(self, newStrategyID):
 		self.currentStrategy.changeStrategy(newStrategyID)
@@ -36,6 +36,11 @@ class Agent():
 		# s = "Summary of Network\n"
 		s = f"Agent {self.id} is currently running strategy {self.currentStrategy} with current reputation {self.currentReputation}"
 		return s
+
+	def initialiseHistory(self):
+		# neighbourIDs = [neighbour.id for neighbour in self.neighbours]
+		# self.history = {}.fromkeys(neighbourIDs)
+		self.history = {}.fromkeys(self.neighbours)
 
 	def __str__(self):
 		return str(self.id)
@@ -54,3 +59,5 @@ TODO:
 		values are the record of actions ijX and the resulting reputation for BOTH parties -> another dictionary?
 2. __eq__ method to check if two agents are equal? It breaks the code currently, need to find oput why
 """
+
+
