@@ -1,7 +1,7 @@
 class SocialDilemna():
 
 	def __init__(self):
-		self.payoff = {}
+		pass
 
 	def playGame(self, agent1Action, agent2Action):
 		agent1Payoff = self.payoff1[agent1Action][agent2Action]
@@ -34,7 +34,10 @@ class PrisonersDilemna(SocialDilemna):
 		}
 
 
-S = PrisonersDilemna(2, 1)
-payoffs = S.playGame('C', 'C')
-print(payoffs)
+def main():
+	S = PrisonersDilemna(2, 1)
+	payoffs = S.playGame('C', 'C')
+	print(payoffs)
 
+if __name__=='__main__':
+	main()

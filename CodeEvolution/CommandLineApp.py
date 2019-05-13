@@ -18,7 +18,6 @@ if __name__=="__main__":
 	obj = ConfigBuilder(_sizes=args.size, _densities=args.density, _omegas=args.omega)
 
 	print(obj.configuration)
-
 	print("NOT IMPLEMENTED")
 
 

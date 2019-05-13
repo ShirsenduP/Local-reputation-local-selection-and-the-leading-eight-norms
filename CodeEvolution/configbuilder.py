@@ -56,6 +56,14 @@ class ConfigBuilder():
 		inRange = all(omega > 0 and omega < 1 for omega in _omegas)
 		return True if inRange else False
 
+
+def main():
+	pass
+
+if __name__ == "__main__":
+	main()
+
+
 """
 TODO:
 

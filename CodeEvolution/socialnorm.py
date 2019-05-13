@@ -17,7 +17,9 @@ class SocialNorm():
 		state_key = str(agent1Reputation) + str(agent2Reputation) + str(agent1Action)
 		return self.states[state_key]
 
-# S = SocialNorm(0)
-# s = S.assignReputation(1, 0, 'D')
 
-# print(s)
+def main():
+	pass
+
+if __name__ == "__main__":
+	main()

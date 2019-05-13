@@ -6,16 +6,18 @@ import networkx as nx
 from agent import Agent
 from socialnorm import SocialNorm
 from socialdilemna import SocialDilemna, PrisonersDilemna
+from strategy import Strategy
 
 class Network():
 
-	def __init__(self, _config, _socialNorm):
+	def __init__(self, _config, _socialNorm, _socialDilemna):
 		self.config = _config
 		self.agentList = []
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
 		self.currentTimeStep = 0
 		self.socialNorm = SocialNorm(0)
+		self.socialDilemna = _socialDilemna
 		self.snapshot = {}
 		self.__initialiseAgentHistories()
 
@@ -37,30 +39,33 @@ class Network():
 						
 
 
-	def __playPrisonersDilemna(self, agent1, agent2):
-		agent1.getOpponentReputation(agent2)
-		agent2.getOpponentReputation(agent1)
-		# agent1Move = agent1.getMove()
+	def playSocialDilemna(self, dilemna, agent1, agent2):
+		agent1.getOpponentsReputation(agent2)
+		agent2.getOpponentsReputation(agent1)
+		
 		# agent2Move = agent2.getMove()
-		payoffs = PD.playGame(agent1Move, agent2Move)
+		payoffs = self.socialDilemna.playGame(agent1Move, agent2Move)
 		#update reputations NOTE: from SocialNorm() class
 		#update interaction history
-		#social dilemnas -> use just b and c to get payoffs -> more general than the PD
 
 
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
 		agent2 = random.choice(self.agentList)
-		print(agent2 == agent1)
 		while agent2 == agent1:
 			agent2 = random.choice(self.agentList)
 		return [agent1.id, agent2.id]
 
 	def runSingleTimestep(self):
-		pass
-	# 	interactionCounter = []
-	# 	r = random.random()
-	# 	while r < omega:
+		randomAgents = self.chooseTwoAgents()
+		self.playSocialDilemna(self.socialDilemna, self.agentList[randomAgents[0]], self.agentList[randomAgents[1]])
+		r = random.random()
+		interactionCounter = 1
+		while r < self.config['omega']:
+			r = random.random()
+			interactionCounter += 1
+			self.playSocialDilemna(self.socialDilemna, self.agentList[randomAgents[0]], self.agentList[randomAgents[1]])
+			print(interactionCounter)
 
 
 	def __initialiseAgentHistories(self):
@@ -97,11 +102,19 @@ class Network():
     #     self.population = G
 
 
+def main():
+	pass
+
+if __name__ == "__main__":
+	main()
+
 """
 TODO:
 	
+	- Implement check for minimum 2 neighbours per agent
 	- Add random seed to erdos renyi generator function -> predefined list of seeds for all repeated experiments
 	- Implement load_from_file in constructor
 	- plotting error
 		MatplotlibDeprecationWarning: isinstance(..., numbers.Number); if cb.is_numlike(alpha):
 """
+

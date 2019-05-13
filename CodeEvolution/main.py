@@ -6,6 +6,7 @@ from network import Network
 from agent import Agent
 from socialnorm import SocialNorm
 from configbuilder import ConfigBuilder
+from socialdilemna import PrisonersDilemna
 
 def main():
 
@@ -20,19 +21,23 @@ def main():
 	# config = ConfigBuilder(sizes, densities, omegas)
 
 
-	socialNorm = SocialNorm(0)
 	size = [7]
 	density = [0.25]
-	omega = [0.1]
+	omega = [0.5]
 	singleSimulation = True
 	saveToDisk = False
 
 	config = ConfigBuilder(size, density, omega, singleSimulation, saveToDisk)
+	socialNorm = SocialNorm(0)
+	PD = PrisonersDilemna(2, 1)
 
-	N = Network(config.configuration, socialNorm)
+	N = Network(config.configuration, socialNorm, PD)
+	agents = N.runSingleTimestep()
+
+	print(agents)
 	# N = Network(_size=size, _density=density, _omega=omega, _socialNorm=socialNorm)
 	# N.show()
-	N.summary()
+	# N.summary()
 	# N.runSimulation()
 	
 
@@ -56,9 +61,9 @@ TODO:
 1. Setup as package so it can easily be installed on any linux system with help docs. 
 2. Create builder class to setup parameters of model, then change Network class to just accept a builder object to seperate the config methods to the simulation methods
 3. When adding neighbours, don't add if already neighbours! repeated agents in agent.neighbours list!
+5. SocialDilemna class -> subclasses can be input to network to choose and parameterise the game easily
 
 4. DOCSTRINGS!!!
-5. SocialDilemna class -> subclasses can be input to network to choose and parameterise the game easily
 6. UML diagram to explain class structure
 
 """

@@ -25,11 +25,16 @@ class Strategy:
 		self.currentStrategy = dict((key, value) for key, value in zip(self.allStates, self.allOutcomes[newStrategyID]))
 
 
+def main():
+	pass
+
+if __name__ == "__main__":
+	main()
+
 """
 
 TODO:
 
 1	Error checking to sanitise inputs
-2	MAYBE change C/D to enumerate types? Not sure if necessary as user will never need to do this manually
 
 """

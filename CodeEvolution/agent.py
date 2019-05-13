@@ -31,6 +31,9 @@ class Agent():
 		thirdParty = random.choice(opponent.neighbours)
 		# randomly choose a neighbour of the opponent
 		# return the result of their last interaction
+
+	# def getMove(self, opponentID):
+	# 	opponentMove = self.getOpponentsReputation(opponentID)
 	
 	def summary(self):
 		# s = "Summary of Network\n"
@@ -47,6 +50,13 @@ class Agent():
 
 	# def __eq__(self, otherAgent):
 	# 	return self.id == otherAgent.id
+
+
+def main():
+	pass
+
+if __name__ == "__main__":
+	main()
 
 """
 
