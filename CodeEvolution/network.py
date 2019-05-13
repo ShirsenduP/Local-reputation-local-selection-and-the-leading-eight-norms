@@ -5,6 +5,7 @@ import networkx as nx
 
 from agent import Agent
 from socialnorm import SocialNorm
+from socialdilemna import SocialDilemna, PrisonersDilemna
 
 class Network():
 
@@ -39,9 +40,9 @@ class Network():
 	def __playPrisonersDilemna(self, agent1, agent2):
 		agent1.getOpponentReputation(agent2)
 		agent2.getOpponentReputation(agent1)
-		agent1.getMove()
-		agent2.getMove()
-		#play game
+		# agent1Move = agent1.getMove()
+		# agent2Move = agent2.getMove()
+		payoffs = PD.playGame(agent1Move, agent2Move)
 		#update reputations NOTE: from SocialNorm() class
 		#update interaction history
 		#social dilemnas -> use just b and c to get payoffs -> more general than the PD
