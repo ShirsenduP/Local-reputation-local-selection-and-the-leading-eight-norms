@@ -15,11 +15,11 @@ class Network():
 		self.agentList = []
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
-		self.currentTimeStep = 0
 		self.socialDilemna = _socialDilemna
 		self.snapshot = {}
 		self.__initialiseAgentHistories()
-
+		self.maxPeriods = 1000
+		self.finished = False
 
 	def erdosRenyiGenerator(self):
 		for agentID in range(self.config['size']):
@@ -57,9 +57,11 @@ class Network():
 		# print(f"agent{agent1.id} gets payoff {payoff1}")
 		# print(f"agent{agent2.id} gets payoff {payoff2}")
 
-		## Update agent utilities
+		## Update agent utilities and reputations
 		agent1.updateUtility(payoff1)
-		agent2.updateUtility(payoff2)		
+		agent2.updateUtility(payoff2)
+		agent1.updateReputation(agent2Reputation, agent1Move)
+		agent2.updateReputation(agent1Reputation, agent2Move)
 
 		## Update interaction history
 		agent1Interaction = {
@@ -90,7 +92,13 @@ class Network():
 			s += "\n"
 			print(s)
 			
-
+	def runSimulation(self):
+		currentPeriod = 0
+		while currentPeriod < self.maxPeriods:
+			self.runSingleTimestep()
+			currentPeriod += 1
+			#self.checkConvergence()
+		self.finished = True	
 
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
@@ -101,16 +109,14 @@ class Network():
 
 
 	def runSingleTimestep(self):
-		randomAgents = self.chooseTwoAgents()
-		self.playSocialDilemna(self.socialDilemna, self.agentList[randomAgents[0]], self.agentList[randomAgents[1]])
+		self.playSocialDilemna()
 		r = random.random()
 		interactionCounter = 1
 		while r < self.config['omega']:
-			r = random.random()
+			self.playSocialDilemna()
 			interactionCounter += 1
-			self.playSocialDilemna(self.socialDilemna, self.agentList[randomAgents[0]], self.agentList[randomAgents[1]])
-			print(interactionCounter)
-
+			r = random.random()
+		# NEED TO MAKE SNAPSHOT
 
 	def __initialiseAgentHistories(self):
 		for agent in self.agentList:
@@ -139,7 +145,11 @@ class Network():
 		# 	for neighbour in agent.neighbours:
 		# 		s += "\t" + str(neighbour.id)
 		# 	print(s)
-		s = "SUMMARY OF NETWORK\n\n"
+		if self.finished:
+			s = "FINAL STATE\n"
+		else:
+			s = "INITIAL STATE\n"
+
 		for agent in self.agentList:
 			s += str(agent) + "\n"
 		return s

@@ -26,6 +26,10 @@ class Agent():
 		self.history = {} # get LAST partner
 		self.currentUtility = 0
 
+	def updateReputation(self, opponentReputation, ownMove):
+		newReputation = self.currentSocialNorm.assignReputation(self.currentReputation, opponentReputation, ownMove)
+		self.currentReputation = newReputation
+
 	def updateUtility(self, payoff):
 		self.currentUtility += payoff
 
@@ -60,12 +64,12 @@ class Agent():
 		return s
 
 	def __str__(self):
-		s = f"AgentID: \t {self.id}\t"
-		s += f"StrategyID: \t {self.currentStrategy}\t\t"
-		s += f"SocialNormID: \t {self.currentSocialNorm}\t\t"
-		s += f"Reputation: \t {self.currentReputation}\t\t"
+		s = f"Agent {self.id}\t"
+		s += f"Strategy#: \t {self.currentStrategy}\t"
+		s += f"SocialNorm#: \t {self.currentSocialNorm}\t"
+		s += f"Reputation: \t {self.currentReputation}\t"
 		neighbourIDs = list(map(lambda neighbour:neighbour.id, self.neighbours))
-		s += f"Neighbours: \t {neighbourIDs}\t\t"
+		s += f"Neighbours: \t {neighbourIDs}\t"
 		s += f"Utility: \t {self.currentUtility}"
 		return s
 

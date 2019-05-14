@@ -8,14 +8,19 @@ from socialdilemna import PrisonersDilemna
 def main():
 
 	###
-	### USER-INPUT-PARAMETERS
+	### USER-INPUT
 	###
 
-	size = [5]
+	# Network
+	size = [10]
 	density = [1]
-	omega = [0.5]
+	omega = [0.99]
+	
+	# Model
 	singleSimulation = True
 	saveToDisk = False
+	
+	# Social Dilemna
 	pdBenefit = 2
 	pdCost = 1
 
@@ -31,21 +36,13 @@ def main():
 	###
 
 	N = Network(config.configuration, PD)
-	# agents = N.runSingleTimestep()
 
 	print(N)
 
-	for period in range(10000):
-		N.playSocialDilemna()
-
-	# N.showHistory()
-
+	N.runSimulation()
 
 	print(N)
 	
-
-	print("success")
-
 
 if __name__ == "__main__":
 	main()
@@ -63,6 +60,7 @@ TODO:
 4. DOCSTRINGS!!!
 6. UML diagram to explain class structure
 
+7. agents are currently only initialised with 0/1 strategyIDs for debugging purposes
 """
 
 
