@@ -18,13 +18,14 @@ class Network():
 		self.socialDilemna = _socialDilemna
 		self.snapshot = {}
 		self.__initialiseAgentHistories()
-		self.maxPeriods = 1000
+		self.maxPeriods = 100000
+		self.updateProbability = 0.2
 		self.finished = False
 
 	def erdosRenyiGenerator(self):
 		for agentID in range(self.config['size']):
-			# self.agentList.append(Agent(_id=agentID, _strategy=random.randint(0,7)))
-			self.agentList.append(Agent(_id=agentID, _strategy=random.randint(2,3)))
+			self.agentList.append(Agent(_id=agentID, _strategy=random.randint(0,7)))
+			# self.agentList.append(Agent(_id=agentID, _strategy=random.randint(2,3)))
 			self.population.add_node(self.agentList[agentID])
 
 		for agentID1 in range(len(self.population)):
@@ -94,11 +95,17 @@ class Network():
 			
 	def runSimulation(self):
 		currentPeriod = 0
+		probOfMutants = 0.01
 		while currentPeriod < self.maxPeriods:
 			self.runSingleTimestep()
 			currentPeriod += 1
 			#self.checkConvergence()
-		self.finished = True	
+			r = random.random()
+			if r < probOfMutants:
+				# print("Mutants added")
+				self.addMutants(8, 0.2)
+			# print(self)	
+		self.finished = True
 
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
@@ -107,8 +114,17 @@ class Network():
 			agent2 = random.choice(self.agentList)
 		return [agent1, agent2]
 
+	def addMutants(self, mutantStrategyID, proportion):
+		newMutantCount = int(proportion*self.config['size'])
+		addedMutants = []
+		while len(addedMutants) < newMutantCount:
+			randomMutant = random.choice(self.agentList)
+			if randomMutant not in addedMutants:
+				randomMutant.currentStrategy.changeStrategy(mutantStrategyID)
+				addedMutants.append(randomMutant)
 
 	def runSingleTimestep(self):
+		# Interaction Period
 		self.playSocialDilemna()
 		r = random.random()
 		interactionCounter = 1
@@ -116,7 +132,13 @@ class Network():
 			self.playSocialDilemna()
 			interactionCounter += 1
 			r = random.random()
+		
+		# Update strategies
+		for agent in self.agentList:
+			agent.updateStrategy(self.updateProbability)
+
 		# NEED TO MAKE SNAPSHOT
+
 
 	def __initialiseAgentHistories(self):
 		for agent in self.agentList:
@@ -177,5 +199,6 @@ TODO:
 	- Implement load_from_file in constructor
 	- plotting error
 		MatplotlibDeprecationWarning: isinstance(..., numbers.Number); if cb.is_numlike(alpha):
+	- record current timesteps/interactions per period?
 """
 

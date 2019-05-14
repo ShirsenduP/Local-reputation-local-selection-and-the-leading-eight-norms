@@ -12,15 +12,15 @@ def main():
 	###
 
 	# Network
-	size = [10]
-	density = [1]
-	omega = [0.99]
+	size = [50]
+	density = [0.6]
+	omega = [0.9]
 	
 	# Model
 	singleSimulation = True
 	saveToDisk = False
 	
-	# Social Dilemna
+	# Social PrisonersDilemna
 	pdBenefit = 2
 	pdCost = 1
 

@@ -8,7 +8,9 @@ class SocialNorm():
 				[1,0,0,1,1,0,1,1],
 				[1,0,0,1,1,0,0,1],
 				[1,0,1,1,1,0,0,0],
-				[1,0,0,1,1,0,0,0]]
+				[1,0,0,1,1,0,0,0],
+				[0,0,0,0,0,0,0,0], 
+				[0,0,0,0,0,0,0,0]]
 
 	def __init__(self, _stateID):
 		self.states = dict((key, value) for key, value in zip(self.allStates, self.allOutcomes[_stateID]))
@@ -16,6 +18,9 @@ class SocialNorm():
 	def assignReputation(self, agent1Reputation, agent2Reputation, agent1Action):
 		state_key = str(agent1Reputation) + str(agent2Reputation) + str(agent1Action)
 		return self.states[state_key]
+	
+	def updateSocialNorm(self, newStateID):
+		self.__init__(newStateID)
 
 	def __str__(self):
 		return str(self.states)

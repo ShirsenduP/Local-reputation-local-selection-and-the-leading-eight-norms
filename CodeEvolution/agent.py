@@ -33,8 +33,17 @@ class Agent():
 	def updateUtility(self, payoff):
 		self.currentUtility += payoff
 
-	def changeStrategy(self, newStrategyID):
-		self.currentStrategy.changeStrategy(newStrategyID)
+	def updateStrategy(self, updateProbability):
+		r = random.random()
+		if r < updateProbability:
+			newStrategyID = self.findBestLocalStrategy()
+			if newStrategyID == self.currentStrategy:
+				return
+			if newStrategyID == 8:
+				pass
+				# print("update to mutant strat")
+			self.currentStrategy.changeStrategy(newStrategyID)
+			self.currentSocialNorm.updateSocialNorm(newStrategyID)
 
 	def getOpponentsReputation(self, opponent):
 		# thirdParty = random.choice(opponent.neighbours)
@@ -63,13 +72,20 @@ class Agent():
 			s += f"Last interaction with neighbour {neighbour.id} was {self.history[neighbour]}\n"
 		return s
 
+	def findBestLocalStrategy(self):
+		neighbourUtilities = list(map(lambda x:x.currentUtility, self.neighbours))
+		maxLocalUtility = max(neighbourUtilities)
+		bestPerformingAgentIndex = neighbourUtilities.index(maxLocalUtility)
+		return self.neighbours[bestPerformingAgentIndex].currentStrategy.currentStrategyID
+	
+
 	def __str__(self):
 		s = f"Agent {self.id}\t"
-		s += f"Strategy#: \t {self.currentStrategy}\t"
-		s += f"SocialNorm#: \t {self.currentSocialNorm}\t"
+		s += f"Strategy#: \t {self.currentStrategy.currentStrategyID}\t"
+		# s += f"SocialNorm#: \t {self.currentSocialNorm}\t"
 		s += f"Reputation: \t {self.currentReputation}\t"
 		neighbourIDs = list(map(lambda neighbour:neighbour.id, self.neighbours))
-		s += f"Neighbours: \t {neighbourIDs}\t"
+		# s += f"Neighbours: \t {neighbourIDs}\t"
 		s += f"Utility: \t {self.currentUtility}"
 		return s
 
@@ -97,7 +113,13 @@ TODO:
 !!!!
 3. 	need to sort out getOpponentsReputation function, currently it just outputs the persons current reputation, but need to base it on the last interaction!
 
+4.	probability of changing strategy?
+
+5. findBestLocalStrategy -> What if multiple agents have the same utility but different strategies? random choice, right now its just updating to whichever one it finds first!
+
+
 """
+6. FINDBESTLOCALSTRATEGY -> social norm class with previous interaction history with some neighbour, if None, make random 1/0 choice
 
 
 

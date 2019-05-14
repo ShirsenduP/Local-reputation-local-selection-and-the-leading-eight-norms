@@ -8,7 +8,9 @@ class Strategy:
 					['C', 'D', 'C', 'D'],
 					['C', 'D', 'C', 'D'],
 					['C', 'D', 'C', 'D'],
-					['C', 'D', 'C', 'D']]
+					['C', 'D', 'C', 'D'],
+					['D', 'D', 'D', 'D'], #AllD
+					['C', 'C', 'C', 'C']] #AllC
 
 
 	def __init__(self, strategyID):
