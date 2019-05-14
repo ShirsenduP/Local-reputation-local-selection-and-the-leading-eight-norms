@@ -24,6 +24,8 @@ class Strategy:
 		self.currentStrategyID = newStrategyID
 		self.currentStrategy = dict((key, value) for key, value in zip(self.allStates, self.allOutcomes[newStrategyID]))
 
+	def __str__(self):
+		return f"{self.currentStrategyID} - {self.currentStrategy}"
 
 def main():
 	pass
@@ -35,6 +37,6 @@ if __name__ == "__main__":
 
 TODO:
 
-1	Error checking to sanitise inputs
+1	Error checking to sanitise inputs -> no human interaction necessary, is this worth doing?
 
 """

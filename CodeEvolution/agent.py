@@ -1,9 +1,9 @@
 import random
 from strategy import Strategy
+from socialnorm import SocialNorm
 
 class Agent():
 
-	
 	reputation = (0,1)
 	strategyColour = {
 		0: "orange", 
@@ -19,21 +19,26 @@ class Agent():
 	def __init__(self, _id, _strategy):
 		self.id = _id
 		self.currentStrategy = Strategy(_strategy)
+		self.currentSocialNorm = SocialNorm(_strategy)
 		self.currentReputation = random.choice(self.reputation)
 		self.neighbours = []
 		self.colour = self.strategyColour[self.currentStrategy.currentStrategyID]
 		self.history = {} # get LAST partner
+		self.currentUtility = 0
+
+	def updateUtility(self, payoff):
+		self.currentUtility += payoff
 
 	def changeStrategy(self, newStrategyID):
 		self.currentStrategy.changeStrategy(newStrategyID)
 
 	def getOpponentsReputation(self, opponent):
-		thirdParty = random.choice(opponent.neighbours)
+		# thirdParty = random.choice(opponent.neighbours)
+		# return thirdParty.currentReputation
+		return opponent.currentReputation
+		# return thirdParty.history[opponent.id]
 		# randomly choose a neighbour of the opponent
 		# return the result of their last interaction
-
-	# def getMove(self, opponentID):
-	# 	opponentMove = self.getOpponentsReputation(opponentID)
 	
 	def summary(self):
 		# s = "Summary of Network\n"
@@ -45,8 +50,24 @@ class Agent():
 		# self.history = {}.fromkeys(neighbourIDs)
 		self.history = {}.fromkeys(self.neighbours)
 
+	def recordInteraction(self, interaction):
+		self.history[interaction['Opponent']] = interaction
+
+	def getHistory(self):
+		s = ""
+		for neighbour in self.neighbours:
+			s += f"Last interaction with neighbour {neighbour.id} was {self.history[neighbour]}\n"
+		return s
+
 	def __str__(self):
-		return str(self.id)
+		s = f"AgentID: \t {self.id}\t"
+		s += f"StrategyID: \t {self.currentStrategy}\t\t"
+		s += f"SocialNormID: \t {self.currentSocialNorm}\t\t"
+		s += f"Reputation: \t {self.currentReputation}\t\t"
+		neighbourIDs = list(map(lambda neighbour:neighbour.id, self.neighbours))
+		s += f"Neighbours: \t {neighbourIDs}\t\t"
+		s += f"Utility: \t {self.currentUtility}"
+		return s
 
 	# def __eq__(self, otherAgent):
 	# 	return self.id == otherAgent.id
@@ -68,6 +89,14 @@ TODO:
 		keys are chronological interaction
 		values are the record of actions ijX and the resulting reputation for BOTH parties -> another dictionary?
 2. __eq__ method to check if two agents are equal? It breaks the code currently, need to find oput why
+
+!!!!
+3. 	need to sort out getOpponentsReputation function, currently it just outputs the persons current reputation, but need to base it on the last interaction!
+
 """
+
+
+
+
 
 

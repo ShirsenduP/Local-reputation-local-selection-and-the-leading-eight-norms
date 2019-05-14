@@ -1,54 +1,51 @@
-import matplotlib.pyplot as plt
-import networkx as nx
 import random
 
+from configbuilder import ConfigBuilder
 from network import Network
 from agent import Agent
-from socialnorm import SocialNorm
-from configbuilder import ConfigBuilder
 from socialdilemna import PrisonersDilemna
 
 def main():
 
-	# sizes = [10000]
-	# densities = [0.5]
-	# omegas = [0.5]
-	#proportions of agents = {
-	# s1:
-	# s2:
-	# s3:}
+	###
+	### USER-INPUT-PARAMETERS
+	###
 
-	# config = ConfigBuilder(sizes, densities, omegas)
-
-
-	size = [7]
-	density = [0.25]
+	size = [5]
+	density = [1]
 	omega = [0.5]
 	singleSimulation = True
 	saveToDisk = False
+	pdBenefit = 2
+	pdCost = 1
+
+	###
+	### MODEL-GENERATED-PARAMETERS
+	###
 
 	config = ConfigBuilder(size, density, omega, singleSimulation, saveToDisk)
-	socialNorm = SocialNorm(0)
-	PD = PrisonersDilemna(2, 1)
+	PD = PrisonersDilemna(pdBenefit, pdCost)
 
-	N = Network(config.configuration, socialNorm, PD)
-	agents = N.runSingleTimestep()
+	###
+	### MODEL
+	###
 
-	print(agents)
-	# N = Network(_size=size, _density=density, _omega=omega, _socialNorm=socialNorm)
-	# N.show()
-	# N.summary()
-	# N.runSimulation()
+	N = Network(config.configuration, PD)
+	# agents = N.runSingleTimestep()
+
+	print(N)
+
+	for period in range(10000):
+		N.playSocialDilemna()
+
+	# N.showHistory()
+
+
+	print(N)
 	
 
-	# G = nx.erdos_renyi_graph(20, 1)
-	# plt.subplot(111)
-	# nx.draw(G)
-	# plt.show()
-	# print(len(G))
-
 	print("success")
-	return 0
+
 
 if __name__ == "__main__":
 	main()
