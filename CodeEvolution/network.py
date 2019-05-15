@@ -1,4 +1,5 @@
 import random
+import logging
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -7,6 +8,8 @@ from agent import Agent
 from socialnorm import SocialNorm
 from socialdilemna import SocialDilemna, PrisonersDilemna
 from strategy import Strategy
+
+logging.basicConfig(filename="CodeEvolution/logs/test.log", level=logging.DEBUG, format='%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
 
 class Network():
 
@@ -18,7 +21,7 @@ class Network():
 		self.socialDilemna = _socialDilemna
 		self.snapshot = {}
 		self.__initialiseAgentHistories()
-		self.maxPeriods = 100000
+		self.maxPeriods = 10
 		self.updateProbability = 0.2
 		self.finished = False
 
@@ -45,18 +48,18 @@ class Network():
 		agent2Reputation = agent1.getOpponentsReputation(agent2)
 		agent1Reputation = agent2.getOpponentsReputation(agent1)
 		
-		# print(f"agent{agent1.id} sees agent{agent2.id}Rep is " + str(agent2Reputation))
-		# print(f"agent{agent2.id} sees agent{agent1.id}Rep is " + str(agent1Reputation))
+		logging.debug(f"agent {agent1.id} ({agent1.currentStrategy.currentStrategyID}) sees agent {agent2.id}'s reputation is {agent2Reputation}")
+		logging.debug(f"agent {agent2.id} ({agent2.currentStrategy.currentStrategyID}) sees agent {agent1.id}'s reputation is {agent1Reputation}")
 
 		agent1Move = agent1.currentStrategy.chooseAction(agent1.currentReputation, agent2Reputation)
-		# print(f"agent{agent1.id}Move is " + str(agent1Move))
+		logging.debug(f"agent {agent1.id}'s move is {agent1Move}")
 
 		agent2Move = agent2.currentStrategy.chooseAction(agent2.currentReputation, agent1Reputation)
-		# print(f"agent{agent2.id}Move is " + str(agent2Move))
+		logging.debug(f"agent {agent2.id}'s move is {agent2Move}")
 		
 		payoff1, payoff2 = self.socialDilemna.playGame(agent1Move, agent2Move)
-		# print(f"agent{agent1.id} gets payoff {payoff1}")
-		# print(f"agent{agent2.id} gets payoff {payoff2}")
+		logging.debug(f"agent {agent1.id} gets payoff {payoff1}")
+		logging.debug(f"agent {agent2.id} gets payoff {payoff2}")
 
 		## Update agent utilities and reputations
 		agent1.updateUtility(payoff1)
@@ -73,7 +76,7 @@ class Network():
 			'Opponent Move': agent2Move
 		}
 		agent1.recordInteraction(agent1Interaction)		
-
+		
 		agent2Interaction = {
 			'Opponent': agent1,
 			'Focal Reputation': agent2.currentReputation,
@@ -139,6 +142,9 @@ class Network():
 
 		# NEED TO MAKE SNAPSHOT
 
+	def grabSnapshot(self, period):
+		self.snapshot[period] = self.agentList.copy()
+
 
 	def __initialiseAgentHistories(self):
 		for agent in self.agentList:
@@ -200,5 +206,8 @@ TODO:
 	- plotting error
 		MatplotlibDeprecationWarning: isinstance(..., numbers.Number); if cb.is_numlike(alpha):
 	- record current timesteps/interactions per period?
+	- record proportions of different strategies at each timestep
+	- record average utilities of each strategy
+	
 """
 

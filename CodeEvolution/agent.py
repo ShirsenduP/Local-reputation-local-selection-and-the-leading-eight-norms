@@ -1,6 +1,7 @@
 import random
 from strategy import Strategy
 from socialnorm import SocialNorm
+import logging
 
 class Agent():
 
@@ -27,13 +28,16 @@ class Agent():
 		self.currentUtility = 0
 
 	def updateReputation(self, opponentReputation, ownMove):
+		"""Update the reputation of an agent using their social norm strategy, their current reputation, their opponents reputation and the move they just made."""
 		newReputation = self.currentSocialNorm.assignReputation(self.currentReputation, opponentReputation, ownMove)
 		self.currentReputation = newReputation
 
 	def updateUtility(self, payoff):
+		"""Update the utility or cumulative payoff of an agent."""
 		self.currentUtility += payoff
 
 	def updateStrategy(self, updateProbability):
+		"""Switch strategies to the """
 		r = random.random()
 		if r < updateProbability:
 			newStrategyID = self.findBestLocalStrategy()
@@ -46,10 +50,9 @@ class Agent():
 			self.currentSocialNorm.updateSocialNorm(newStrategyID)
 
 	def getOpponentsReputation(self, opponent):
-		# thirdParty = random.choice(opponent.neighbours)
-		# return thirdParty.currentReputation
-		return opponent.currentReputation
-		# return thirdParty.history[opponent.id]
+		thirdParty = random.choice(opponent.neighbours)
+		# return opponent.currentReputation
+		opponentsThirdPartyReputation = thirdParty.history[opponent].reputation
 		# randomly choose a neighbour of the opponent
 		# return the result of their last interaction
 	
@@ -59,12 +62,13 @@ class Agent():
 		return s
 
 	def initialiseHistory(self):
-		# neighbourIDs = [neighbour.id for neighbour in self.neighbours]
-		# self.history = {}.fromkeys(neighbourIDs)
+		"""Only keep track of interactions with your neighbours."""
 		self.history = {}.fromkeys(self.neighbours)
 
 	def recordInteraction(self, interaction):
-		self.history[interaction['Opponent']] = interaction
+		"""Remember the previous interaction with your neighbours (and no one else)."""
+		if interaction['Opponent'] in self.neighbours:
+			self.history[interaction['Opponent']] = interaction
 
 	def getHistory(self):
 		s = ""
@@ -73,6 +77,7 @@ class Agent():
 		return s
 
 	def findBestLocalStrategy(self):
+		"""Find the strategy of your best performing neighbour."""
 		neighbourUtilities = list(map(lambda x:x.currentUtility, self.neighbours))
 		maxLocalUtility = max(neighbourUtilities)
 		bestPerformingAgentIndex = neighbourUtilities.index(maxLocalUtility)
@@ -119,7 +124,7 @@ TODO:
 
 
 """
-6. FINDBESTLOCALSTRATEGY -> social norm class with previous interaction history with some neighbour, if None, make random 1/0 choice
+# 6. FINDBESTLOCALSTRATEGY -> social norm class with previous interaction history with some neighbour, if None, make random 1/0 choice
 
 
 
