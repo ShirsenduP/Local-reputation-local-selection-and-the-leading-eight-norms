@@ -144,7 +144,7 @@ class Network():
 
 	def grabSnapshot(self, period):
 		self.snapshot[period] = self.agentList.copy()
-
+		
 
 	def __initialiseAgentHistories(self):
 		for agent in self.agentList:

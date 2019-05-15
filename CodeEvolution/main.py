@@ -12,10 +12,10 @@ def main():
 	### Logging
 	now = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
 	logger = logging.getLogger('CodeEvolution')
-	logger.setLevel(logging.INFO)
+	logger.setLevel(logging.WARN)
 	# fh = logging.FileHandler(f'CodeEvolution/logs/{now}.log')
 	fh = logging.FileHandler('CodeEvolution/logs/test.log')
-	fh.setLevel(logging.DEBUG)
+	fh.setLevel(logging.WARN)
 	ch = logging.StreamHandler()
 	ch.setLevel(logging.ERROR)
 

@@ -37,7 +37,7 @@ class Agent():
 		self.currentUtility += payoff
 
 	def updateStrategy(self, updateProbability):
-		"""Switch strategies to the """
+		"""Switch strategies to the strategy used by the best performing neighbour of the agent with some probability."""
 		r = random.random()
 		if r < updateProbability:
 			newStrategyID = self.findBestLocalStrategy()
@@ -50,11 +50,20 @@ class Agent():
 			self.currentSocialNorm.updateSocialNorm(newStrategyID)
 
 	def getOpponentsReputation(self, opponent):
+		"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour."""
 		thirdParty = random.choice(opponent.neighbours)
-		# return opponent.currentReputation
-		opponentsThirdPartyReputation = thirdParty.history[opponent].reputation
-		# randomly choose a neighbour of the opponent
-		# return the result of their last interaction
+		opponentsThirdPartyInteraction = thirdParty.history[opponent] #check for no previous interaction
+		
+		try:
+			opponentPastReputation = opponentsThirdPartyInteraction['Focal Reputation']
+			opponentNeighbourReputation = opponentsThirdPartyInteraction['Opponent Reputation']
+			opponentPastMove = opponentsThirdPartyInteraction['Focal Move']
+		except TypeError as err:
+			return random.randint(0,1)
+		else:
+			opponentCurrentReputation = self.currentSocialNorm.assignReputation(opponentPastReputation, opponentNeighbourReputation, opponentPastMove)
+			return opponentCurrentReputation
+			
 	
 	def summary(self):
 		# s = "Summary of Network\n"
