@@ -5,6 +5,9 @@ class SocialDilemna():
 		pass
 
 	def playGame(self, agent1Action, agent2Action):
+		if agent1Action not in ['C', 'D'] or agent2Action not in ['C', 'D']:
+			raise ValueError("Agent move is not valid ('C' or 'D')")
+
 		agent1Payoff = self.payoff1[agent1Action][agent2Action]
 		agent2Payoff = self.payoff2[agent1Action][agent2Action]
 		return [agent1Payoff, agent2Payoff]

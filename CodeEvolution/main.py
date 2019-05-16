@@ -32,28 +32,41 @@ def main():
 	###
 	### USER-INPUT
 	###
-
-	# Network
-	size = [50]
-	density = [0.6]
-	omega = [0.9]
-	
-
-	# Model
-	singleSimulation = True
-	saveToDisk = False
 	
 	# Social PrisonersDilemna
 	pdBenefit = 2
 	pdCost = 1
 
+	# Network
+	size = [50]
+	density = [0.6] 
+	omega = [0.99]
+
+	# Model
+	maxperiods = 1000
+	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
+	updateProbability = [0.2]
+	probabilityOfMutants = [0.01]
+	singleSimulation = True
+	saveToDisk = False
 
 	###
 	### MODEL-GENERATED-PARAMETERS
 	###
 
-	config = ConfigBuilder(size, density, omega, singleSimulation, saveToDisk)
-	PD = PrisonersDilemna(pdBenefit, pdCost)
+	config = ConfigBuilder(
+		_sizes=size,
+		_densities=density,
+		_omegas=omega,
+		_maxperiods=maxperiods,
+		_socialDilemna=socialDilemna,
+		_updateProbability=updateProbability,
+		_probabilityOfMutants=probabilityOfMutants,
+		_singleSimulation=singleSimulation,
+		_saveToDisk=saveToDisk)
+
+
+
 
 	# Log message
 	s = ""
@@ -66,7 +79,7 @@ def main():
 	###
 
 	logger.info("Network Initialising")
-	N = Network(config.configuration, PD)
+	N = Network(config.configuration)
 
 	print(N)
 

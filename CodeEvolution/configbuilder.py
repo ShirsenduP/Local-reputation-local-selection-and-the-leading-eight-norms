@@ -3,39 +3,62 @@ import datetime
 
 class ConfigBuilder():
 	
-	def __init__(self, _sizes, _densities, _omegas, _singleSimulation=False, _saveToDisk=False):
+	def __init__(self, 
+		_sizes, 
+		_densities, 
+		_omegas, 
+		_maxperiods, 
+		_socialDilemna, 
+		_updateProbability,
+		_probabilityOfMutants,
+		_singleSimulation=False, 
+		_saveToDisk=False):
+		
 		self.configuration = None
 
 		isValid = self.__containsValidParameters(_sizes, _densities, _omegas)
 		if not isValid:
 			raise Exception("Parameters are invalid!")
 		else:
-			self.configuration = self.__generate(_sizes, _densities, _omegas)
+			self.configuration = self.__generate(_sizes, 
+				_densities, 
+				_omegas, 
+				_maxperiods, 
+				_socialDilemna,
+				_updateProbability,
+				_probabilityOfMutants)
+
 			if _singleSimulation:
 				self.configuration = self.configuration[0]
 
-			if _saveToDisk:
-				self.__getJsonConfigFile()
+			# if _saveToDisk:
+			# 	self.getJsonConfigFile()
 
-	def __generate(self, _sizes, _densities, _omegas):
+	def __generate(self, _sizes, _densities, _omegas, _maxperiod, _socialDilemna, _updateProbability, _probabilityOfMutants):
 		config = {}
 		testCounter = 0
 		for size in _sizes:
 			for density in _densities:
 				for omega in _omegas:
-					config[testCounter] = {
-						'size' : size,
-						'density' : density,
-						'omega' : omega
-					}
-					testCounter += 1
+					for updateProbability in _updateProbability:
+						for probabilityOfMutants in _probabilityOfMutants:
+							config[testCounter] = {
+								'size' : size,
+								'density' : density,
+								'omega' : omega,
+								'maxperiods' : _maxperiod,
+								'dilemna' : _socialDilemna,
+								'updateProbability' : updateProbability,
+								'probabilityOfMutants' : probabilityOfMutants
+							}
+							testCounter += 1
 		return config
 
-	def __getJsonConfigFile(self):
-		timestamp = datetime.datetime.now()
-		timestamp = timestamp.strftime("%d-%b-%Y (%H:%M:%S.%f)")
-		with open('configurations/jsonConfig@{}.json'.format(timestamp), 'w') as jsonConfig:
-			json.dump(self.config, jsonConfig, indent=4)
+	# def getJsonConfigFile(self):
+	# 	timestamp = datetime.datetime.now()
+	# 	timestamp = timestamp.strftime("%d-%b-%Y_(%H:%M:%S.%f)")
+	# 	with open('CodeEvolution/configurations/jsonConfig@{}.json'.format(timestamp), 'w') as jsonConfig:
+	# 		json.dump(self.configuration, jsonConfig, indent=4)
 
 	def __containsValidParameters(self, _sizes, _densities, _omegas):
 		ValidSizes = self.__checkValidSizes(_sizes)

@@ -13,16 +13,13 @@ logging.basicConfig(filename="CodeEvolution/logs/test.log", level=logging.DEBUG,
 
 class Network():
 
-	def __init__(self, _config, _socialDilemna):
+	def __init__(self, _config):
 		self.config = _config
 		self.agentList = []
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
-		self.socialDilemna = _socialDilemna
 		self.snapshot = {}
 		self.__initialiseAgentHistories()
-		self.maxPeriods = 10
-		self.updateProbability = 0.2
 		self.finished = False
 
 	def erdosRenyiGenerator(self):
@@ -57,7 +54,7 @@ class Network():
 		agent2Move = agent2.currentStrategy.chooseAction(agent2.currentReputation, agent1Reputation)
 		logging.debug(f"agent {agent2.id}'s move is {agent2Move}")
 		
-		payoff1, payoff2 = self.socialDilemna.playGame(agent1Move, agent2Move)
+		payoff1, payoff2 = self.config['dilemna'].playGame(agent1Move, agent2Move)
 		logging.debug(f"agent {agent1.id} gets payoff {payoff1}")
 		logging.debug(f"agent {agent2.id} gets payoff {payoff2}")
 
@@ -98,17 +95,21 @@ class Network():
 			
 	def runSimulation(self):
 		currentPeriod = 0
-		probOfMutants = 0.01
-		while currentPeriod < self.maxPeriods:
+
+		while currentPeriod < self.config['maxperiods']:
 			self.runSingleTimestep()
 			currentPeriod += 1
-			#self.checkConvergence()
+			self.checkConvergence()
 			r = random.random()
-			if r < probOfMutants:
+			if r < self.config['probabilityOfMutants']:
 				# print("Mutants added")
 				self.addMutants(8, 0.2)
 			# print(self)	
 		self.finished = True
+
+	def checkConvergence(self):
+		pass
+
 
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
@@ -138,7 +139,7 @@ class Network():
 		
 		# Update strategies
 		for agent in self.agentList:
-			agent.updateStrategy(self.updateProbability)
+			agent.updateStrategy(self.config['updateProbability'])
 
 		# NEED TO MAKE SNAPSHOT
 
@@ -167,12 +168,6 @@ class Network():
 
 
 	def __str__(self):
-		# print("Network Summary")
-		# for agent in self.agentList:
-		# 	s = "Agent " + str(agent) + f" with reputation {agent.currentReputation} has neighbours \t" 
-		# 	for neighbour in agent.neighbours:
-		# 		s += "\t" + str(neighbour.id)
-		# 	print(s)
 		if self.finished:
 			s = "FINAL STATE\n"
 		else:
@@ -181,14 +176,6 @@ class Network():
 		for agent in self.agentList:
 			s += str(agent) + "\n"
 		return s
-
-
-
-
-    # def load_data(self):
-    #     with open('tests/data/testfile0') as f:
-    #         G = nx.read_adjlist(f, object=Agent)
-    #     self.population = G
 
 
 def main():
