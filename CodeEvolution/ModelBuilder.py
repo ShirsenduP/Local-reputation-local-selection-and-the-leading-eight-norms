@@ -1,53 +1,83 @@
 import json
 
 from argparse import ArgumentParser
+from math import inf
+
+from validator import Validator
 from configbuilder import ConfigBuilder
 from socialdilemna import PrisonersDilemna
 
 
+
+
 if __name__=="__main__":
 
-	description = "This script builds the configuration file to run a SINGLE simulation with the given parameters defined here"
-	sizeHelp = "Help: The number (int (0,inf)) of agents in the network."
-	densityHelp = "Help: The density (float (0,1]) of agent connections within the Erdos-Renyi generated random graph "
-	omegaHelp = "Help: The probability (float (0,1)) of another interaction within the same timestep"
-	periodHelp = "Help: The maximum number of iterations (int (0,inf)) allowed within the simulation"
 
-
-	parser = ArgumentParser(description=description)
-	parser.add_argument('--name', help="Name of JSON config file")
-	# parser.add_argument('--size', help=sizeHelp, type=int, nargs=1)
-	# parser.add_argument('--density', help=densityHelp, type=float, nargs=1)
-	# parser.add_argument('--omega', help=omegaHelp, type=float, nargs=1)
-	# parser.add_argument('--periods', help=periodHelp, type=int, nargs=1)
+	parser = ArgumentParser(
+		description="This script builds the configuration file to run a SINGLE simulation with the given parameters defined within the 'USER INPUT' section in the file 'ModelBuilder.py'.")
 	args = parser.parse_args()
 
-	# Social PrisonersDilemna
+	#########################################################################################################
+	### BEGIN USER INPUT
+	#########################################################################################################
+
+	# Experiment Name
+	name = "draft"
+
+	# Number of agents in network
+	size = [50]
+
+	# Density of connections in Erdos-Renyi randomly generated network (must be in [0,1])
+	density = [0.6, 0.7] 
+	
+	# Probability distribution of agent strategies (must be floats and sum to 1)
+	distribution = [0.5, 0.5, 0., 0., 0., 0., 0., 0.]
+	
+	# Probability of a further interaction within a single timeperiod (must be in (0,1))
+	omega = [0.9]
+
+	# Maximum number of periods run if no convergence (must be an integer greater than 1)
+	maxperiods = 10
+
+	# Social dilemna, payoff and cost ('PD' is the only acceptable social dilemna currently, benefit > cost)
 	pdBenefit = 2
 	pdCost = 1
-
-	# Network
-	size = [50, 100, 150]
-	density = [0.6, 0.7] 
-	distribution = [0.5, 0.5, 0, 0, 0, 0, 0, 0]
-
-	if sum(distribution) != 1:
-		raise ValueError(f"Distribution {distribution} must sum to 1.")
-
-	omega = [0.99]
-
-	# Model
-	maxperiods = 1000
 	socialDilemna = ('PD', pdBenefit, pdCost)
+	# TODO: Check if pdBenefit and pdCost is numeric
+
+	# Probability of any agent updating their strategy within a single time period (must be in [0,1])
 	updateProbability = [0.2]
+
+	# Mutant ID and Probability: [0,7] represent the leading eight, [8,9] represent All-D/All-C respectively
 	mutantID = 8
 	probabilityOfMutants = [0.01]
+
+	#########################################################################################################
+	### END USER INPUT
+	#########################################################################################################
+	
+	# Parameter Input Validation
+	Validator = Validator()
+	Validator.checkPrisonerDilemnaParameters(pdBenefit, pdCost)
+	Validator.checkListTypes(size, int)
+	Validator.checkRangeOfValuesInList(size, [0, inf], edges=False)
+	Validator.checkListTypes(density, float)
+	Validator.checkRangeOfValuesInList(density, [0, 1], edges=False)
+	Validator.checkListTypes(distribution, float)
+	Validator.checkRangeOfValuesInList(distribution, [0,1])
+	Validator.checkValidDistribution(distribution)
+	Validator.checkListTypes(omega, float)
+	Validator.checkMaxPeriods(maxperiods)
+	Validator.checkRangeOfValuesInList(updateProbability, [0, 1])
+	Validator.checkRangeOfValuesInList(probabilityOfMutants, [0, 1], edges=False)
+
+
+
+
+	# Generate config file
 	singleSimulation = False
 	saveToDisk = True
 
-	if sum(distribution) != 1:
-		raise ValueError
-		
 	config = ConfigBuilder(
 		_sizes=size,
 		_densities=density,
@@ -61,8 +91,8 @@ if __name__=="__main__":
 		_singleSimulation=singleSimulation,
 		_saveToDisk=saveToDisk)
 
-
-	with open('CodeEvolution/configurations/{}.json'.format(args.name), 'w') as jsonConfig:
+	with open('CodeEvolution/configurations/{}.json'.format(name), 'w') as jsonConfig:
 		json.dump(config.configuration, jsonConfig, indent=4)
 
-# TODO - Add limits to parameters
+
+
