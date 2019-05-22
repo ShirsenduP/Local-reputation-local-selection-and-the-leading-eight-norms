@@ -1,9 +1,0 @@
-{
-    "size": 50,
-    "density": 0.6,
-    "omega": 0.99,
-    "maxperiods": 1000,
-    "dilemna": "PD",
-    "updateProbability": 0.2,
-    "probabilityOfMutants": 0.01
-}

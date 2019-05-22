@@ -14,7 +14,9 @@ class Agent():
 		4: "cornflowerblue",
 		5: "royalblue",
 		6: "plum",
-		7: "lightpink"
+		7: "lightpink",
+		8: "black",
+		9: "green"
 	}
 
 	def __init__(self, _id, _strategy):
@@ -63,6 +65,8 @@ class Agent():
 		else:
 			opponentCurrentReputation = self.currentSocialNorm.assignReputation(opponentPastReputation, opponentNeighbourReputation, opponentPastMove)
 			return opponentCurrentReputation
+		# TODO: Check how we find our own reputation, can't be hardcoded, has to be calculated using own social norm
+		# TODO: Replicator dyamics (in model_experiment.pdf)
 			
 	
 	def summary(self):
@@ -86,7 +90,7 @@ class Agent():
 		return s
 
 	def findBestLocalStrategy(self):
-		"""Find the strategy of your best performing neighbour."""
+		"""Find the strategy of your best performing neighbour. (Copy the best)"""
 		neighbourUtilities = list(map(lambda x:x.currentUtility, self.neighbours))
 		maxLocalUtility = max(neighbourUtilities)
 		bestPerformingAgentIndex = neighbourUtilities.index(maxLocalUtility)
@@ -103,8 +107,6 @@ class Agent():
 		s += f"Utility: \t {self.currentUtility}"
 		return s
 
-	# def __eq__(self, otherAgent):
-	# 	return self.id == otherAgent.id
 
 
 def main():
@@ -113,28 +115,11 @@ def main():
 if __name__ == "__main__":
 	main()
 
-"""
-
-TODO:
-
-1. Rewrite self.neighbours to be a dictionary
-	keys are neighbours
-	values are dictionaries
-		keys are chronological interaction
-		values are the record of actions ijX and the resulting reputation for BOTH parties -> another dictionary?
-2. __eq__ method to check if two agents are equal? It breaks the code currently, need to find oput why
-
-!!!!
-3. 	need to sort out getOpponentsReputation function, currently it just outputs the persons current reputation, but need to base it on the last interaction!
-
-4.	probability of changing strategy?
-
-5. findBestLocalStrategy -> What if multiple agents have the same utility but different strategies? random choice, right now its just updating to whichever one it finds first!
 
 
-"""
-# 6. FINDBESTLOCALSTRATEGY -> social norm class with previous interaction history with some neighbour, if None, make random 1/0 choice
-
+# TODO: findBestLocalStrategy -> What if multiple agents have the same utility but different strategies? random choice, right now its just updating to whichever one it finds first!
+# TODO: findBestLocalStrategy -> social norm class with previous interaction history with some neighbour, if None, make random 1/0 choice
+# TODO: reset payoff to 0 at the beginning of each timeperiod
 
 
 

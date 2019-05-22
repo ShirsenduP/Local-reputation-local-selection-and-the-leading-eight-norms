@@ -35,10 +35,3 @@ def main():
 if __name__ == "__main__":
 	main()
 
-"""
-
-TODO:
-
-1	Error checking to sanitise inputs -> no human interaction necessary, is this worth doing?
-
-"""

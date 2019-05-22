@@ -6,14 +6,18 @@ class ConfigBuilder():
 	def __init__(self, 
 		_sizes, 
 		_densities, 
+		_distribution,
 		_omegas, 
 		_maxperiods, 
 		_socialDilemna, 
 		_updateProbability,
+		_mutantID,
 		_probabilityOfMutants,
 		_singleSimulation=False, 
 		_saveToDisk=False):
 		
+		# TODO: raise exceptions for invalid parameters! 
+
 		self.configuration = None
 
 		isValid = self.__containsValidParameters(_sizes, _densities, _omegas)
@@ -21,20 +25,20 @@ class ConfigBuilder():
 			raise Exception("Parameters are invalid!")
 		else:
 			self.configuration = self.__generate(_sizes, 
-				_densities, 
+				_densities,
+				_distribution, 
 				_omegas, 
 				_maxperiods, 
 				_socialDilemna,
 				_updateProbability,
+				_mutantID,
 				_probabilityOfMutants)
 
 			if _singleSimulation:
 				self.configuration = self.configuration[0]
 
-			# if _saveToDisk:
-			# 	self.getJsonConfigFile()
 
-	def __generate(self, _sizes, _densities, _omegas, _maxperiod, _socialDilemna, _updateProbability, _probabilityOfMutants):
+	def __generate(self, _sizes, _densities, _distribution, _omegas, _maxperiod, _socialDilemna, _updateProbability, _mutantID, _probabilityOfMutants):
 		config = {}
 		testCounter = 0
 		for size in _sizes:
@@ -42,23 +46,21 @@ class ConfigBuilder():
 				for omega in _omegas:
 					for updateProbability in _updateProbability:
 						for probabilityOfMutants in _probabilityOfMutants:
+							print(testCounter)
 							config[testCounter] = {
 								'size' : size,
 								'density' : density,
+								'distribution' : _distribution,
 								'omega' : omega,
 								'maxperiods' : _maxperiod,
 								'dilemna' : _socialDilemna,
 								'updateProbability' : updateProbability,
+								'mutantID' : _mutantID,
 								'probabilityOfMutants' : probabilityOfMutants
 							}
 							testCounter += 1
+							
 		return config
-
-	# def getJsonConfigFile(self):
-	# 	timestamp = datetime.datetime.now()
-	# 	timestamp = timestamp.strftime("%d-%b-%Y_(%H:%M:%S.%f)")
-	# 	with open('CodeEvolution/configurations/jsonConfig@{}.json'.format(timestamp), 'w') as jsonConfig:
-	# 		json.dump(self.configuration, jsonConfig, indent=4)
 
 	def __containsValidParameters(self, _sizes, _densities, _omegas):
 		ValidSizes = self.__checkValidSizes(_sizes)
@@ -85,13 +87,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
-
-"""
-TODO:
-
-1. Redo the checking for single input or list of inputs
-2. Redo the checking to raise exceptions and not to try to sanitise the input
-
-"""
 

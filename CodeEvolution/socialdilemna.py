@@ -13,7 +13,7 @@ class SocialDilemna():
 		return [agent1Payoff, agent2Payoff]
 
 class PrisonersDilemna(SocialDilemna):
-	"""Prisoner's Dilemna game parameterised by a benefit and a cost, the benefit is received by A if B cooperates with them, and the cost is paid by A if it cooperates with B."""
+	"""Prisoner's Dilemna game parameterised by a benefit and a cost, the benefit is received by agent1 if agent2 cooperates with them, and the cost is paid by agent1 if it cooperates with agent2."""
 	
 	def __init__(self, benefit, cost):
 		SocialDilemna.__init__(self)

@@ -1,5 +1,10 @@
 import random
 import logging
+import csv
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 from time import gmtime, strftime
 
 from configbuilder import ConfigBuilder
@@ -12,12 +17,12 @@ def main():
 	### Logging
 	now = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
 	logger = logging.getLogger('CodeEvolution')
-	logger.setLevel(logging.WARN)
+	logger.setLevel(logging.CRITICAL)
 	# fh = logging.FileHandler(f'CodeEvolution/logs/{now}.log')
 	fh = logging.FileHandler('CodeEvolution/logs/test.log')
-	fh.setLevel(logging.WARN)
+	fh.setLevel(logging.CRITICAL)
 	ch = logging.StreamHandler()
-	ch.setLevel(logging.ERROR)
+	ch.setLevel(logging.CRITICAL)
 
 	formatter = logging.Formatter('%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
 	fh.setFormatter(formatter)
@@ -26,9 +31,7 @@ def main():
 	logger.addHandler(fh)
 	logger.addHandler(ch)
 
-
-
-
+							
 	###
 	### USER-INPUT
 	###
@@ -38,14 +41,16 @@ def main():
 	pdCost = 1
 
 	# Network
-	size = [50]
+	size = [100]
 	density = [0.6] 
-	omega = [0.99]
+	distribution = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	omega = [0.9]
 
 	# Model
-	maxperiods = 1000
+	maxperiods = 500
 	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
 	updateProbability = [0.2]
+	mutantID = 8
 	probabilityOfMutants = [0.01]
 	singleSimulation = True
 	saveToDisk = False
@@ -57,10 +62,12 @@ def main():
 	config = ConfigBuilder(
 		_sizes=size,
 		_densities=density,
+		_distribution=distribution,
 		_omegas=omega,
 		_maxperiods=maxperiods,
 		_socialDilemna=socialDilemna,
 		_updateProbability=updateProbability,
+		_mutantID=mutantID,
 		_probabilityOfMutants=probabilityOfMutants,
 		_singleSimulation=singleSimulation,
 		_saveToDisk=saveToDisk)
@@ -81,34 +88,55 @@ def main():
 	logger.info("Network Initialising")
 	N = Network(config.configuration)
 
-	print(N)
-
+	# print(N)
+	print("Start")
 	logger.info("Simulation Initialising")
 	N.runSimulation()
 	logger.info("Simulation Terminating")
 
-	print(N)
+	print(N.results.actions)
+
+	# plt.plot(N.results.strategyProportions[0])
+	# plt.plot(N.results.strategyProportions[8])
+	# plt.plot(N.results.utilities[0])
+	# plt.plot(N.results.utilities[8])
+	plt.plot(N.results.actions['C'])
+	plt.plot(N.results.actions['D'])
+	plt.show()
+
+	# np.savetxt("CodeEvolution/results/strategies.csv", N.results['strategies'], delimiter=',')
+	# print(N)
+	# print(N.results['strategies'])
+	# print(N.results['averageUtility'])
 	logger.info("Network Terminating")
+	print("End")
+
+	# p = pd.DataFrame(N.results['strategies'])
+	# print(p)
+
+
+
+
 
 if __name__ == "__main__":
 	main()
 
 
 
-"""
+# TODO: UML diagram describing package - for dissertation
+# TODO: Docstrings
+# TODO: pandas dataframes
+# TODO: Output to csv -> class on it own
+# TODO: Load the data into matplotlib
+# TODO: Maybe add karoly on the github repo
+# TODO: read karoly papers
 
-TODO:
-1. Setup as package so it can easily be installed on any linux system with help docs. 
-2. Create builder class to setup parameters of model, then change Network class to just accept a builder object to seperate the config methods to the simulation methods
-3. When adding neighbours, don't add if already neighbours! repeated agents in agent.neighbours list!
-5. SocialDilemna class -> subclasses can be input to network to choose and parameterise the game easily
-
-4. DOCSTRINGS!!!
-6. UML diagram to explain class structure
-
-7. agents are currently only initialised with 0/1 strategyIDs for debugging purposes
-"""
+# TODO: Priority
+# TODO: simones publications with karoly, 
+# TODO: write unit tests first 
+# TODO: logging functions
+# TODO: then reproduce iwasa paper
+# otree behavioural experiments (look on simones page)
 
 
-
-
+# TODO: Nature, Science, Journal of theoretical biology, proceeding of the royal society, philosophical transcations of the royal society, AVOID behavioural economics
