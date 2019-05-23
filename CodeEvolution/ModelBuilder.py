@@ -1,5 +1,4 @@
-import json
-
+from json import dump
 from argparse import ArgumentParser
 from math import inf
 
@@ -7,11 +6,7 @@ from validator import Validator
 from configbuilder import ConfigBuilder
 from socialdilemna import PrisonersDilemna
 
-
-
-
 if __name__=="__main__":
-
 
 	parser = ArgumentParser(
 		description="This script builds the configuration file to run a SINGLE simulation with the given parameters defined within the 'USER INPUT' section in the file 'ModelBuilder.py'.")
@@ -25,10 +20,10 @@ if __name__=="__main__":
 	name = "draft"
 
 	# Number of agents in network
-	size = [50]
+	size = [50, 100, 150]
 
 	# Density of connections in Erdos-Renyi randomly generated network (must be in [0,1])
-	density = [0.6, 0.7] 
+	density = [0.6, 0.7, 0.8, 0.9] 
 	
 	# Probability distribution of agent strategies (must be floats and sum to 1)
 	distribution = [0.5, 0.5, 0., 0., 0., 0., 0., 0.]
@@ -43,7 +38,6 @@ if __name__=="__main__":
 	pdBenefit = 2
 	pdCost = 1
 	socialDilemna = ('PD', pdBenefit, pdCost)
-	# TODO: Check if pdBenefit and pdCost is numeric
 
 	# Probability of any agent updating their strategy within a single time period (must be in [0,1])
 	updateProbability = [0.2]
@@ -59,6 +53,7 @@ if __name__=="__main__":
 	# Parameter Input Validation
 	Validator = Validator()
 	Validator.checkPrisonerDilemnaParameters(pdBenefit, pdCost)
+	Validator.checkNumeric([pdBenefit, pdCost])
 	Validator.checkListTypes(size, int)
 	Validator.checkRangeOfValuesInList(size, [0, inf], edges=False)
 	Validator.checkListTypes(density, float)
@@ -70,8 +65,6 @@ if __name__=="__main__":
 	Validator.checkMaxPeriods(maxperiods)
 	Validator.checkRangeOfValuesInList(updateProbability, [0, 1])
 	Validator.checkRangeOfValuesInList(probabilityOfMutants, [0, 1], edges=False)
-
-
 
 
 	# Generate config file
@@ -91,8 +84,9 @@ if __name__=="__main__":
 		_singleSimulation=singleSimulation,
 		_saveToDisk=saveToDisk)
 
+	# Export to configurations directory
 	with open('CodeEvolution/configurations/{}.json'.format(name), 'w') as jsonConfig:
-		json.dump(config.configuration, jsonConfig, indent=4)
+		dump(config.configuration, jsonConfig, indent=4)
 
-
+	print(f"{len(config.configuration)} Experiments ready")
 

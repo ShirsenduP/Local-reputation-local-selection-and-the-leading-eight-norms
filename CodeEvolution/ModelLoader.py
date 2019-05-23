@@ -26,7 +26,7 @@ if __name__=="__main__":
 
 	experimentName = args.filepath.split(sep='/')[-1]
 	numberOfExperiments = len(tests.keys())
-	repeatPerExperiment = 3
+	repeatPerExperiment = 100
 
 	print(f"Total {numberOfExperiments} experiments")
 	results = {}
