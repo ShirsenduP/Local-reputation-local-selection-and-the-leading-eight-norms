@@ -20,7 +20,7 @@ if __name__=="__main__":
 	name = "draft"
 
 	# Number of agents in network
-	size = [50, 100, 150]
+	size = [100, 150]
 
 	# Density of connections in Erdos-Renyi randomly generated network (must be in [0,1])
 	density = [0.6, 0.7, 0.8, 0.9] 
@@ -29,22 +29,23 @@ if __name__=="__main__":
 	distribution = [0.5, 0.5, 0., 0., 0., 0., 0., 0.]
 	
 	# Probability of a further interaction within a single timeperiod (must be in (0,1))
-	omega = [0.9]
+	omega = [0.95]
 
 	# Maximum number of periods run if no convergence (must be an integer greater than 1)
-	maxperiods = 10
+	maxperiods = 1000
 
 	# Social dilemna, payoff and cost ('PD' is the only acceptable social dilemna currently, benefit > cost)
 	pdBenefit = 2
 	pdCost = 1
 	socialDilemna = ('PD', pdBenefit, pdCost)
+	#TODO: At some point this will need to be generalisable to other games
 
 	# Probability of any agent updating their strategy within a single time period (must be in [0,1])
 	updateProbability = [0.2]
 
 	# Mutant ID and Probability: [0,7] represent the leading eight, [8,9] represent All-D/All-C respectively
 	mutantID = 8
-	probabilityOfMutants = [0.01]
+	probabilityOfMutants = [0.05]
 
 	#########################################################################################################
 	### END USER INPUT

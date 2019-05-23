@@ -1,6 +1,7 @@
 import random
 import logging
 import numpy as np
+from collections import OrderedDict
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -24,7 +25,6 @@ class Network():
 		self.agentList = []
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
-		self.snapshot = {}
 		self.__initialiseAgentHistories()
 		self.currentPeriod = 0
 		self.results = Results()
@@ -32,6 +32,16 @@ class Network():
 			'C' : 0, 
 			'D' : 0
 		}
+		self.checkMinTwoNeighbours()
+		self.convergenceHistory = OrderedDict()
+
+	def checkMinTwoNeighbours(self):
+		"""Checks whether each node (agent) in the graph (network) has a minimum degree (#of neighbours) of 2."""
+
+		for agent in self.agentList:
+			# print(len(agent.neighbours))
+			if len(agent.neighbours) < 2:
+				raise Exception("One or more agents of this network does not satisfy the minimum two neighbours requirement. Try adjusting the density higher or increase the size of the network.")
 
 	def resetTempActions(self):
 		"""Reset the cooperation/defection counter to zero. To be used at the end of each timeperiod after actions have been recorded."""
@@ -85,6 +95,8 @@ class Network():
 
 
 	def runSimulation(self):
+		
+		convergenceCheckIntervals = random.sample(range(self.config['maxperiods']), 15)
 		self.initStrategies()
 		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
@@ -99,6 +111,8 @@ class Network():
 				self.addMutants(self.config['mutantID'], mutantProbability) 
 			self.currentPeriod += 1
 			self.results.updateActions(self.tempActions)
+			if self.currentPeriod in convergenceCheckIntervals:
+				self.grabSnapshot()
 
 	def erdosRenyiGenerator(self):
 		strategyProbabilities = self.config['distribution']
@@ -124,35 +138,36 @@ class Network():
 
 	def playSocialDilemna(self):
 
+		# Two agents chosen randomly from the population
 		agent1, agent2 = self.chooseTwoAgents()
 
+		# Each agent discover's the other's reputation
 		agent2Reputation = agent1.getOpponentsReputation(agent2)
 		agent1Reputation = agent2.getOpponentsReputation(agent1)
 		
 		logging.debug(f"agent {agent1.id} ({agent1.currentStrategy.currentStrategyID}) sees agent {agent2.id}'s reputation is {agent2Reputation}")
 		logging.debug(f"agent {agent2.id} ({agent2.currentStrategy.currentStrategyID}) sees agent {agent1.id}'s reputation is {agent1Reputation}")
 
+		# Each agent calculates their move according to their behavioural strategy
 		agent1Move = agent1.currentStrategy.chooseAction(agent1.currentReputation, agent2Reputation)
 		self.tempActions[agent1Move] += 1
 		logging.debug(f"agent {agent1.id}'s move is {agent1Move}")
-
 		agent2Move = agent2.currentStrategy.chooseAction(agent2.currentReputation, agent1Reputation)
 		self.tempActions[agent2Move] += 1
 		logging.debug(f"agent {agent2.id}'s move is {agent2Move}")
 		
-		# self.recordInteraction(agent1Move)
-		# self.recordInteraction(agent2Move)
+		# Calculate each agent's payoff
 		payoff1, payoff2 = self.config['dilemna'].playGame(agent1Move, agent2Move)
 		logging.debug(f"agent {agent1.id} gets payoff {payoff1}")
 		logging.debug(f"agent {agent2.id} gets payoff {payoff2}")
 
-		## Update agent utilities and reputations
+		# Update agent utilities and reputations
 		agent1.updateUtility(payoff1)
 		agent2.updateUtility(payoff2)
 		agent1.updateReputation(agent2Reputation, agent1Move)
 		agent2.updateReputation(agent1Reputation, agent2Move)
 
-		## Update interaction history
+		# Update interaction history
 		agent1Interaction = {
 			'Opponent': agent2,
 			'Focal Reputation': agent1.currentReputation,
@@ -160,7 +175,7 @@ class Network():
 			'Focal Move': agent1Move, 
 			'Opponent Move': agent2Move
 		}
-		# agent1.recordInteraction(agent1Interaction)		
+		agent1.recordInteraction(agent1Interaction)		
 		
 		agent2Interaction = {
 			'Opponent': agent1,
@@ -169,7 +184,7 @@ class Network():
 			'Focal Move': agent2Move, 
 			'Opponent Move': agent1Move
 		}
-		# agent2.recordInteraction(agent2Interaction)
+		agent2.recordInteraction(agent2Interaction)
 
 
 	def showHistory(self):
@@ -217,9 +232,8 @@ class Network():
 		for agent in self.agentList:
 			agent.currentUtility = 0
 
-	def grabSnapshot(self, period):
-		self.snapshot[period] = self.agentList.copy()
-		#TODO: Need to finish snapshot function for convergence check!
+	def grabSnapshot(self):
+		self.convergenceHistory[self.currentPeriod] = self.agentList.copy()
 
 	def __initialiseAgentHistories(self):
 		for agent in self.agentList:
@@ -256,7 +270,6 @@ if __name__ == "__main__":
 
 	
 # TODO: Implement check for minimum 2 neighbours per agent
-# TODO: record average utilities of each strategy
 	
 
 

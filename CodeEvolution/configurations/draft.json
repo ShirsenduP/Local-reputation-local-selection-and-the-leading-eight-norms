@@ -1,6 +1,6 @@
 {
     "0": {
-        "size": 50,
+        "size": 100,
         "density": 0.6,
         "distribution": [
             0.5,
@@ -12,8 +12,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -21,10 +21,10 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     },
     "1": {
-        "size": 50,
+        "size": 100,
         "density": 0.7,
         "distribution": [
             0.5,
@@ -36,8 +36,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -45,10 +45,10 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     },
     "2": {
-        "size": 50,
+        "size": 100,
         "density": 0.8,
         "distribution": [
             0.5,
@@ -60,8 +60,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -69,10 +69,10 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     },
     "3": {
-        "size": 50,
+        "size": 100,
         "density": 0.9,
         "distribution": [
             0.5,
@@ -84,8 +84,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -93,10 +93,10 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     },
     "4": {
-        "size": 100,
+        "size": 150,
         "density": 0.6,
         "distribution": [
             0.5,
@@ -108,8 +108,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -117,10 +117,10 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     },
     "5": {
-        "size": 100,
+        "size": 150,
         "density": 0.7,
         "distribution": [
             0.5,
@@ -132,8 +132,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -141,10 +141,10 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     },
     "6": {
-        "size": 100,
+        "size": 150,
         "density": 0.8,
         "distribution": [
             0.5,
@@ -156,8 +156,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -165,105 +165,9 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     },
     "7": {
-        "size": 100,
-        "density": 0.9,
-        "distribution": [
-            0.5,
-            0.5,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "omega": 0.9,
-        "maxperiods": 10,
-        "dilemna": [
-            "PD",
-            2,
-            1
-        ],
-        "updateProbability": 0.2,
-        "mutantID": 8,
-        "probabilityOfMutants": 0.01
-    },
-    "8": {
-        "size": 150,
-        "density": 0.6,
-        "distribution": [
-            0.5,
-            0.5,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "omega": 0.9,
-        "maxperiods": 10,
-        "dilemna": [
-            "PD",
-            2,
-            1
-        ],
-        "updateProbability": 0.2,
-        "mutantID": 8,
-        "probabilityOfMutants": 0.01
-    },
-    "9": {
-        "size": 150,
-        "density": 0.7,
-        "distribution": [
-            0.5,
-            0.5,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "omega": 0.9,
-        "maxperiods": 10,
-        "dilemna": [
-            "PD",
-            2,
-            1
-        ],
-        "updateProbability": 0.2,
-        "mutantID": 8,
-        "probabilityOfMutants": 0.01
-    },
-    "10": {
-        "size": 150,
-        "density": 0.8,
-        "distribution": [
-            0.5,
-            0.5,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "omega": 0.9,
-        "maxperiods": 10,
-        "dilemna": [
-            "PD",
-            2,
-            1
-        ],
-        "updateProbability": 0.2,
-        "mutantID": 8,
-        "probabilityOfMutants": 0.01
-    },
-    "11": {
         "size": 150,
         "density": 0.9,
         "distribution": [
@@ -276,8 +180,8 @@
             0.0,
             0.0
         ],
-        "omega": 0.9,
-        "maxperiods": 10,
+        "omega": 0.95,
+        "maxperiods": 1000,
         "dilemna": [
             "PD",
             2,
@@ -285,6 +189,6 @@
         ],
         "updateProbability": 0.2,
         "mutantID": 8,
-        "probabilityOfMutants": 0.01
+        "probabilityOfMutants": 0.05
     }
 }

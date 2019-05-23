@@ -41,15 +41,15 @@ def main():
 	pdCost = 1
 
 	# Network
-	size = [100]
-	density = [0.6] 
+	size = [50]
+	density = [0.1] 
 	distribution = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	omega = [0.9]
 
 	# Model
 	maxperiods = 500
 	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
-	updateProbability = [0.2]
+	updateProbability = [0.01]
 	mutantID = 8
 	probabilityOfMutants = [0.01]
 	singleSimulation = True
@@ -94,15 +94,15 @@ def main():
 	N.runSimulation()
 	logger.info("Simulation Terminating")
 
-	print(N.results.actions)
+	# print(N.results.actions)
 
 	# plt.plot(N.results.strategyProportions[0])
 	# plt.plot(N.results.strategyProportions[8])
 	# plt.plot(N.results.utilities[0])
 	# plt.plot(N.results.utilities[8])
-	plt.plot(N.results.actions['C'])
-	plt.plot(N.results.actions['D'])
-	plt.show()
+	# plt.plot(N.results.actions['C'])
+	# plt.plot(N.results.actions['D'])
+	# plt.show()
 
 	# np.savetxt("CodeEvolution/results/strategies.csv", N.results['strategies'], delimiter=',')
 	# print(N)
@@ -132,11 +132,11 @@ if __name__ == "__main__":
 # TODO: read karoly papers
 
 # TODO: Priority
-# TODO: simones publications with karoly, 
-# TODO: write unit tests first 
-# TODO: logging functions
-# TODO: then reproduce iwasa paper
-# otree behavioural experiments (look on simones page)
+	# TODO: simones publications with karoly, 
+	# TODO: write unit tests first 
+	# TODO: logging functions
+	# TODO: then reproduce iwasa paper
+	# otree behavioural experiments (look on simones page)
 
 
 # TODO: Nature, Science, Journal of theoretical biology, proceeding of the royal society, philosophical transcations of the royal society, AVOID behavioural economics

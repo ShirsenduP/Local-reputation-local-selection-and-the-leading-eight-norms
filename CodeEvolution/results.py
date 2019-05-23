@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 class Results():
 
@@ -22,9 +23,7 @@ class Results():
 		utilities = pd.DataFrame(self.utilities)
 		results = pd.concat([actions, strategyProportions, utilities], axis=1)
 		return results
-		# results.to_csv(outputPath)
 
-		# return (self.strategyProportions, self.utilities, self.actions)
 
 	def __str__(self):
 		s = str(self.strategyProportions)
@@ -48,4 +47,7 @@ def averageOverIterations(iterations):
 def exportResultsToCSV(experimentName, experimentResults, experimentNumber):
 	"""Export the results from a single dataframe averaged over multiple iterations as a 'experimentName.csv' file."""
 
-	experimentResults.to_csv(f"CodeEvolution/results/{experimentName}-{experimentNumber}.csv")
+	if experimentName not in os.listdir("CodeEvolution/results"):
+		os.mkdir(f"CodeEvolution/results/{experimentName}")
+
+	experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentName}-{experimentNumber}.csv")

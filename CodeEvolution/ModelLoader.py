@@ -1,24 +1,25 @@
-from argparse import ArgumentParser
 import json
-import time
-import csv
-import numpy as np
-import pandas as pd
+import profile
+
+from argparse import ArgumentParser
+from multiprocessing import Pool
 
 from network import Network
 from socialdilemna import PrisonersDilemna
 from results import averageOverIterations, exportResultsToCSV
 
-if __name__=="__main__":
-	description = "Run a single simulation from a JSON config file"
-	filepathHelp = "Filepath to JSON config file"
-	outputHelp = "Show final state of network"
+description = "Run a single simulation from a JSON config file"
+filepathHelp = "Filepath to JSON config file"
+outputHelp = "Show final state of network"
+profilerHelp = "Run profiler and output to tests directory"
 
-	parser = ArgumentParser(description=description)
-	parser.add_argument('filepath', metavar='F', help=filepathHelp, type=str)
-	parser.add_argument('-o', '--output', help=outputHelp, action="store_true")
-	args = parser.parse_args()
+parser = ArgumentParser(description=description)
+parser.add_argument('filepath', metavar='F', help=filepathHelp, type=str)
+parser.add_argument('-o', '--output', help=outputHelp, action='store_true')
+parser.add_argument('-p', '--profiler', help=profilerHelp, action='store_true')
+args = parser.parse_args()
 
+def main():
 	
 	with open(args.filepath) as config:	
 		tests = json.load(config)
@@ -26,12 +27,13 @@ if __name__=="__main__":
 
 	experimentName = args.filepath.split(sep='/')[-1]
 	numberOfExperiments = len(tests.keys())
-	repeatPerExperiment = 100
+	repeatPerExperiment = 3
 
 	print(f"Total {numberOfExperiments} experiments")
 	results = {}
 
 	for experimentNumber in range(numberOfExperiments):
+		print(f"Simulation {experimentNumber}/{numberOfExperiments}", end=" ", flush=True)
 		dilemna = tests[str(experimentNumber)]['dilemna']
 		for repeat in range(repeatPerExperiment):
 			tests[str(experimentNumber)]['dilemna'] = PrisonersDilemna(dilemna[1], dilemna[2])
@@ -44,6 +46,12 @@ if __name__=="__main__":
 
 		# Export a single CSV per experiment
 		exportResultsToCSV(experimentName, experimentNumberResult, experimentNumber)
-	
-		print(".")
 
+		print("\tdone")
+
+	experimentInputs = list(range(numberOfExperiments))
+
+if __name__=="__main__":
+	main()
+
+	

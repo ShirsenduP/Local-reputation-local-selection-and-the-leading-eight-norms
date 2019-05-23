@@ -49,7 +49,7 @@ class Agent():
 				pass
 				# print("update to mutant strat")
 			self.currentStrategy.changeStrategy(newStrategyID)
-			self.currentSocialNorm.updateSocialNorm(newStrategyID)
+			self.currentSocialNorm.updateSocialNorm(newStrategyID) #TODO: UPDATE so everyone uses same social norm
 
 	def getOpponentsReputation(self, opponent):
 		"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour."""
