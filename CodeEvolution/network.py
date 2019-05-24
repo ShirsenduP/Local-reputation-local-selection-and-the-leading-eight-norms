@@ -23,6 +23,7 @@ class Network():
 	def __init__(self, _config):
 		self.config = _config
 		self.agentList = []
+		self.socialNorm = SocialNorm(_config['socialNorm'])
 		self.population = nx.Graph()
 		self.erdosRenyiGenerator()
 		self.__initialiseAgentHistories()
@@ -92,11 +93,13 @@ class Network():
 		for key, value in utilities.items():
 			self.results.utilities[key].append(value)
 
-
+	def compareNetworkState(self, state1, state2):
+		pass
+		# TODO: implement compareNetworkState(self, state1, state2)
 
 	def runSimulation(self):
 		
-		convergenceCheckIntervals = random.sample(range(self.config['maxperiods']), 15)
+		convergenceCheckIntervals = random.sample(range(self.config['maxperiods']), 1)
 		self.initStrategies()
 		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
@@ -120,7 +123,7 @@ class Network():
 
 		for agentID in range(self.config['size']):
 			randomStrategyIndex = random.randint(0, len(strategyDistribution)-1)
-			self.agentList.append(Agent(_id=agentID, _strategy=strategyDistribution[randomStrategyIndex]))
+			self.agentList.append(Agent(_id=agentID, _strategy=strategyDistribution[randomStrategyIndex], _socialNorm=self.config['socialNorm']))
 			strategyDistribution.pop(randomStrategyIndex)
 			self.population.add_node(self.agentList[agentID])
 
@@ -136,15 +139,44 @@ class Network():
 							self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
 						
 
+
+	def getOpponentsReputation(self, agent1, agent2):
+		"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour."""
+
+		# NOTE: Only when two agents are interacting are their H-Score is calculated through the *population-wide* social norm, each agent could be imbued with their own H-score attribute but don't think its necessary -> might be if it takes too long to calculate each time. If any agent's previous interaction with their randomly chosen neighbour doesn't exist, then randomly choose a reputation
+
+		agent2Neighbour = random.choice(agent2.neighbours)
+		agent1Neighbour = random.choice(agent1.neighbours)
+	
+		agent2ThirdPartyInteraction = agent2.history[agent2Neighbour]
+		agent1ThirdPartyInteraction = agent1.history[agent1Neighbour]
+
+		try:
+			agent2PastReputation = agent2ThirdPartyInteraction['Focal Reputation']
+			agent2NeighbourPastReputation = agent2ThirdPartyInteraction['Opponent Reputation']
+			agent2PastMove = agent2ThirdPartyInteraction['Focal Move']
+		except:
+			agent2Reputation = random.randint(0,1)
+		else:
+			agent2Reputation = self.socialNorm.assignReputation(agent2PastReputation, agent2NeighbourPastReputation, agent2PastMove)
+
+		try:
+			agent1PastReputation = agent1ThirdPartyInteraction['Focal Reputation']
+			agent1NeighbourPastReputation = agent1ThirdPartyInteraction['Opponent Reputation']
+			agent1PastMove = agent1ThirdPartyInteraction['Focal Move']
+		except:
+			agent1Reputation = random.randint(0,1)
+		else:
+			agent1Reputation = self.socialNorm.assignReputation(agent1PastReputation, agent1NeighbourPastReputation, agent1PastMove)
+
+		return (agent2Reputation, agent1Reputation)
+
 	def playSocialDilemna(self):
 
 		# Two agents chosen randomly from the population
 		agent1, agent2 = self.chooseTwoAgents()
+		agent2Reputation, agent1Reputation = self.getOpponentsReputation(agent1, agent2)
 
-		# Each agent discover's the other's reputation
-		agent2Reputation = agent1.getOpponentsReputation(agent2)
-		agent1Reputation = agent2.getOpponentsReputation(agent1)
-		
 		logging.debug(f"agent {agent1.id} ({agent1.currentStrategy.currentStrategyID}) sees agent {agent2.id}'s reputation is {agent2Reputation}")
 		logging.debug(f"agent {agent2.id} ({agent2.currentStrategy.currentStrategyID}) sees agent {agent1.id}'s reputation is {agent1Reputation}")
 
@@ -164,8 +196,8 @@ class Network():
 		# Update agent utilities and reputations
 		agent1.updateUtility(payoff1)
 		agent2.updateUtility(payoff2)
-		agent1.updateReputation(agent2Reputation, agent1Move)
-		agent2.updateReputation(agent1Reputation, agent2Move)
+		# agent1.updateReputation(agent2Reputation, agent1Move)
+		# agent2.updateReputation(agent1Reputation, agent2Move)
 
 		# Update interaction history
 		agent1Interaction = {
