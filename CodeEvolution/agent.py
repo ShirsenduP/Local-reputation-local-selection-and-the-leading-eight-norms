@@ -1,6 +1,5 @@
 import random
 from strategy import Strategy
-from socialnorm import SocialNorm
 import logging
 
 class Agent():
@@ -19,20 +18,14 @@ class Agent():
 		9: "green"
 	}
 
-	def __init__(self, _id, _strategy, _socialNorm):
+	def __init__(self, _id, _strategy):
 		self.id = _id
 		self.currentStrategy = Strategy(_strategy)
-		# self.currentSocialNorm = SocialNorm(_socialNorm)
 		self.currentReputation = random.choice(self.reputation)
-		self.neighbours = []
-		self.colour = self.strategyColour[self.currentStrategy.currentStrategyID]
-		self.history = {} # get LAST partner
 		self.currentUtility = 0
-
-	# def updateReputation(self, opponentReputation, ownMove):
-	# 	"""Update the reputation of an agent using their social norm strategy, their current reputation, their opponents reputation and the move they just made."""
-	# 	newReputation = self.currentSocialNorm.assignReputation(self.currentReputation, opponentReputation, ownMove)
-	# 	self.currentReputation = newReputation
+		self.neighbours = []
+		self.history = {} # get LAST partner
+		self.colour = self.strategyColour[self.currentStrategy.currentStrategyID]
 
 	def updateUtility(self, payoff):
 		"""Update the utility or cumulative payoff of an agent."""
@@ -49,24 +42,10 @@ class Agent():
 				pass
 				# print("update to mutant strat")
 			self.currentStrategy.changeStrategy(newStrategyID)
-			# self.currentSocialNorm.updateSocialNorm(newStrategyID)
 
-	# def getOpponentsReputation(self, opponent):
-	# 	"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour."""
-	# 	thirdParty = random.choice(opponent.neighbours)
-	# 	opponentsThirdPartyInteraction = thirdParty.history[opponent] #check for no previous interaction
-		
-	# 	try:
-	# 		opponentPastReputation = opponentsThirdPartyInteraction['Focal Reputation']
-	# 		opponentNeighbourReputation = opponentsThirdPartyInteraction['Opponent Reputation']
-	# 		opponentPastMove = opponentsThirdPartyInteraction['Focal Move']
-	# 	except TypeError as err:
-	# 		return random.randint(0,1)
-	# 	else:
-	# 		opponentCurrentReputation = self.currentSocialNorm.assignReputation(opponentPastReputation, opponentNeighbourReputation, opponentPastMove)
-	# 		return opponentCurrentReputation
-	# 	# TODO: Check how we find our own reputation, can't be hardcoded, has to be calculated using own social norm
-	# 	# TODO: Replicator dyamics (in model_experiment.pdf)
+	
+		# TODO: Check how we find our own reputation, can't be hardcoded, has to be calculated using own social norm
+		# TODO: Replicator dyamics (in model_experiment.pdf)
 			
 	
 	def summary(self):
@@ -100,7 +79,6 @@ class Agent():
 	def __str__(self):
 		s = f"Agent {self.id}\t"
 		s += f"Strategy#: \t {self.currentStrategy.currentStrategyID}\t"
-		# s += f"SocialNorm#: \t {self.currentSocialNorm}\t"
 		s += f"Reputation: \t {self.currentReputation}\t"
 		neighbourIDs = list(map(lambda neighbour:neighbour.id, self.neighbours))
 		# s += f"Neighbours: \t {neighbourIDs}\t"

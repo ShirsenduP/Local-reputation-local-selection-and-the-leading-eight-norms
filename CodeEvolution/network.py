@@ -12,11 +12,11 @@ from socialnorm import SocialNorm
 from socialdilemna import SocialDilemna, PrisonersDilemna
 from strategy import Strategy
 
-logging.basicConfig(filename="CodeEvolution/logs/test.log", level=logging.DEBUG, format='%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
+# logging.basicConfig(filename="CodeEvolution/logs/test.log", level=logging.DEBUG, format='%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
 
-testSeed = 1
-random.seed(testSeed)
-np.random.seed(testSeed)
+# testSeed = 1
+# random.seed(testSeed)
+# np.random.seed(testSeed)
 
 class Network():
 
@@ -123,7 +123,7 @@ class Network():
 
 		for agentID in range(self.config['size']):
 			randomStrategyIndex = random.randint(0, len(strategyDistribution)-1)
-			self.agentList.append(Agent(_id=agentID, _strategy=strategyDistribution[randomStrategyIndex], _socialNorm=self.config['socialNorm']))
+			self.agentList.append(Agent(_id=agentID, _strategy=strategyDistribution[randomStrategyIndex]))
 			strategyDistribution.pop(randomStrategyIndex)
 			self.population.add_node(self.agentList[agentID])
 
@@ -143,19 +143,28 @@ class Network():
 	def getOpponentsReputation(self, agent1, agent2):
 		"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour."""
 
+		# TODO: if two people are connected exclude self from opponent.neighbours so they are not using their previous interaction history
+
 		# NOTE: Only when two agents are interacting are their H-Score is calculated through the *population-wide* social norm, each agent could be imbued with their own H-score attribute but don't think its necessary -> might be if it takes too long to calculate each time. If any agent's previous interaction with their randomly chosen neighbour doesn't exist, then randomly choose a reputation
 
+		# Choose neighbour of each agent (except the opponent of that agent)
 		agent2Neighbour = random.choice(agent2.neighbours)
 		agent1Neighbour = random.choice(agent1.neighbours)
-	
+		while agent2Neighbour == agent1:
+			agent2Neighbour = random.choice(agent2.neighbours)
+		while agent1Neighbour == agent2:
+			agent1Neighbour = random.choice(agent1.neighbours)
+
+		# Get the agent's last interaction with their neighbour
 		agent2ThirdPartyInteraction = agent2.history[agent2Neighbour]
 		agent1ThirdPartyInteraction = agent1.history[agent1Neighbour]
 
+		# Calculate agents' reputations using social norm, if no history, assign random reputation
 		try:
 			agent2PastReputation = agent2ThirdPartyInteraction['Focal Reputation']
 			agent2NeighbourPastReputation = agent2ThirdPartyInteraction['Opponent Reputation']
 			agent2PastMove = agent2ThirdPartyInteraction['Focal Move']
-		except:
+		except TypeError:
 			agent2Reputation = random.randint(0,1)
 		else:
 			agent2Reputation = self.socialNorm.assignReputation(agent2PastReputation, agent2NeighbourPastReputation, agent2PastMove)
@@ -177,21 +186,21 @@ class Network():
 		agent1, agent2 = self.chooseTwoAgents()
 		agent2Reputation, agent1Reputation = self.getOpponentsReputation(agent1, agent2)
 
-		logging.debug(f"agent {agent1.id} ({agent1.currentStrategy.currentStrategyID}) sees agent {agent2.id}'s reputation is {agent2Reputation}")
-		logging.debug(f"agent {agent2.id} ({agent2.currentStrategy.currentStrategyID}) sees agent {agent1.id}'s reputation is {agent1Reputation}")
+		# logging.debug(f"agent {agent1.id} ({agent1.currentStrategy.currentStrategyID}) sees agent {agent2.id}'s reputation is {agent2Reputation}")
+		# logging.debug(f"agent {agent2.id} ({agent2.currentStrategy.currentStrategyID}) sees agent {agent1.id}'s reputation is {agent1Reputation}")
 
 		# Each agent calculates their move according to their behavioural strategy
 		agent1Move = agent1.currentStrategy.chooseAction(agent1.currentReputation, agent2Reputation)
 		self.tempActions[agent1Move] += 1
-		logging.debug(f"agent {agent1.id}'s move is {agent1Move}")
+		# logging.debug(f"agent {agent1.id}'s move is {agent1Move}")
 		agent2Move = agent2.currentStrategy.chooseAction(agent2.currentReputation, agent1Reputation)
 		self.tempActions[agent2Move] += 1
-		logging.debug(f"agent {agent2.id}'s move is {agent2Move}")
+		# logging.debug(f"agent {agent2.id}'s move is {agent2Move}")
 		
 		# Calculate each agent's payoff
 		payoff1, payoff2 = self.config['dilemna'].playGame(agent1Move, agent2Move)
-		logging.debug(f"agent {agent1.id} gets payoff {payoff1}")
-		logging.debug(f"agent {agent2.id} gets payoff {payoff2}")
+		# logging.debug(f"agent {agent1.id} gets payoff {payoff1}")
+		# logging.debug(f"agent {agent2.id} gets payoff {payoff2}")
 
 		# Update agent utilities and reputations
 		agent1.updateUtility(payoff1)

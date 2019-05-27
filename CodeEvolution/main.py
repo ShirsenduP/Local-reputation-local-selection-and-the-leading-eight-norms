@@ -30,13 +30,13 @@ def main():
 	###
 	
 	# Social PrisonersDilemna
-	pdBenefit = 2
-	pdCost = 1
+	pdBenefit = 1
+	pdCost = 0.5
 
 	# Network
 	size = [100]
 	density = [0.5] 
-	distribution = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
+	distribution = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	socialNorm = 0
 	omega = [0.95]
 
@@ -44,7 +44,7 @@ def main():
 	maxperiods = 1000
 	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
 	updateProbability = [0.1]
-	mutantID = 9
+	mutantID = 8
 	probabilityOfMutants = [0.1]
 	singleSimulation = True
 	saveToDisk = False
@@ -90,12 +90,12 @@ def main():
 
 	# print(N.results.actions)
 
-	plt.plot(N.results.strategyProportions[8])
-	plt.plot(N.results.strategyProportions[9])
-	# plt.plot(N.results.utilities[0])
+	plt.plot(N.results.strategyProportions[0])
+	# plt.plot(N.results.strategyProportions[9])
+	plt.plot(N.results.utilities[0])
 	# plt.plot(N.results.utilities[8])
-	plt.plot(N.results.actions['C'])
-	plt.plot(N.results.actions['D'])
+	# plt.plot(N.results.actions['C'])
+	# plt.plot(N.results.actions['D'])
 	plt.show()
 
 	print(N)

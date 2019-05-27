@@ -70,7 +70,6 @@ if __name__=="__main__":
 
 	# Generate config file
 	singleSimulation = False
-	saveToDisk = True
 
 	config = ConfigBuilder(
 		_sizes=size,
@@ -82,8 +81,7 @@ if __name__=="__main__":
 		_updateProbability=updateProbability,
 		_mutantID=mutantID,
 		_probabilityOfMutants=probabilityOfMutants,
-		_singleSimulation=singleSimulation,
-		_saveToDisk=saveToDisk)
+		_singleSimulation=singleSimulation)
 
 	# Export to configurations directory
 	with open('CodeEvolution/configurations/{}.json'.format(name), 'w') as jsonConfig:

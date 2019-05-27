@@ -13,8 +13,7 @@ class ConfigBuilder():
 		_socialDilemna, 
 		_updateProbability,
 		_mutantID,
-		_probabilityOfMutants,
-		_saveToDisk=False):
+		_probabilityOfMutants):
 
 		self.configuration = self.__generate(_sizes, 
 			_densities,
