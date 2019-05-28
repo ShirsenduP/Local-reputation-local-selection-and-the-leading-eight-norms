@@ -279,7 +279,7 @@ class Network():
 	def __initialiseAgentHistories(self):
 		for agent in self.agentList:
 			agent.initialiseHistory()
-
+		#TODO: change so histories and list of neighbours is the same thing!!
 
 	def __getStrategyColours(self):
 		colourMap = []
