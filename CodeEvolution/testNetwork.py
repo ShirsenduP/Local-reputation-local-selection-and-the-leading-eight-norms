@@ -7,65 +7,117 @@ from unittest import TestCase
 import random
 import numpy as np
 
+## DEFAULT TEST PARAMETERS UNLESS OTHERWISE SPECIFIED (DO NOT CHANGE)
+
+# Random Number Generation (seed must be 1 for testing)
+seed = 1
+random.seed(seed)
+np.random.seed(seed)
+
+# Social PrisonersDilemna
+pdBenefit = 1
+pdCost = 0.5
+
+# Network
+size = [5]
+density = [1] 
+distribution = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+socialNorm = 0
+
+# Model
+omega = [0.5]
+maxperiods = 1
+socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
+updateProbability = [0.1]
+mutantID = 8
+probabilityOfMutants = [0.1]
+
+def DefaultTestNetwork(size=size, 
+	density=density,
+	distribution=distribution,
+	socialNorm=socialNorm,
+	omega=omega, 
+	maxperiod=maxperiods,
+	socialDilemna=socialDilemna,
+	updateProbability=updateProbability,
+	mutantID=mutantID,
+	probabilityOfMutants=probabilityOfMutants):
+	"""This function creates a default network with the parameters defined above. For one-off test cases with different parameterisations, pass in the new value for any of the parameters to create a custom network. Otherwise, call with no arguments to create a default network setup."""
+	
+	if seed != 1:
+		raise ValueError("Seed not initialised to correct default value (1)!")
+
+	config = ConfigBuilder(
+		_sizes=size,
+		_densities=density,
+		_distribution=distribution,
+		_socialNorm=socialNorm,
+		_omegas=omega,
+		_maxperiods=maxperiod,
+		_socialDilemna=socialDilemna,
+		_updateProbability=updateProbability,
+		_mutantID=mutantID,
+		_probabilityOfMutants=probabilityOfMutants)
+
+	config = config.configuration[0]
+	N = Network(config)
+	return N
+
+
 class NetworkTest(TestCase):
-	def setUp(self):
-		print("setup")
-		self.seed = 1
-		random.seed(self.seed)
-		np.random.seed(self.seed)
-
-		# Social PrisonersDilemna
-		self.pdBenefit = 1
-		self.pdCost = 0.5
-
-		# Network
-		self.size = [5]
-		self.density = [0.8] 
-		self.distribution = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-		self.socialNorm = 0
-
-		# Model
-		self.omega = [0.5]
-		self.maxperiods = 1
-		self.socialDilemna = PrisonersDilemna(self.pdBenefit, self.pdCost)
-		self.updateProbability = [0.1]
-		self.mutantID = 8
-		self.probabilityOfMutants = [0.1]
-		self.singleSimulation = True
-
-
-
-		config = ConfigBuilder(
-			_sizes=self.size,
-			_densities=self.density,
-			_distribution=self.distribution,
-			_socialNorm=self.socialNorm,
-			_omegas=self.omega,
-			_maxperiods=self.maxperiods,
-			_socialDilemna=self.socialDilemna,
-			_updateProbability=self.updateProbability,
-			_mutantID=self.mutantID,
-			_probabilityOfMutants=self.probabilityOfMutants)
-
-		config = config.configuration[0]
-		self.N = Network(_config=config)
 
 	def testNetworkInitialisation(self):
+		N = DefaultTestNetwork()
+		self.assertEqual(len(N.agentList), size[0])
+		self.assertEqual(N.socialNorm.stateID, socialNorm)
+		self.assertEqual(N.currentPeriod, 0)
 
-		self.assertEqual(self.seed, 1)
-		self.assertEqual(len(self.N.agentList), self.size[0])
-		self.assertEqual(self.N.socialNorm.stateID, self.socialNorm)
-		self.assertEqual(self.N.currentPeriod, 0)
-
-		for agent in self.N.agentList:
-			self.assertEqual(agent.currentStrategy.currentStrategyID, 0)
+		# for agent in N.agentList:
+		# 	self.assertEqual(agent.currentStrategy.currentStrategyID, 0)
 		
-	
+		customSize = [50]
+		customDistribution = [0.2, 0.2, 0.0, 0.0, 0.2, 0.1, 0.1, 0.1, 0.1, 0.0]
+		N = DefaultTestNetwork(size=customSize, distribution=customDistribution)
+		strategies = [agent.currentStrategy.currentStrategyID for agent in N.agentList]
+		strategyCounts = [strategies.count(val) for val in range(len(customDistribution))]
+
+		actualCounts = [val*customSize[0] for val in customDistribution]
+		self.assertEqual(strategyCounts, actualCounts)
+
 	def testCheckMinTwoNeighbours(self):
-		pass
+		with self.assertRaises(Exception) as err:
+			DefaultTestNetwork(size=[0])
+			DefaultTestNetwork(size=[1])
+			DefaultTestNetwork(size=[2])
+			DefaultTestNetwork(size=[10], density=[0.1])
+			DefaultTestNetwork(size=[10], density=[0.5])
+			DefaultTestNetwork(size=[1000], density=[0])
+
 
 	def testResetTempActions(self):
-		pass
+		"""In this test, with seed=1, agents 3 and 4 interact first and they both cooperate"""
+		N = DefaultTestNetwork()
+
+		self.assertEqual(N.tempActions['C'], 0)
+		self.assertEqual(N.tempActions['D'], 0)
+		N.runSingleTimestep()
+		self.assertEqual(N.tempActions['C'], 2)
+		self.assertEqual(N.tempActions['D'], 0)
+		N.resetTempActions()
+		self.assertEqual(N.tempActions['C'], 0)
+		self.assertEqual(N.tempActions['D'], 0)
+		N.resetTempActions()
+		self.assertEqual(N.tempActions['C'], 0)
+		self.assertEqual(N.tempActions['D'], 0)
+
+		for interaction in range(random.randint(1,100)):
+			N.runSingleTimestep()
+		
+		self.assertNotEqual(N.tempActions['C'], 0)
+		self.assertNotEqual(N.tempActions['D'], 0)
+		N.resetTempActions()
+		self.assertEqual(N.tempActions['C'], 0)
+		self.assertEqual(N.tempActions['D'], 0)
 
 	def testInitstrategies(self):
 		pass

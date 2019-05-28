@@ -117,9 +117,19 @@ class Network():
 			if self.currentPeriod in convergenceCheckIntervals:
 				self.grabSnapshot()
 
+	def getStrategyCounts(self):
+		distribution = [val*self.config['size'] for val in self.config['distribution']]
+		counts = []
+		strategyNumber = 0
+		for strategy in distribution:
+			for count in range(int(strategy)):
+				counts.append(strategyNumber)
+			strategyNumber += 1
+		return counts
+
 	def erdosRenyiGenerator(self):
-		strategyProbabilities = self.config['distribution']
-		strategyDistribution = [np.random.choice(np.arange(0,len(strategyProbabilities)), p = strategyProbabilities) for _ in range(self.config['size'])]
+		strategyDistribution = self.getStrategyCounts()
+		
 
 		for agentID in range(self.config['size']):
 			randomStrategyIndex = random.randint(0, len(strategyDistribution)-1)
@@ -310,7 +320,6 @@ if __name__ == "__main__":
 	main()
 
 	
-# TODO: Implement check for minimum 2 neighbours per agent
-	
+# TODO: when distribution*size doesn't give integer values, fix so it converts to int and adjusts the agent strategy counts	
 
 
