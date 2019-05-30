@@ -6,11 +6,11 @@ from collections import OrderedDict
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from agent import Agent
-from results import Results
-from socialnorm import SocialNorm
-from socialdilemna import SocialDilemna, PrisonersDilemna
-from strategy import Strategy
+from CodeEvolution.agent import Agent
+from CodeEvolution.results import Results
+from CodeEvolution.socialnorm import SocialNorm
+from CodeEvolution.socialdilemna import SocialDilemna, PrisonersDilemna
+from CodeEvolution.strategy import Strategy
 
 # logging.basicConfig(filename="CodeEvolution/logs/test.log", level=logging.DEBUG, format='%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
 
@@ -65,42 +65,43 @@ class Network():
 		self.results.utilities[mutantID] = []
 		
 
+		
+
 	def scanStrategies(self):
 		"""Update the results with the proportions of all strategies at any given time."""
 
-		# count strategies and total utilities per strategy
-		strategyIDs = self.results.strategyProportions.keys()
-		strategies = {}.fromkeys(strategyIDs, 0)
-		utilities = {}.fromkeys(strategyIDs, 0)
+		#update results with census		
+		census = self.getCensusProportions()
+		self.results.strategyProportions[self.currentPeriod] = census
+		
+		#add up all the utilities over the strategies
+		censusCounts = self.getCensus()
+		averageUtilities = {}.fromkeys(censusCounts.keys(), 0)
 		for agent in self.agentList:
-			agentStrategyID = agent.currentStrategy.currentStrategyID
-			strategies[agentStrategyID] += 1		
-			utilities[agentStrategyID] += agent.currentUtility
+			agentStratID = agent.currentStrategy.currentStrategyID
+			averageUtilities[agentStratID] += agent.currentUtility
+			
+		#average the utilities
+		for ID, _ in averageUtilities.items():
+			if censusCounts[ID] > 0:
+				averageUtilities[ID] /= censusCounts[ID]
 
-
-		for strategyID in utilities:
-			if strategies[strategyID] > 0:
-				utilities[strategyID] /= strategies[strategyID]
-
-		# convert to proportions of the total population
-		populationSize = self.config['size']
-		for id in strategies:
-			strategies[id] /= populationSize
-
-		# update Results object with strategy proportions and average utilities
-		for key, value in strategies.items():
-			self.results.strategyProportions[key].append(value)
-		for key, value in utilities.items():
-			self.results.utilities[key].append(value)
+		#update results with utilities
+		self.results.utilities[self.currentPeriod] = averageUtilities
+		
 
 	def compareNetworkState(self, state1, state2):
-		pass
-		# TODO: implement compareNetworkState(self, state1, state2)
+		"""Compare two dictionaries with key-value pairs being strategyID and the proportion of the population running that strategy."""
+
+		hasConverged = False
+		if state1 == state2:
+			hasConverged = True
+		return hasConverged
 
 	def runSimulation(self):
 		
 		convergenceCheckIntervals = random.sample(range(self.config['maxperiods']), 1)
-		self.initStrategies()
+		# self.initStrategies()
 		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
 		while self.currentPeriod < self.config['maxperiods']:
@@ -118,18 +119,34 @@ class Network():
 				self.grabSnapshot()
 
 	def getStrategyCounts(self):
-		distribution = [val*self.config['size'] for val in self.config['distribution']]
-		counts = []
-		strategyNumber = 0
-		for strategy in distribution:
-			for count in range(int(strategy)):
-				counts.append(strategyNumber)
-			strategyNumber += 1
-		return counts
+		"""Return a list where each element represents the strategyID of an agent"""
+
+		populationSize = self.config['size']
+		propOfStrategies = self.config['distribution']
+		countsOfStrategies = [int(val*populationSize) for val in propOfStrategies]
+		pop = []
+		for i in range(len(countsOfStrategies)):
+			for _ in range(countsOfStrategies[i]):
+				pop.append(i)
+		return pop
+	
+	def getCensus(self):
+		"""Return a dictionary where the key-value pairs are the strategy IDs and the number of agents running that strategy."""
+		return Strategy.census.copy()
+
+	def getCensusProportions(self):
+		"""Return a dictionary where the key-value pairs are the strategy IDs and the proportion of the population running that strategy."""
+
+		census = self.getCensus()
+		size = self.config['size']
+		for key, _ in census.items():
+			census[key] /= size
+		return census
 
 	def erdosRenyiGenerator(self):
+		"""Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
+
 		strategyDistribution = self.getStrategyCounts()
-		
 
 		for agentID in range(self.config['size']):
 			randomStrategyIndex = random.randint(0, len(strategyDistribution)-1)
@@ -276,6 +293,7 @@ class Network():
 		# Update strategies
 		for agent in self.agentList:
 			agent.updateStrategy(self.config['updateProbability'])
+			# print(f"Agent {agent.id} updating to {agent.currentStrategy.currentStrategyID}")
 
 		# TODO: Grab snapshot
 

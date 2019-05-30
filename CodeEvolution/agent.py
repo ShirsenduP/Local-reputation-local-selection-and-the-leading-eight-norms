@@ -1,6 +1,7 @@
 import random
-from strategy import Strategy
 import logging
+
+from CodeEvolution.strategy import Strategy
 
 class Agent():
 
@@ -36,11 +37,9 @@ class Agent():
 		r = random.random()
 		if r < updateProbability:
 			newStrategyID = self.findBestLocalStrategy()
-			if newStrategyID == self.currentStrategy:
+			if newStrategyID == self.currentStrategy.currentStrategyID:
 				return
-			if newStrategyID == 8:
-				pass
-				# print("update to mutant strat")
+			oldStrategyID = self.currentStrategy.currentStrategyID
 			self.currentStrategy.changeStrategy(newStrategyID)
 
 	
@@ -74,6 +73,7 @@ class Agent():
 		maxLocalUtility = max(neighbourUtilities)
 		bestPerformingAgentIndex = neighbourUtilities.index(maxLocalUtility)
 		return self.neighbours[bestPerformingAgentIndex].currentStrategy.currentStrategyID
+		#TODO: find competing strategies with same max utilities
 	
 
 	def __str__(self):

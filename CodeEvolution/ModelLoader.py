@@ -4,9 +4,9 @@ import profile
 from argparse import ArgumentParser
 from multiprocessing import Pool
 
-from network import Network
-from socialdilemna import PrisonersDilemna
-from results import averageOverIterations, exportResultsToCSV
+from CodeEvolution.network import Network
+from CodeEvolution.socialdilemna import PrisonersDilemna
+from CodeEvolution.results import averageOverIterations, exportResultsToCSV
 
 description = "Run a single simulation from a JSON config file"
 filepathHelp = "Filepath to JSON config file"

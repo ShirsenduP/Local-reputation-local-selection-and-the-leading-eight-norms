@@ -7,22 +7,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from time import gmtime, strftime
 
-from configbuilder import ConfigBuilder
-from network import Network
-from agent import Agent
-from socialdilemna import PrisonersDilemna
+from CodeEvolution.configbuilder import ConfigBuilder
+from CodeEvolution.network import Network
+from CodeEvolution.agent import Agent
+from CodeEvolution.socialdilemna import PrisonersDilemna
+from CodeEvolution.strategy import Strategy
 
 def main():
 
 	### Logging
-	now = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
-	logger = logging.getLogger('CodeEvolution')
-	logger.setLevel(logging.DEBUG)
-	fh = logging.FileHandler('CodeEvolution/logs/test.log')
-	fh.setLevel(logging.DEBUG)
-	formatter = logging.Formatter('%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
-	fh.setFormatter(formatter)
-	logger.addHandler(fh)
+	# now = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
+	# logger = logging.getLogger('CodeEvolution')
+	# logger.setLevel(logging.DEBUG)
+	# fh = logging.FileHandler('CodeEvolution/logs/test.log')
+	# fh.setLevel(logging.DEBUG)
+	# formatter = logging.Formatter('%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
+	# fh.setFormatter(formatter)
+	# logger.addHandler(fh)
 
 							
 	###
@@ -30,24 +31,22 @@ def main():
 	###
 	
 	# Social PrisonersDilemna
-	pdBenefit = 1
-	pdCost = 0.5
+	pdBenefit = 2
+	pdCost = 1
 
 	# Network
-	size = [100]
+	size = [250]
 	density = [0.5] 
-	distribution = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	distribution = [1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	socialNorm = 0
-	omega = [0.95]
+	omega = [0.99]
 
 	# Model
-	maxperiods = 1000
+	maxperiods = 3000
 	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
 	updateProbability = [0.1]
 	mutantID = 8
 	probabilityOfMutants = [0.1]
-	singleSimulation = True
-	saveToDisk = False
 
 	###
 	### MODEL-GENERATED-PARAMETERS
@@ -63,48 +62,45 @@ def main():
 		_socialDilemna=socialDilemna,
 		_updateProbability=updateProbability,
 		_mutantID=mutantID,
-		_probabilityOfMutants=probabilityOfMutants,
-		_saveToDisk=saveToDisk)
+		_probabilityOfMutants=probabilityOfMutants)
 
 
 
 
 	# Log message
-	s = ""
-	for key, value in config.configuration.items():
-		s += f"{key}: \t {value}, "
-	logger.info(f"Model parameters: \t {s}")
+	# s = ""
+	# for key, value in config.configuration.items():
+	# 	s += f"{key}: \t {value}, "
+	# logger.info(f"Model parameters: \t {s}")
 	
 	###
 	### MODEL
 	###
 
-	logger.info("Network Initialising")
+	# logger.info("Network Initialising")
 	N = Network(config.configuration[0])
+	print("Start")
+	# logger.info("Simulation Initialising")
+	N.runSimulation()
+	# logger.info("Simulation Terminating")
+	# results = N.results.export()
+	print(N.results.strategyProportions[maxperiods-1])
+
+	# plt.plot(results.strategyProportions[0])
+	# plt.plot(results.strategyProportions[9])
+	# plt.plot(results.utilities[0])
+	# plt.plot(results.utilities[8])self.results.strategyProportions
+	# plt.plot(results.actions['C'])
+	# plt.plot(results.actions['D'])
+	# plt.show()
 
 	# print(N)
-	print("Start")
-	logger.info("Simulation Initialising")
-	N.runSimulation()
-	logger.info("Simulation Terminating")
-
-	# print(N.results.actions)
-
-	plt.plot(N.results.strategyProportions[0])
-	# plt.plot(N.results.strategyProportions[9])
-	plt.plot(N.results.utilities[0])
-	# plt.plot(N.results.utilities[8])
-	# plt.plot(N.results.actions['C'])
-	# plt.plot(N.results.actions['D'])
-	plt.show()
-
-	print(N)
 
 	# np.savetxt("CodeEvolution/results/strategies.csv", N.results['strategies'], delimiter=',')
 	# print(N.convergenceHistory)
 	# print(N.results['strategies'])
 	# print(N.results['averageUtility'])
-	logger.info("Network Terminating")
+	# logger.info("Network Terminating")
 	print("End")
 
 	# p = pd.DataFrame(N.results['strategies'])
@@ -121,7 +117,7 @@ if __name__ == "__main__":
 
 # TODO: UML diagram describing package - for dissertation
 # TODO: Docstrings
-# TODO: pandas dataframes
+# TODO: pandas dataframes BUG
 # TODO: Output to csv -> class on it own
 # TODO: Load the data into matplotlib
 # TODO: Maybe add karoly on the github repo

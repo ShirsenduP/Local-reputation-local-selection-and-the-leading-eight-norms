@@ -1,7 +1,7 @@
-from agent import Agent
-from network import Network
-from socialdilemna import PrisonersDilemna
-from configbuilder import ConfigBuilder
+from CodeEvolution.agent import Agent
+from CodeEvolution.network import Network
+from CodeEvolution.socialdilemna import PrisonersDilemna
+from CodeEvolution.configbuilder import ConfigBuilder
 
 from unittest import TestCase
 import random

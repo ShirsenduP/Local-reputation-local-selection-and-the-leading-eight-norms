@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-	name="EvolutionOfCooperation",
-	version="0.0.1",
+	name="CodeEvolution",
+	version="0.1.0",
 	packages=find_packages(exclude=['*test']),
 	install_requires=['matplotlib', 'networkx', 'numpy', 'pandas']
 )

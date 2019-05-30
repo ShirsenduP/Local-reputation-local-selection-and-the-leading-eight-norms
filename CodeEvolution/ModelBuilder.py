@@ -2,9 +2,9 @@ from json import dump
 from argparse import ArgumentParser
 from math import inf
 
-from validator import Validator
-from configbuilder import ConfigBuilder
-from socialdilemna import PrisonersDilemna
+from CodeEvolution.validator import Validator
+from CodeEvolution.configbuilder import ConfigBuilder
+from CodeEvolution.socialdilemna import PrisonersDilemna
 
 if __name__=="__main__":
 
