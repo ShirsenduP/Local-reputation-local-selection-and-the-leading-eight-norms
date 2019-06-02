@@ -22,7 +22,7 @@ class Agent():
 	def __init__(self, _id, _strategy):
 		self.id = _id
 		self.currentStrategy = Strategy(_strategy)
-		self.currentReputation = random.choice(self.reputation)
+		self.currentReputation = random.choice(Agent.reputation)
 		self.currentUtility = 0
 		self.neighbours = []
 		self.history = {} # get LAST partner
@@ -71,17 +71,34 @@ class Agent():
 		"""Find the strategy of your best performing neighbour. (Copy the best)"""
 		neighbourUtilities = list(map(lambda x:x.currentUtility, self.neighbours))
 		maxLocalUtility = max(neighbourUtilities)
-		bestPerformingAgentIndex = neighbourUtilities.index(maxLocalUtility)
-		return self.neighbours[bestPerformingAgentIndex].currentStrategy.currentStrategyID
-		#TODO: find competing strategies with same max utilities
-	
+		indices = [i for i, x in enumerate(neighbourUtilities) if x == maxLocalUtility]
+		bestLocalStrategyID = random.choice(indices)
+		return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
+		
+		
+	# 	#TODO: find competing strategies with same max utilities
+
+	#TODO: Test this!!!
+	# def findBestLocalStrategy(self):
+	# 	maxUtil = [tuple([None, None, 0])]
+	# 	for agent in self.neighbours:
+	# 		if agent.currentUtility > maxUtil[0][2]:
+	# 			maxUtil = tuple([agent, agent.currentStrategy.currentStrategyID, agent.currentUtility])
+	# 		elif agent.currentUtility == maxUtil:
+	# 			maxUtil.append(tuple([agent, agent.currentStrategy.currentStrategyID, agent.currentUtility]))
+	# 	if len(maxUtil) == 1:
+	# 		return maxUtil[0][1]
+	# 	else: 
+	# 		randomlyChosenFromBest = random.choice(maxUtil)
+	# 		return randomlyChosenFromBest[1]
 
 	def __str__(self):
 		s = f"Agent {self.id}\t"
 		s += f"Strategy#: \t {self.currentStrategy.currentStrategyID}\t"
-		s += f"Reputation: \t {self.currentReputation}\t"
+		# s += f"Reputation: \t {self.currentReputation}\t"
 		neighbourIDs = list(map(lambda neighbour:neighbour.id, self.neighbours))
 		# s += f"Neighbours: \t {neighbourIDs}\t"
+		s += f"# Of Neighbours: \t {len(neighbourIDs)}\t"
 		s += f"Utility: \t {self.currentUtility}"
 		return s
 
@@ -93,11 +110,6 @@ def main():
 if __name__ == "__main__":
 	main()
 
-
-
-# TODO: findBestLocalStrategy -> What if multiple agents have the same utility but different strategies? random choice, right now its just updating to whichever one it finds first!
-# TODO: findBestLocalStrategy -> social norm class with previous interaction history with some neighbour, if None, make random 1/0 choice
-# TODO: reset payoff to 0 at the beginning of each timeperiod
 
 
 

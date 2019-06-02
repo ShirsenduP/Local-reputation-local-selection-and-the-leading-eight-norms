@@ -1,7 +1,8 @@
+import copy
 import random
 import logging
 import numpy as np
-from collections import OrderedDict
+from collections import deque
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -25,8 +26,7 @@ class Network():
 		self.agentList = []
 		self.socialNorm = SocialNorm(_config['socialNorm'])
 		self.population = nx.Graph()
-		self.erdosRenyiGenerator()
-		self.__initialiseAgentHistories()
+		# self.createNetwork()
 		self.currentPeriod = 0
 		self.results = Results()
 		self.tempActions = {
@@ -34,7 +34,11 @@ class Network():
 			'D' : 0
 		}
 		self.checkMinTwoNeighbours()
-		self.convergenceHistory = OrderedDict()
+		self.hasConverged = False
+		self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/15))
+		self.convergenceCheckIntervals.sort()
+		self.convergenceHistory = deque(3*[None], 3)
+		print(self.convergenceCheckIntervals)
 
 	def checkMinTwoNeighbours(self):
 		"""Checks whether each node (agent) in the graph (network) has a minimum degree (#of neighbours) of 2."""
@@ -63,9 +67,6 @@ class Network():
 		mutantID = self.config['mutantID']
 		self.results.strategyProportions[mutantID] = []
 		self.results.utilities[mutantID] = []
-		
-
-		
 
 	def scanStrategies(self):
 		"""Update the results with the proportions of all strategies at any given time."""
@@ -88,35 +89,25 @@ class Network():
 
 		#update results with utilities
 		self.results.utilities[self.currentPeriod] = averageUtilities
-		
-
-	def compareNetworkState(self, state1, state2):
-		"""Compare two dictionaries with key-value pairs being strategyID and the proportion of the population running that strategy."""
-
-		hasConverged = False
-		if state1 == state2:
-			hasConverged = True
-		return hasConverged
 
 	def runSimulation(self):
 		
-		convergenceCheckIntervals = random.sample(range(self.config['maxperiods']), 1)
-		# self.initStrategies()
 		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
-		while self.currentPeriod < self.config['maxperiods']:
+		while self.currentPeriod < self.config['maxperiods'] and not self.hasConverged:
 			self.resetUtility()
 			self.resetTempActions()
 			self.runSingleTimestep()
 			self.scanStrategies()
 			self.checkConvergence()
 			r = random.random()
-			if r < self.config['probabilityOfMutants']:
+			if r < mutantProbability:
 				self.addMutants(self.config['mutantID'], mutantProbability) 
 			self.currentPeriod += 1
 			self.results.updateActions(self.tempActions)
-			if self.currentPeriod in convergenceCheckIntervals:
+			if self.currentPeriod in self.convergenceHistory.keys():
 				self.grabSnapshot()
+				self.checkConvergence()
 
 	def getStrategyCounts(self):
 		"""Return a list where each element represents the strategyID of an agent"""
@@ -132,7 +123,8 @@ class Network():
 	
 	def getCensus(self):
 		"""Return a dictionary where the key-value pairs are the strategy IDs and the number of agents running that strategy."""
-		return Strategy.census.copy()
+		censusCopy = copy.deepcopy(Strategy.census)
+		return censusCopy
 
 	def getCensusProportions(self):
 		"""Return a dictionary where the key-value pairs are the strategy IDs and the proportion of the population running that strategy."""
@@ -143,7 +135,7 @@ class Network():
 			census[key] /= size
 		return census
 
-	def erdosRenyiGenerator(self):
+	def createNetwork(self):
 		"""Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
 
 		strategyDistribution = self.getStrategyCounts()
@@ -164,8 +156,8 @@ class Network():
 							self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
 						if self.agentList[agentID1] not in self.agentList[agentID2].neighbours:
 							self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
-						
 
+		self.__initialiseAgentHistories()
 
 	def getOpponentsReputation(self, agent1, agent2):
 		"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour."""
@@ -254,7 +246,6 @@ class Network():
 		}
 		agent2.recordInteraction(agent2Interaction)
 
-
 	def showHistory(self):
 		for agent in self.agentList:
 			s = f"History for agent {agent.id} \n"
@@ -263,16 +254,23 @@ class Network():
 			print(s)
 
 	def checkConvergence(self):
-		# TODO: Check convergence implementation
-		pass
+		"""Check if the network has converged or not by checking the last 3 snapshots taken at randomly chosen intervals."""
+		
+		history = self.convergenceHistory
 
+		if None in history:
+			return
+
+		if history[2] == history[1] and history[1] == history[0]:
+			self.hasConverged = True
+			print(f"HAS CONVERGED AT {self.currentPeriod}")
 
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
 		agent2 = random.choice(self.agentList)
 		while agent2 == agent1:
 			agent2 = random.choice(self.agentList)
-		return [agent1, agent2]
+		return (agent1, agent2)
 
 	def addMutants(self, mutantStrategyID, proportion):
 		newMutantCount = int(proportion*self.config['size'])
@@ -295,14 +293,14 @@ class Network():
 			agent.updateStrategy(self.config['updateProbability'])
 			# print(f"Agent {agent.id} updating to {agent.currentStrategy.currentStrategyID}")
 
-		# TODO: Grab snapshot
+		# if self.currentPeriod in self.convergenceHistory
 
 	def resetUtility(self):
 		for agent in self.agentList:
 			agent.currentUtility = 0
 
 	def grabSnapshot(self):
-		self.convergenceHistory[self.currentPeriod] = self.agentList.copy()
+		self.convergenceHistory.appendleft(self.getCensus())
 
 	def __initialiseAgentHistories(self):
 		for agent in self.agentList:
@@ -315,14 +313,12 @@ class Network():
 			colourMap.append(agent.colour)
 		return colourMap
 
-
 	def show(self):
 		colourMap = self.__getStrategyColours()
 		plt.subplot(111)
 		nx.draw(self.population, with_labels=True, bold_text=True, node_color=colourMap)
 		plt.show()
 		# plt.savefig('/home/localadmin/Dev/CodeEvolution/CodeEvolution/figures/network.png')
-
 
 	def __str__(self):
 		s = ""

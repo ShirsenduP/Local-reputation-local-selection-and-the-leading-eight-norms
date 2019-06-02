@@ -17,6 +17,7 @@ class SocialNorm():
 		self.stateID = _stateID
 
 	def assignReputation(self, agent1Reputation, agent2Reputation, agent1Action):
+		"""Return agent1's new reputation given his and his opponent's current reputation and agent1's action"""
 		state_key = str(agent1Reputation) + str(agent2Reputation) + str(agent1Action)
 		return self.states[state_key]
 	

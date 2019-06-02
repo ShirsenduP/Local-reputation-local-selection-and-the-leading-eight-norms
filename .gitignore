@@ -4,3 +4,6 @@ venv/
 env/
 .log
 CodeEvolution/logs/
+CodeEvolution/configurations/draft2.json
+CodeEvolution/results/
+

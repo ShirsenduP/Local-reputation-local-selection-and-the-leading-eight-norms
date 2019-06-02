@@ -35,8 +35,8 @@ def main():
 	pdCost = 1
 
 	# Network
-	size = [250]
-	density = [0.5] 
+	size = [50]
+	density = [0.1] 
 	distribution = [1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	socialNorm = 0
 	omega = [0.99]
@@ -79,12 +79,15 @@ def main():
 
 	# logger.info("Network Initialising")
 	N = Network(config.configuration[0])
+	N.createNetwork()
+	print(N)
+
 	print("Start")
 	# logger.info("Simulation Initialising")
 	N.runSimulation()
 	# logger.info("Simulation Terminating")
 	# results = N.results.export()
-	print(N.results.strategyProportions[maxperiods-1])
+	# print(N.results.strategyProportions[maxperiods-1])
 
 	# plt.plot(results.strategyProportions[0])
 	# plt.plot(results.strategyProportions[9])
@@ -94,7 +97,8 @@ def main():
 	# plt.plot(results.actions['D'])
 	# plt.show()
 
-	# print(N)
+	print(N)
+	print(N.results.strategyProportions[N.currentPeriod-1])
 
 	# np.savetxt("CodeEvolution/results/strategies.csv", N.results['strategies'], delimiter=',')
 	# print(N.convergenceHistory)
