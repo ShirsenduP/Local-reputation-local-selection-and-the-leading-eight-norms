@@ -15,6 +15,7 @@ class OhtsukiIsawaNetwork(Network):
 		if _config['density'] != 1:
 			_config['density'] = 1
 		self.createNetwork()
+		self.evolutionaryUpdateSpeed = 0.5
 	
 	def createNetwork(self):
 		"""Generate a fully connected graph (density = 1)"""
@@ -41,39 +42,30 @@ class OhtsukiIsawaNetwork(Network):
 		return agent1.currentReputation, agent2.currentReputation
 
 	def runSimulation(self):
-		# self.scanStrategies()
+		"""Run full simulation for upto total number of simulations defined in 'self.config['maxperiods']' or up until the system converges at preallocated randomly chosen convergence check intervals."""
+		self.initStrategies()
+		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
 		while self.currentPeriod < self.config['maxperiods'] and not self.hasConverged:
 			self.resetUtility()
 			self.resetTempActions()
 			self.runSingleTimestep()
-			# self.scanStrategies()
-			# self.checkConvergence()
+			self.scanStrategies()
 			r = random.random()
 			if r < mutantProbability:
 				self.addMutants(self.config['mutantID'], mutantProbability)
-			self.results.updateActions(self.tempActions)
+			# self.results.updateActions(self.tempActions)
+			self.evolutionaryUpdate(self.evolutionaryUpdateSpeed)
+
 			if self.currentPeriod in self.convergenceCheckIntervals:
-				print(self.currentPeriod, self.getCensus())
 				self.grabSnapshot()
 				self.checkConvergence()
-			self.currentPeriod += 1
-
-	# SAME AS TEMPLATE
-	# def runSingleTimestep(self):
-	# 	self.playSocialDilemna()
-	# 	r = random.random()
-	# 	while r < self.config['omega']:
-	# 		self.playSocialDilemna()
-	# 		r = random.random()
-
-	# 	#strategy update
-	# 	#TODO!!!
-	# 	for agent in self.agentList:
-	# 		agent.updateStrategy(self.config['updateProbability'])
-
-
-
+			
+			if self.hasConverged or self.currentPeriod==self.config['maxperiods']-1:
+				self.results.convergedAt = self.currentPeriod
+				return
+			else: 
+				self.currentPeriod += 1
 
 	def playSocialDilemna(self):
 		agent1, agent2 = self.chooseTwoAgents()
@@ -110,7 +102,9 @@ class OhtsukiIsawaAgent(Agent):
 	def updateReputation(self, newRep):
 		self.currentReputation = newRep
 
-
+	def updateStrategy(self, updateProbability):
+		"""Overwrite the default update strategy method which implements local learning. Strategy updates occur in the network.evolutionaryUpdate method."""
+		pass
 
 
 
@@ -125,17 +119,23 @@ if __name__ == "__main__":
 
 	# Network
 	size = [100]
-	density = [0.5] 
-	distribution = [1.0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	density = [1] 
+	distribution = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	socialNorm = 0
 	omega = [0.99]
 
 	# Model
-	maxperiods = 1000
+	maxperiods = 5
 	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
 	updateProbability = [0.1]
 	mutantID = 8
-	probabilityOfMutants = [0.1]
+	probabilityOfMutants = [0.2]
+
+	#TODO TESTS
+	"""	1. starting 50/50 mutants and some Strategy
+		2. Initially a strategy and no mutants - at the end of each timestep, each agent has some 'probabilityOfMutants' of turning into a mutant (<< .1 )
+		3. test the number of mutants needed to kill the system"""
+
 
 	###
 	### MODEL-GENERATED-PARAMETERS
@@ -157,6 +157,7 @@ if __name__ == "__main__":
 
 	print("START OHTSUKI AND ISAWA MODEL")
 	N = OhtsukiIsawaNetwork(config)
+	print("Starting Strategy Distribution (T=0) - ", N.getCensus())
 	N.runSimulation()
-	print(N)
+	print(f"Ending Strategy Distribution (T={N.results.convergedAt}) - ", N.getCensus())
 	print("END")

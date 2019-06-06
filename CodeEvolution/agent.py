@@ -33,7 +33,7 @@ class Agent():
 		self.currentUtility += payoff
 
 	def updateStrategy(self, updateProbability):
-		"""Switch strategies to the strategy used by the best performing neighbour of the agent with some probability."""
+		"""(COPY THE BEST) Switch strategies to the strategy used by the best performing neighbour of the agent with some probability."""
 		r = random.random()
 		if r < updateProbability:
 			newStrategyID = self.findBestLocalStrategy()
@@ -43,10 +43,13 @@ class Agent():
 			self.currentStrategy.changeStrategy(newStrategyID)
 
 	
-		# TODO: Check how we find our own reputation, can't be hardcoded, has to be calculated using own social norm
 		# TODO: Replicator dyamics (in model_experiment.pdf)
 			
-	
+	def updatePersonalReputation(self, newRep):
+		"""Update own reputation, only to be used for an agent's own reputation from their point of view in an interaction."""
+		self.currentReputation = newRep
+
+
 	def summary(self):
 		# s = "Summary of Network\n"
 		s = f"Agent {self.id} is currently running strategy {self.currentStrategy} with current reputation {self.currentReputation}"
@@ -92,16 +95,21 @@ class Agent():
 	# 		randomlyChosenFromBest = random.choice(maxUtil)
 	# 		return randomlyChosenFromBest[1]
 
-	def __str__(self):
-		s = f"Agent {self.id}\t"
-		s += f"Strategy#: \t {self.currentStrategy.currentStrategyID}\t"
-		# s += f"Reputation: \t {self.currentReputation}\t"
-		neighbourIDs = list(map(lambda neighbour:neighbour.id, self.neighbours))
-		# s += f"Neighbours: \t {neighbourIDs}\t"
-		s += f"# Of Neighbours: \t {len(neighbourIDs)}\t"
-		s += f"Utility: \t {self.currentUtility}"
-		return s
+	# def __str__(self):
+	# 	s = f"Agent {self.id}\t"
+	# 	s += f"Strategy#: \t {self.currentStrategy.currentStrategyID}\t"
+	# 	# s += f"Reputation: \t {self.currentReputation}\t"
+	# 	neighbourIDs = list(map(lambda neighbour:neighbour.id, self.neighbours))
+	# 	# s += f"Neighbours: \t {neighbourIDs}\t"
+	# 	s += f"# Of Neighbours: \t {len(neighbourIDs)}\t"
+	# 	s += f"Utility: \t {self.currentUtility}"
+	# 	return s
 
+	def __str__(self):
+		s = "("
+		s += f"Agent {self.id}"
+		s += f", s={self.currentStrategy.currentStrategyID}"
+		return s
 
 
 def main():

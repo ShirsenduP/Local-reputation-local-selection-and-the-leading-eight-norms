@@ -7,6 +7,7 @@ class Results():
 		self.actions = {'C' : [], 'D' : []}
 		self.strategyProportions = {}
 		self.utilities = {}
+		self.convergedAt = None
 
 	def updateActions(self, actions):
 		"""Given a dictionary of counts of cooperators and defectors, append to network results the proportions for that particular time period"""
@@ -25,6 +26,26 @@ class Results():
 		return results
 
 
+	@classmethod
+	def averageOverIterations(cls, iterations):
+		"""Take a dictionary where each key is the iteration number and each value is the corresponding pandas dataframe of results. Return a single dataframe with averaged results."""
+		# print(dict[0].column.values())
+		result = pd.DataFrame()
+		iterationsAsList = list(iterations.values())
+		concatenatedResults = pd.concat(iterationsAsList)
+		byRowIndex = concatenatedResults.groupby(concatenatedResults.index)
+		means = byRowIndex.mean()
+		return means
+
+	@classmethod
+	def exportResultsToCSV(cls, experimentName, experimentResults, experimentNumber):
+		"""Export the results from a single dataframe averaged over multiple iterations as a 'experimentName.csv' file."""
+
+		if experimentName not in os.listdir("CodeEvolution/results"):
+			os.mkdir(f"CodeEvolution/results/{experimentName}")
+
+		experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentName}-{experimentNumber}.csv")
+
 	def __str__(self):
 		s = str(self.strategyProportions)
 		s += 3*'\n'
@@ -32,22 +53,3 @@ class Results():
 		s += 3*'\n'
 		s += str(self.actions)
 		return s
-
-
-def averageOverIterations(iterations):
-	"""Take a dictionary where each key is the iteration number and each value is the corresponding pandas dataframe of results. Return a single dataframe with averaged results."""
-	# print(dict[0].column.values())
-	result = pd.DataFrame()
-	iterationsAsList = list(iterations.values())
-	concatenatedResults = pd.concat(iterationsAsList)
-	byRowIndex = concatenatedResults.groupby(concatenatedResults.index)
-	means = byRowIndex.mean()
-	return means
-
-def exportResultsToCSV(experimentName, experimentResults, experimentNumber):
-	"""Export the results from a single dataframe averaged over multiple iterations as a 'experimentName.csv' file."""
-
-	if experimentName not in os.listdir("CodeEvolution/results"):
-		os.mkdir(f"CodeEvolution/results/{experimentName}")
-
-	experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentName}-{experimentNumber}.csv")

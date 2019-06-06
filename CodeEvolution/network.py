@@ -35,10 +35,9 @@ class Network():
 		}
 		self.checkMinTwoNeighbours()
 		self.hasConverged = False
-		self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/15))
+		self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/50))
 		self.convergenceCheckIntervals.sort()
 		self.convergenceHistory = deque(3*[None], 3)
-		print(self.convergenceCheckIntervals)
 
 	def checkMinTwoNeighbours(self):
 		"""Checks whether each node (agent) in the graph (network) has a minimum degree (#of neighbours) of 2."""
@@ -91,7 +90,7 @@ class Network():
 		self.results.utilities[self.currentPeriod] = averageUtilities
 
 	def runSimulation(self):
-		
+		self.initStrategies()
 		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
 		while self.currentPeriod < self.config['maxperiods'] and not self.hasConverged:
@@ -99,15 +98,22 @@ class Network():
 			self.resetTempActions()
 			self.runSingleTimestep()
 			self.scanStrategies()
-			self.checkConvergence()
 			r = random.random()
 			if r < mutantProbability:
 				self.addMutants(self.config['mutantID'], mutantProbability) 
-			self.currentPeriod += 1
 			self.results.updateActions(self.tempActions)
-			if self.currentPeriod in self.convergenceHistory.keys():
+			if self.currentPeriod in self.convergenceCheckIntervals:
 				self.grabSnapshot()
 				self.checkConvergence()
+
+			if self.currentPeriod == 8:
+				self.evolutionaryUpdate()
+
+			if self.hasConverged or self.currentPeriod==self.config['maxperiods']-1:
+				self.results.convergedAt = self.currentPeriod
+				return
+			else: 
+				self.currentPeriod += 1
 
 	def getStrategyCounts(self):
 		"""Return a list where each element represents the strategyID of an agent"""
@@ -160,11 +166,7 @@ class Network():
 		self.__initialiseAgentHistories()
 
 	def getOpponentsReputation(self, agent1, agent2):
-		"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour."""
-
-		# TODO: if two people are connected exclude self from opponent.neighbours so they are not using their previous interaction history
-
-		# NOTE: Only when two agents are interacting are their H-Score is calculated through the *population-wide* social norm, each agent could be imbued with their own H-score attribute but don't think its necessary -> might be if it takes too long to calculate each time. If any agent's previous interaction with their randomly chosen neighbour doesn't exist, then randomly choose a reputation
+		"""Calculate the reputation of your opponent given the last interaction of the opponent with a randomly chosen neighbour. Only when two agents are interacting are their H-Score is calculated through the *population-wide* social norm, each agent could be imbued with their own H-score attribute but don't think its necessary -> might be if it takes too long to calculate each time. If any agent's previous interaction with their randomly chosen neighbour doesn't exist, then randomly choose a reputation."""
 
 		# Choose neighbour of each agent (except the opponent of that agent)
 		agent2Neighbour = random.choice(agent2.neighbours)
@@ -183,7 +185,8 @@ class Network():
 			agent2PastReputation = agent2ThirdPartyInteraction['Focal Reputation']
 			agent2NeighbourPastReputation = agent2ThirdPartyInteraction['Opponent Reputation']
 			agent2PastMove = agent2ThirdPartyInteraction['Focal Move']
-		except TypeError:
+		except:
+			# No history so randomly assign a reputation
 			agent2Reputation = random.randint(0,1)
 		else:
 			agent2Reputation = self.socialNorm.assignReputation(agent2PastReputation, agent2NeighbourPastReputation, agent2PastMove)
@@ -224,8 +227,8 @@ class Network():
 		# Update agent utilities and reputations
 		agent1.updateUtility(payoff1)
 		agent2.updateUtility(payoff2)
-		# agent1.updateReputation(agent2Reputation, agent1Move)
-		# agent2.updateReputation(agent1Reputation, agent2Move)
+		self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+
 
 		# Update interaction history
 		agent1Interaction = {
@@ -246,6 +249,14 @@ class Network():
 		}
 		agent2.recordInteraction(agent2Interaction)
 
+	def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+		"""Given the agents, their reputations, and their moves, update their personal reputations (the reputation they use for themselves for all of their interactions)."""
+		agent1PersonalReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2Reputation, agent1Move)
+		agent2PersonalReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1Reputation, agent2Move)
+
+		agent1.updatePersonalReputation(agent1PersonalReputation)
+		agent2.updatePersonalReputation(agent2PersonalReputation)
+
 	def showHistory(self):
 		for agent in self.agentList:
 			s = f"History for agent {agent.id} \n"
@@ -258,12 +269,13 @@ class Network():
 		
 		history = self.convergenceHistory
 
+		# Minimum 3 snapshots needed to check for convergence (as defined in self.convergenceHistory)
 		if None in history:
 			return
 
 		if history[2] == history[1] and history[1] == history[0]:
 			self.hasConverged = True
-			print(f"HAS CONVERGED AT {self.currentPeriod}")
+			self.results.convergedAt = self.currentPeriod
 
 	def chooseTwoAgents(self):
 		agent1 = random.choice(self.agentList)
@@ -281,6 +293,132 @@ class Network():
 				randomMutant.currentStrategy.changeStrategy(mutantStrategyID)
 				addedMutants.append(randomMutant)
 
+	# def evolutionaryUpdate(self):
+	# 	"""Calculate the distribution of utilities over the various strategies and reallocate the strategies of members in the same proportions. E.g. if Strategy 1 and 2 at the end of a timestep have average utility 5 and 10, then the strategy distribution for the next round for Strategies 1 and 2 should be 33%/66%."""
+	# 	populationSize = self.config['size']
+	# 	currentCensus = list(self.getCensusProportions().values())
+		
+	# 	currentUtils = self.results.utilities[self.currentPeriod]
+	# 	print("Strategy Distribution: ", self.getCensusProportions())
+	# 	print("Utility Distribution: ", currentUtils)
+	# 	# If the average utility of a strategy is negative, why would anyone switch to it? Remove it from the distribution
+	# 	for key, _ in currentUtils.items():
+	# 		if currentUtils[key]<0:
+	# 			currentUtils[key] = 0
+	# 	print("Utility Distribution: ", currentUtils)
+
+	# 	totalAvgUtil = sum(currentUtils.values())
+	# 	if totalAvgUtil == 0:
+	# 		return
+		
+	# 	# Get distribution of utilities per strategy
+	# 	finalCensus = [round(util/totalAvgUtil, 3) for util in currentUtils.values()]
+
+
+	# 	difference = [round(y-x,2) for x, y in zip(currentCensus, finalCensus)]
+	# 	if sum([abs(x) for x in difference]) == 0:
+	# 		print("system converged to 1 strategy")
+	# 		return
+
+	# 	strategySwaps = [(i, thing) for i, thing in zip(list(range(10)), difference) if round(thing,3) != 0]
+	# 	print(strategySwaps)
+
+
+	# 	print("Strategy Update: ", strategySwaps)
+	# 	assert len(strategySwaps) <= 2
+	# 	if strategySwaps[0][1] > 0:
+	# 		strategySwaps.reverse()
+		
+	# 	for agent in self.agentList:
+	# 		if agent.currentStrategy.currentStrategyID == strategySwaps[0][0]:
+	# 			r = random.random()
+	# 			if r < strategySwaps[1][1]*self.config['updateProbability']:
+	# 				print(f"Agent {agent.id}, sOld={agent.currentStrategy.currentStrategyID}, r={r}, sNew={strategySwaps[1][0]}")
+	# 				agent.currentStrategy.changeStrategy(strategySwaps[1][0])
+	# 			else:
+	# 				print("no update")
+	# 		else:
+	# 			print(f"Agent {agent.id}, sOld={agent.currentStrategy.currentStrategyID}, nochange!")
+
+	# 	print("New Strategy Distribution: ", self.getCensusProportions())
+
+	def evolutionaryUpdate(self, alpha):
+		"""Calculate the distribution of utilities over the various strategies and reallocate the strategies of members in the same proportions. E.g. if Strategy 1 and 2 at the end of a timestep have average utility 5 and 10, then the strategy distribution for the next round for Strategies 1 and 2 should be 33%/66%."""
+
+		startingDistribution = self.getCensusProportions()
+
+		# If the population is already dominated by a single strategy then strategy update is not possible (this could emerge by only a single strategy in the population)
+		activeStrategies = {}
+		for key, value in startingDistribution.items():
+			if value > 0:
+				activeStrategies[key] = value
+		
+		if len(activeStrategies) == 1:
+			print("skipped")
+			return
+		elif len(activeStrategies) > 2:
+			raise Exception("more than 2 strategies in the population -> should not happen currently!")
+
+		# We only care about strategies with positive utilities
+		strategyUtils = self.results.utilities[self.currentPeriod]
+		activeUtils = {}.fromkeys(activeStrategies)
+		for key, value in strategyUtils.items():
+			if key in activeStrategies.keys():
+				activeUtils[key] = strategyUtils[key] if strategyUtils[key] > 0 else 0
+		totalUtil = sum(activeUtils.values())
+
+
+		# Find target distribution weighted by alpha
+		target = {}.fromkeys(activeStrategies)
+		for key, value in target.items():
+			util = activeUtils[key]
+			target[key] = (1-alpha)*activeStrategies[key] + alpha*(util/totalUtil)
+
+		# Find proportion of population changing strategies
+		change = {}.fromkeys(target)
+		for key, value in target.items():
+			change[key] = round(target[key] - activeStrategies[key],4)
+
+		order = [None, None]
+		for key, value in change.items():
+			if value < 0:
+				order[0] = key
+			else:
+				order[1] = key
+		losingStrategy, growingStrategy = order
+
+		for agent in self.agentList:
+			if agent.currentStrategy.currentStrategyID == losingStrategy:
+				r = random.random()
+				if r < abs(target[growingStrategy]):
+					agent.currentStrategy.changeStrategy(growingStrategy)
+			
+		print()
+		print("strats: ", activeStrategies)
+		print("utils: ", activeUtils)
+		print("target: ", target)
+		print("change: ", change)
+		print("losing strat: ", losingStrategy)
+		print("growing strat: ", growingStrategy)
+		print("new strats: ", self.getCensusProportions())
+
+
+
+
+
+
+
+	#TODO: 
+	# smooth evolutionary strategy update
+	# final distribution of strategies defined same as proportions of payoffs, so you have a goal distribution of updated strategies, then you cycle throughe each agent and each agent updates with some probability defined by us
+
+	#TODO:
+	# Faster the speed of evolution (omega), the lower the proportion of cooperators
+
+	#TODO:
+	# Global reputation but local update, you copy from your neighbours, but interact with everybody
+		
+
 	def runSingleTimestep(self):
 		self.playSocialDilemna()
 		r = random.random()
@@ -294,6 +432,7 @@ class Network():
 			# print(f"Agent {agent.id} updating to {agent.currentStrategy.currentStrategyID}")
 
 		# if self.currentPeriod in self.convergenceHistory
+
 
 	def resetUtility(self):
 		for agent in self.agentList:
