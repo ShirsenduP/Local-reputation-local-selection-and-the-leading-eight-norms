@@ -32,14 +32,13 @@ class Agent():
 		"""Update the utility or cumulative payoff of an agent."""
 		self.currentUtility += payoff
 
-	def updateStrategy(self, updateProbability):
+	def updateStrategy(self, updateProbability, copyTheBest=True):
 		"""(COPY THE BEST) Switch strategies to the strategy used by the best performing neighbour of the agent with some probability."""
 		r = random.random()
 		if r < updateProbability:
-			newStrategyID = self.findBestLocalStrategy()
+			newStrategyID = self.findBestLocalStrategy(copyTheBetter)
 			if newStrategyID == self.currentStrategy.currentStrategyID:
 				return
-			oldStrategyID = self.currentStrategy.currentStrategyID
 			self.currentStrategy.changeStrategy(newStrategyID)
 
 	
@@ -70,16 +69,20 @@ class Agent():
 			s += f"Last interaction with neighbour {neighbour.id} was {self.history[neighbour]}\n"
 		return s
 
-	def findBestLocalStrategy(self):
-		"""Find the strategy of your best performing neighbour. (Copy the best)"""
+	def findBestLocalStrategy(self, copyTheBest):
+		"""Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the strategies with maximum utility."""
 		neighbourUtilities = list(map(lambda x:x.currentUtility, self.neighbours))
-		maxLocalUtility = max(neighbourUtilities)
-		indices = [i for i, x in enumerate(neighbourUtilities) if x == maxLocalUtility]
+		if copyTheBest:
+			maxLocalUtility = max(neighbourUtilities)
+			indices = [i for i, x in enumerate(neighbourUtilities) if x == maxLocalUtility]
+		else:
+			betterLocalUtilities = [util for util in neighbourUtilities if util > self.currentUtility]
+			indices = [i for i, x in enumerate(neighbourUtilities) if x == random.choice(betterLocalUtilities)]
 		bestLocalStrategyID = random.choice(indices)
+
 		return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
 		
 		
-	# 	#TODO: find competing strategies with same max utilities
 
 	#TODO: Test this!!!
 	# def findBestLocalStrategy(self):

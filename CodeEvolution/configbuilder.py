@@ -1,19 +1,20 @@
 import json
 import datetime
+from socialdilemna import PrisonersDilemna
 
 class ConfigBuilder():
 	
 	def __init__(self, 
-		_sizes, 
-		_densities, 
-		_distribution,
-		_socialNorm,
-		_omegas, 
-		_maxperiods, 
 		_socialDilemna, 
-		_updateProbability,
-		_mutantID,
-		_probabilityOfMutants):
+		_sizes=[500], 
+		_densities=[0.2], 
+		_distribution=[0.9, 0, 0, 0, 0, 0, 0, 0, 0.1, 0],
+		_socialNorm=0,
+		_omegas=[0.99], 
+		_maxperiods=2000, 
+		_updateProbability=[0.1],
+		_mutantID=8,
+		_probabilityOfMutants=[1]):
 
 		self.configuration = self.__generate(_sizes, 
 			_densities,
