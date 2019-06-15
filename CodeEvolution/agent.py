@@ -111,6 +111,7 @@ class Agent():
 	def __str__(self):
 		s = "("
 		s += f"Agent {self.id}"
+		s += f"# of agents {len(self.neighbours)}"
 		s += f", s={self.currentStrategy.currentStrategyID}"
 		return s
 

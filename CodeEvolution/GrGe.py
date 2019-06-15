@@ -56,7 +56,7 @@ class GrGe_Network(Network):
 		#probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative strategies)*(speed of evolution, larger the alpha, the slower the evolution)
 		for strategy, _ in strategyUtils.items():
 			strategyUtils[strategy] /= (totalUtil*alpha)
-
+		
 		# print(10*"_")
 		# print(self.currentPeriod)
 		for agent in self.agentList:
@@ -107,11 +107,11 @@ if __name__ == "__main__":
 	print("START OHTSUKI AND ISAWA MODEL")
 	N = GrGe_Network(config)
 	print("Starting Strategy Distribution (T=0) - ", N.getCensus())
-	N.runSimulation()
-	print(f"Ending Strategy Distribution (T={N.results.convergedAt}) - ", N.getCensus())
 	
-	# for thing in N.results.strategyProportions.items():
-	# 	print(thing)
-	
-	
+	for i in range(20):
+		N = GrGe_Network(config)
+		N.runSimulation()
+		print(f"{i}: Ending Strategy Distribution (T={N.results.convergedAt}) - ", N.getCensus())
+
+	#TODO make delete method for network to erase everything
 	print("END")

@@ -14,12 +14,6 @@ from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.socialdilemna import SocialDilemna, PrisonersDilemna
 from CodeEvolution.strategy import Strategy
 
-# logging.basicConfig(filename="CodeEvolution/logs/test.log", level=logging.DEBUG, format='%(asctime)s \t%(levelname)s \t%(module)s \t%(funcName)s \t%(message)s')
-
-# testSeed = 1
-# random.seed(testSeed)
-# np.random.seed(testSeed)
-
 class Network():
 
 	def __init__(self, _config, agentType=Agent):
@@ -38,6 +32,9 @@ class Network():
 		self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/100))
 		self.convergenceCheckIntervals.sort()
 		self.convergenceHistory = deque(3*[None], 3)
+
+	# def resetNetwork(self):
+		#TODO: reset everything
 
 	def resetTempActions(self):
 		"""Reset the cooperation/defection counter to zero. To be used at the end of each timeperiod after actions have been recorded."""
@@ -117,6 +114,7 @@ class Network():
 
 	def createNetwork(self, agentType):
 		"""Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
+		#TODO: Check Erdos Renyi, think I am iterating through each edge TWICE -> doubling the density of the random graph - https://stackoverflow.com/questions/31079526/how-to-iterate-over-each-edge-of-a-complete-graph-exactly-once
 
 		strategyDistribution = self.getStrategyCounts()
 

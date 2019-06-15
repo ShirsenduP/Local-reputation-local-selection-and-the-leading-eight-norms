@@ -11,8 +11,12 @@ from CodeEvolution.strategy import Strategy
 class LrGe_Network(Network):
 	"""Network with Local Reputation and Global Evolution (LrGe)"""
 	
-	def __init__(self, config):
-		raise NotImplementedError
+	def __init__(self, _config):
+		super().__init__(_config)
+		if _config['density'] != 1:
+			_config['density'] = 1
+		self.createNetwork(agentType=Agent)
+		self.evolutionaryUpdateSpeed = 0.5
 
 	def getOpponentsReputation(self):
 		raise NotImplementedError

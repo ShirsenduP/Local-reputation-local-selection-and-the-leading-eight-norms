@@ -7,7 +7,6 @@ from unittest import TestCase
 import random
 import numpy as np
 
-## DEFAULT TEST PARAMETERS UNLESS OTHERWISE SPECIFIED (DO NOT CHANGE)
 
 # Random Number Generation (seed must be 1 for testing)
 seed = 1
@@ -15,8 +14,8 @@ random.seed(seed)
 np.random.seed(seed)
 
 # Social PrisonersDilemna
-pdBenefit = 1
-pdCost = 0.5
+pdBenefit = 2
+pdCost = 1
 
 # Network
 size = [5]

@@ -10,7 +10,11 @@ from CodeEvolution.strategy import Strategy
 
 class LrLe_Network(Network):
 	"""Network with Local Reputation and Local Evolution (LrLe)"""
-
+	
+	def __init__(self, _config):
+		super().__init__(_config)
+		self.createNetwork(agentType=None)
+		self.evolutionaryUpdateSpeed = 0.5
 			
 	def evolutionaryUpdate(self):
 		#TODO: COMPLETE
@@ -119,3 +123,7 @@ if __name__=="__main__":
 		_updateProbability=updateProbability,
 		_mutantID=mutantID,
 		_probabilityOfMutants=probabilityOfMutants)
+
+	N = LrLe_Network(config)
+	N.runSimulation()
+	print(N)

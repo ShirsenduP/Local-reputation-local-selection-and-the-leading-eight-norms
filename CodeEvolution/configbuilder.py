@@ -1,6 +1,6 @@
 import json
 import datetime
-from socialdilemna import PrisonersDilemna
+from CodeEvolution.socialdilemna import PrisonersDilemna
 
 class ConfigBuilder():
 	
