@@ -21,7 +21,6 @@ class Network():
 		self.agentList = []
 		self.socialNorm = SocialNorm(_config['socialNorm'])
 		self.population = nx.Graph()
-		# self.createNetwork()
 		self.currentPeriod = 0
 		self.results = Results()
 		self.tempActions = {
@@ -32,9 +31,22 @@ class Network():
 		self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/100))
 		self.convergenceCheckIntervals.sort()
 		self.convergenceHistory = deque(3*[None], 3)
+		dilemnaParameters = self.config['socialDilemna']
+		if dilemnaParameters[0] == 'PD':
+			self.dilemna = PrisonersDilemna(dilemnaParameters[1], dilemnaParameters[2])
+		else:
+			raise Exception("Social Dilemna broken")
 
-	# def resetNetwork(self):
-		#TODO: reset everything
+	def __del__(self):
+		self.socialNorm = None
+		self.currentPeriod = 0
+		self.results = None
+		self.resetTempActions()
+		self.hasConverged = False 
+		# for agentID in range(len(self.agentList)-1, 0):
+		# 	old = self.agentList.pop(agentID)
+		# 	del old
+		Strategy.reset()
 
 	def resetTempActions(self):
 		"""Reset the cooperation/defection counter to zero. To be used at the end of each timeperiod after actions have been recorded."""
@@ -154,7 +166,7 @@ class Network():
 		self.tempActions[agent2Move] += 1
 		
 		# Calculate each agent's payoff
-		payoff1, payoff2 = self.config['dilemna'].playGame(agent1Move, agent2Move)
+		payoff1, payoff2 = self.dilemna.playGame(agent1Move, agent2Move)
 		
 		# Update agents after interaction
 		agent1.updateUtility(payoff1)

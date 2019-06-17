@@ -1,4 +1,5 @@
 import random
+import psutil
 
 from CodeEvolution.network import Network
 from CodeEvolution.configbuilder import ConfigBuilder
@@ -85,33 +86,40 @@ class GrGe_Agent(Agent):
 
 
 if __name__ == "__main__":
-	
-	# Social PrisonersDilemna
-	pdBenefit = 2
-	pdCost = 1
-	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
 
-	#TODO TESTS
-	"""	1. starting 50/50 mutants and some Strategy
-		2. Initially a strategy and no mutants - at the end of each timestep, each agent has some 'probabilityOfMutants' of turning into a mutant (<< .1 )
-		3. test the number of mutants needed to kill the system"""
+
 
 
 	###
 	### MODEL-GENERATED-PARAMETERS
 	###
 
-	config = ConfigBuilder(_socialDilemna=socialDilemna)
+	config = ConfigBuilder()
+	#TODO: initialise the social dilemna object inside the network!!! pass parameters and type of SD into the config builder, and have the network create the social dilemna
 	config = config.configuration[0]
 
-	print("START OHTSUKI AND ISAWA MODEL")
-	N = GrGe_Network(config)
-	print("Starting Strategy Distribution (T=0) - ", N.getCensus())
-	
-	for i in range(20):
-		N = GrGe_Network(config)
-		N.runSimulation()
-		print(f"{i}: Ending Strategy Distribution (T={N.results.convergedAt}) - ", N.getCensus())
+	def runExperiment(config, networkType=Network, agentType=Agent, iter=10):
+		experimentResults = {}
+		for i in range(iter):
+			print(".", end="")
+			def simulate(config):
+				N = networkType(config)
+				N.runSimulation()
+				print(N.getCensus())
+				results = N.results.export()
+				return results
+			experimentResults[i] = simulate(config)
+		return experimentResults
 
-	#TODO make delete method for network to erase everything
+	R = runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, iter=5)
+	means = Results.averageOverIterations(R)
+	Results.exportResultsToCSV("test", means, 14)
+
 	print("END")
+
+
+
+	#TODO TESTS
+	"""	1. starting 50/50 mutants and some Strategy
+		2. Initially a strategy and no mutants - at the end of each timestep, each agent has some 'probabilityOfMutants' of turning into a mutant (<< .1 )
+		3. test the number of mutants needed to kill the system"""

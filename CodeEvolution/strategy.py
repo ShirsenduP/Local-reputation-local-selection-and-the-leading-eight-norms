@@ -22,7 +22,6 @@ class Strategy():
 		self.currentStrategy = dict((key, value) for key, value in zip(Strategy.allStates, Strategy.allOutcomes[strategyID]))
 		self.updateCensus(strategyID, None)
 
-
 	def chooseAction(self, agent1Reputation, agent2Reputation):
 		stateKey = str(agent1Reputation) + str(agent2Reputation)
 		return self.currentStrategy[stateKey]
@@ -39,12 +38,14 @@ class Strategy():
 		if sum(Strategy.census.values()) != Strategy.totalCountOfStrategies:
 			raise Exception("Number of strategies in census is greater than number of agents")
 	
+	@classmethod
+	def reset(cls):
+		Strategy.census = {}.fromkeys(range(10),0)
+		Strategy.totalCountOfStrategies = 0
+
 	def __str__(self):
 		return f"{self.currentStrategyID} - {self.currentStrategy}"
 
-def main():
-	pass
-
 if __name__ == "__main__":
-	main()
+	Strategy.reset()
 

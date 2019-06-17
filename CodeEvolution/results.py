@@ -53,3 +53,4 @@ class Results():
 		s += 3*'\n'
 		s += str(self.actions)
 		return s
+

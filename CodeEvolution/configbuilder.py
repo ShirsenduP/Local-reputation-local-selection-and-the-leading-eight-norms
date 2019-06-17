@@ -5,11 +5,11 @@ from CodeEvolution.socialdilemna import PrisonersDilemna
 class ConfigBuilder():
 	
 	def __init__(self, 
-		_socialDilemna, 
 		_sizes=[500], 
 		_densities=[0.2], 
 		_distribution=[0.9, 0, 0, 0, 0, 0, 0, 0, 0.1, 0],
 		_socialNorm=0,
+		_socialDilemna=('PD', 2, 1), 
 		_omegas=[0.99], 
 		_maxperiods=2000, 
 		_updateProbability=[0.1],
@@ -43,6 +43,7 @@ class ConfigBuilder():
 								'density' : density,
 								'distribution' : _distribution,
 								'socialNorm' : _socialNorm,
+								'socialDilemna' : _socialDilemna,
 								'omega' : omega,
 								'maxperiods' : _maxperiod,
 								'dilemna' : _socialDilemna,

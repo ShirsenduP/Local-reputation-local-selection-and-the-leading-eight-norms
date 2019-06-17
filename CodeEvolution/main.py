@@ -12,6 +12,7 @@ from CodeEvolution.network import Network
 from CodeEvolution.agent import Agent
 from CodeEvolution.socialdilemna import PrisonersDilemna
 from CodeEvolution.strategy import Strategy
+from GrGe import GrGe_Agent, GrGe_Network
 
 def main():
 	# seed = 12
@@ -50,7 +51,7 @@ def main():
 	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
 	updateProbability = [0.99]
 	mutantID = 8
-	probabilityOfMutants = [0.1]
+	probabilityOfMutants = [10]
 
 	###
 	### MODEL-GENERATED-PARAMETERS
@@ -81,44 +82,14 @@ def main():
 	### MODEL
 	###
 
-	# logger.info("Network Initialising")
-	N = Network(config.configuration[0])
-	N.createNetwork()
-	# print(N)
 
-	print("Start")
-	# logger.info("Simulation Initialising")
-	
-	# print(N.getCensusProportions())
-
-	N.runSimulation()
-	# logger.info("Simulation Terminating")
-	# results = N.results.export()
-	# print(N.results.strategyProportions[maxperiods-1])
-
-	# plt.plot(results.strategyProportions[0])
-	# plt.plot(results.strategyProportions[9])
-	# plt.plot(results.utilities[0])
-	# plt.plot(results.utilities[8])self.results.strategyProportions
-	# plt.plot(results.actions['C'])
-	# plt.plot(results.actions['D'])
-	# plt.show()
-
-	# print(N)
-	# print(N.results.strategyProportions[N.currentPeriod-1])
-	# print(N.getCensusProportions())
-	# np.savetxt("CodeEvolution/results/strategies.csv", N.results['strategies'], delimiter=',')
-	# print(N.convergenceHistory)
-	# print(N.results['strategies'])
-	# print(N.results['averageUtility'])
-	# logger.info("Network Terminating")
-	print("End")
-
-	# p = pd.DataFrame(N.results['strategies'])
-	# print(p)
-
-
-
+	for i in range(5):
+		N = GrGe_Network(config.configuration[0])
+		N.createNetwork(GrGe_Agent)
+		print("Start simulation {}".format(i))
+		N.runSimulation()
+		print(N.getCensusProportions())
+		del N
 
 
 if __name__ == "__main__":
