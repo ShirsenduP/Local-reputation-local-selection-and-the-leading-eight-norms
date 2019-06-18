@@ -1,5 +1,9 @@
 import random
 import psutil
+import pandas as pd
+
+from pprint import pprint
+from tqdm import tqdm
 
 from CodeEvolution.network import Network
 from CodeEvolution.configbuilder import ConfigBuilder
@@ -14,8 +18,8 @@ class GrGe_Network(Network):
 
 	def __init__(self, _config):
 		super().__init__(_config)
-		if _config['density'] != 1:
-			_config['density'] = 1
+		if self.config['density'] != 1:
+			self.config['density'] = 1
 		self.createNetwork(agentType=GrGe_Agent)
 		self.evolutionaryUpdateSpeed = 0.5
 
@@ -80,40 +84,25 @@ class GrGe_Agent(Agent):
 		"""Overwrite the default update strategy method which implements local learning. Strategy updates occur in the network.evolutionaryUpdate method."""
 		pass
 
-
-
-
-
+def runExperiment(config, networkType=Network, agentType=Agent, repeat=10):
+	results = {}
+	for i in tqdm(range(repeat)):
+		def simulate(config):
+			N = networkType(config)
+			N.runSimulation()
+			resultsActions = N.results.exportActions()
+			resultsCensus = N.results.exportCensus()
+			return pd.concat([resultsActions, resultsCensus], axis=1)
+		results[i] = simulate(config)
+	print()
+	meanResults = Results.averageOverIterations(results)
+	return meanResults
 
 if __name__ == "__main__":
 
-
-
-
-	###
-	### MODEL-GENERATED-PARAMETERS
-	###
-
 	config = ConfigBuilder()
-	#TODO: initialise the social dilemna object inside the network!!! pass parameters and type of SD into the config builder, and have the network create the social dilemna
-	config = config.configuration[0]
-
-	def runExperiment(config, networkType=Network, agentType=Agent, iter=10):
-		experimentResults = {}
-		for i in range(iter):
-			print(".", end="")
-			def simulate(config):
-				N = networkType(config)
-				N.runSimulation()
-				print(N.getCensus())
-				results = N.results.export()
-				return results
-			experimentResults[i] = simulate(config)
-		return experimentResults
-
-	R = runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, iter=5)
-	means = Results.averageOverIterations(R)
-	Results.exportResultsToCSV("test", means, 14)
+	R = runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=10)
+	Results.exportResultsToCSV("test", config, R, 0)
 
 	print("END")
 

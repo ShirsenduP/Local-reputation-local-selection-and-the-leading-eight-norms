@@ -17,9 +17,9 @@ from CodeEvolution.strategy import Strategy
 class Network():
 
 	def __init__(self, _config, agentType=Agent):
-		self.config = _config
+		self.config = _config.configuration
 		self.agentList = []
-		self.socialNorm = SocialNorm(_config['socialNorm'])
+		self.socialNorm = SocialNorm(self.config['socialNorm'])
 		self.population = nx.Graph()
 		self.currentPeriod = 0
 		self.results = Results()
@@ -35,7 +35,7 @@ class Network():
 		if dilemnaParameters[0] == 'PD':
 			self.dilemna = PrisonersDilemna(dilemnaParameters[1], dilemnaParameters[2])
 		else:
-			raise Exception("Social Dilemna broken")
+			raise Exception("Social dilemna invalid, must be 'PD' currently!")
 
 	def __del__(self):
 		self.socialNorm = None
@@ -43,10 +43,8 @@ class Network():
 		self.results = None
 		self.resetTempActions()
 		self.hasConverged = False 
-		# for agentID in range(len(self.agentList)-1, 0):
-		# 	old = self.agentList.pop(agentID)
-		# 	del old
 		Strategy.reset()
+		
 
 	def resetTempActions(self):
 		"""Reset the cooperation/defection counter to zero. To be used at the end of each timeperiod after actions have been recorded."""

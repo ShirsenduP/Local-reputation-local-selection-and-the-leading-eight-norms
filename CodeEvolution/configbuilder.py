@@ -52,8 +52,11 @@ class ConfigBuilder():
 								'probabilityOfMutants' : probabilityOfMutants
 							}
 							testCounter += 1
-							
-		return config
+
+		if testCounter == 1:
+			return config[0]
+		else:		
+			return config
 
 
 def main():
