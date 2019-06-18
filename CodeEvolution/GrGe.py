@@ -74,7 +74,6 @@ class GrGe_Agent(Agent):
 	def __init__(self, _id, _strategy):
 		super().__init__(_id, _strategy)
 		self.history = None
-		self.currentReputation = random.choice(self.reputation)
 
 	def initialiseHistory(self):
 		"""With global access to agent reputations, maintaining a history log is unnecessary."""
@@ -84,15 +83,20 @@ class GrGe_Agent(Agent):
 		"""Overwrite the default update strategy method which implements local learning. Strategy updates occur in the network.evolutionaryUpdate method."""
 		pass
 
-def runExperiment(config, networkType=Network, agentType=Agent, repeat=10):
+def runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=10):
 	results = {}
-	for i in tqdm(range(repeat)):
+	for i in range(repeat):
 		def simulate(config):
 			N = networkType(config)
 			N.runSimulation()
 			resultsActions = N.results.exportActions()
 			resultsCensus = N.results.exportCensus()
-			return pd.concat([resultsActions, resultsCensus], axis=1)
+			resultsUtils = N.results.exportUtilities()
+			# print(resultsActions)
+			# print(resultsCensus)
+			# print(resultsUtils)
+			N.results.exportUtilities()
+			return pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
 		results[i] = simulate(config)
 	print()
 	meanResults = Results.averageOverIterations(results)
@@ -100,8 +104,9 @@ def runExperiment(config, networkType=Network, agentType=Agent, repeat=10):
 
 if __name__ == "__main__":
 
-	config = ConfigBuilder()
-	R = runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=10)
+	config = ConfigBuilder(_maxperiods=10)
+	R = runExperiment(config)
+	print(R)
 	Results.exportResultsToCSV("test", config, R, 0)
 
 	print("END")

@@ -37,7 +37,6 @@ class ConfigBuilder():
 				for omega in _omegas:
 					for updateProbability in _updateProbability:
 						for probabilityOfMutants in _probabilityOfMutants:
-							# print(testCounter)
 							config[testCounter] = {
 								'size' : size,
 								'density' : density,

@@ -18,13 +18,11 @@ class Results():
 			self.actions[key].append(proportionAction)
 
 
-	# def export(self):
-	# 	"""Return results of a single run of an experiment as a dataframe."""
-	# 	actions = pd.DataFrame(self.actions)
-	# 	strategyProportions = pd.DataFrame(self.strategyProportions)
-	# 	utilities = pd.DataFrame(self.utilities)
-	# 	results = pd.concat([actions, strategyProportions, utilities], axis=1)
-	# 	return results
+	def exportUtilities(self):
+		utils = self.removeZeros(self.utilities)
+		utils = pd.DataFrame(utils).transpose()
+		utils = utils.add_prefix('Average Util. Strategy #')
+		return utils
 
 	def exportActions(self):
 		actions = pd.DataFrame(self.actions)
@@ -32,22 +30,27 @@ class Results():
 		return actions
 
 	def exportCensus(self):
-		#find strategies that are not present at the start of the simulation
+		census = self.removeZeros(self.strategyProportions)
+		census = pd.DataFrame(census).transpose()
+		census = census.add_prefix('Prop. Strategy #')
+		return census
+
+	def removeZeros(self, data):
+		"""Given a dictionary where each key is a timestep, and each corresponding value is another dictionary where the keys and values are the strategies and their average utilities, find the strategies that are not at the start of the simulation (as only two strategies are ever in play) and remove them from all timesteps."""
 		emptyKeys = []
 		nonEmptyKeys = []
-		for key, value in self.strategyProportions[0].items():
+		for key, value in data[0].items():
 			if value == 0:
 				emptyKeys.append(key)
 			else:
 				nonEmptyKeys.append(key)
 
-		#remove strategies
-		for key, value in self.strategyProportions.items():
+		for key, value in data.items():
 			for emptyKey in emptyKeys:
-				self.strategyProportions[key].pop(emptyKey, None)
-		strats = pd.DataFrame(self.strategyProportions).transpose()
-		strats = strats.add_prefix('Prop. Strategy #')
-		return strats
+				data[key].pop(emptyKey, None)
+
+		return data
+
 
 	@classmethod
 	def averageOverIterations(cls, iterations):
