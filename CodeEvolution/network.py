@@ -76,10 +76,10 @@ class Network():
 
 	def runSimulation(self):
 		"""Run full simulation for upto total number of simulations defined in 'self.config['maxperiods']' or up until the system converges at preallocated randomly chosen convergence check intervals."""
-		# self.initStrategies()
 		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
 		while self.currentPeriod < self.config['maxperiods'] and not self.hasConverged:
+			print(Strategy.interactionCount)
 			self.resetUtility()
 			self.resetTempActions()
 			self.runSingleTimestep()
@@ -165,6 +165,9 @@ class Network():
 		
 		# Calculate each agent's payoff
 		payoff1, payoff2 = self.dilemna.playGame(agent1Move, agent2Move)
+		Strategy.updateInteractions(agent1, payoff1)
+		Strategy.updateInteractions(agent2, payoff2)
+		
 		
 		# Update agents after interaction
 		agent1.updateUtility(payoff1)
@@ -239,6 +242,9 @@ class Network():
 		"""Reset the utility of each agent in the population. To be used at the end of every timestep."""
 		for agent in self.agentList:
 			agent.currentUtility = 0
+		Strategy.interactionCount = {}.fromkeys(range(10),{}.fromkeys(['interactions', 'cumulative utility'], 0))
+		# Strategy.interactionCount = {}.fromkeys(range(10), namedtuple('interaction', ['strategyID', 'count']))
+
 
 	def grabSnapshot(self):
 		self.convergenceHistory.appendleft(self.getCensus())

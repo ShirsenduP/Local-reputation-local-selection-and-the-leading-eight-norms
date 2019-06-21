@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 class Strategy():
 	
 	allStates = ['11', '10', '01', '00']
@@ -11,8 +13,9 @@ class Strategy():
 					['C', 'D', 'C', 'D'],
 					['D', 'D', 'D', 'D'], #AllD
 					['C', 'C', 'C', 'C']] #AllC
-	census = {}.fromkeys(range(10),0)
+	census = {}.fromkeys(range(10), 0)
 	totalCountOfStrategies = 0
+	interactionCount = {}.fromkeys(range(10), namedtuple('interaction', ['count', 'utility'], defaults=(None,None)*len(range(9)))) #TODO Critical...
 	
 
 
@@ -37,7 +40,15 @@ class Strategy():
 			Strategy.census[oldStrategyID] -= 1
 		if sum(Strategy.census.values()) != Strategy.totalCountOfStrategies:
 			raise Exception("Number of strategies in census is greater than number of agents")
-	
+
+	@classmethod
+	def updateInteractions(cls, agent, payoff):
+		"""Count strategy-wide utilities and interactions"""
+		strategyID = agent.currentStrategy.currentStrategyID
+		interactionCount[strategyID].count += 1
+		interactionCount[strategyID].utility += payoff
+
+
 	@classmethod
 	def reset(cls):
 		Strategy.census = {}.fromkeys(range(10),0)

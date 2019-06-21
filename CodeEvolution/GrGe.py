@@ -104,7 +104,7 @@ def runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat
 
 if __name__ == "__main__":
 
-	config = ConfigBuilder(_maxperiods=10)
+	config = ConfigBuilder(_maxperiods=1)
 	R = runExperiment(config)
 	print(R)
 	Results.exportResultsToCSV("test", config, R, 0)
