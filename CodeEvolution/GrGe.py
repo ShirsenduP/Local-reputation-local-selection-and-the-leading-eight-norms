@@ -23,19 +23,6 @@ class GrGe_Network(Network):
 		"""(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is accessible to every other agent in the population."""
 		return agent1.currentReputation, agent2.currentReputation
 
-	def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-		"""With direct global access to reputations, interactions need not be recorded. Hence this method overides the default interaction saving mechanism for efficiency."""
-		pass
-
-	def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-		"""Assign reputations following an interaction with each agent's globally known reputation and not the calculated reputation as default."""
-
-		agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation, agent1Move)
-		agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation, agent2Move)
-
-		agent1.updatePersonalReputation(agent1NewReputation)
-		agent2.updatePersonalReputation(agent2NewReputation)
-
 	def evolutionaryUpdate(self, alpha=10):
 		"""Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the utilities of all strategies."""
 
@@ -58,8 +45,6 @@ class GrGe_Network(Network):
 		for strategy, _ in strategyUtils.items():
 			strategyUtils[strategy] /= (totalUtil*alpha)
 		
-		# print(10*"_")
-		# print(self.currentPeriod)
 		for agent in self.agentList:
 			r = random.random()
 			if r < strategyUtils[bestStrategy]:
@@ -70,10 +55,6 @@ class GrGe_Agent(Agent):
 	def __init__(self, _id, _strategy):
 		super().__init__(_id, _strategy)
 		self.history = None
-
-	def initialiseHistory(self):
-		"""With global access to agent reputations, maintaining a history log is unnecessary."""
-		pass
 
 	def updateStrategy(self, updateProbability):
 		"""Overwrite the default update strategy method which implements local learning. Strategy updates occur in the network.evolutionaryUpdate method."""
@@ -88,13 +69,8 @@ def runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat
 			resultsActions = N.results.exportActions()
 			resultsCensus = N.results.exportCensus()
 			resultsUtils = N.results.exportUtilities()
-			# print(resultsActions)
-			# print(resultsCensus)
-			# print(resultsUtils)
-			# N.results.exportUtilities()
 			return pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
 		results[i] = simulate(config)
-	print()
 	meanResults = Results.averageOverIterations(results)
 	return meanResults
 
@@ -103,7 +79,7 @@ if __name__ == "__main__":
 	config = ConfigBuilder()
 	R = runExperiment(config)
 	print(R)
-	Results.exportResultsToCSV("test", config, R, 0)
+	# Results.exportResultsToCSV("test", config, R, 0)
 
 	print("END")
 

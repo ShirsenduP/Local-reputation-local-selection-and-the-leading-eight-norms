@@ -18,11 +18,12 @@ class Network():
 
 	def __init__(self, _config, agentType=Agent):
 		self.config = _config.configuration
+		self.mainStratIDs = self.strategiesInPopulation()
 		self.agentList = []
-		self.socialNorm = SocialNorm(self.config['socialNorm'])
+		self.socialNorm = SocialNorm(self.mainStratIDs[0])
 		self.population = nx.Graph()
 		self.currentPeriod = 0	
-		self.results = Results([0,8])
+		self.results = Results([self.mainStratIDs[0], self.mainStratIDs[1]])
 		self.tempActions = {'C' : 0, 'D' : 0}
 		self.hasConverged = False
 		self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/100))
@@ -34,6 +35,17 @@ class Network():
 			self.dilemna = PrisonersDilemna(dilemnaParameters[1], dilemnaParameters[2])
 		else:
 			raise Exception("Social dilemna invalid, must be 'PD' currently!")
+		
+
+	def strategiesInPopulation(self):
+		"""Find the main strategy ID in the population"""
+		dist = self.config['distribution'] #Only want to find non-mutant agents in the populatiob
+		strategies = [dist.index(value) for value in dist if value != 0]
+		if len(strategies) > 2:
+			raise Exception("More than 1 non-mutant agent in the strategy")
+		return strategies[0], strategies[1]
+
+
 
 	def __del__(self):
 		self.socialNorm = None
@@ -142,7 +154,7 @@ class Network():
 			self.population.add_node(self.agentList[agentID])
 
 		for agentID1 in range(len(self.population)):
-			for agentID2 in range(len(self.population)):
+			for agentID2 in range(agentID1+1, len(self.population)):
 				if agentID1 != agentID2:
 					r = random.random()
 					if r < self.config['density']:
@@ -186,8 +198,8 @@ class Network():
 		agent1.updateUtility(payoff1)
 		agent2.updateUtility(payoff2)
 
-		self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 		self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+		self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 
 
 	def resetUtility(self):
@@ -196,16 +208,33 @@ class Network():
 			agent.currentUtility = 0
 		self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]
 
-		
-
 
 	def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-		"""Must be implemented through the relevent network type. Can be Global or Local."""
-		raise NotImplementedError
+		interaction12 = {
+			'Opponent': agent2,
+			'Focal Reputation': agent1.currentReputation,
+			'Opponent Reputation': agent2Reputation,
+			'Focal Move': agent1Move,
+			'Opponent Move': agent2Move
+		}
+		agent1.recordInteraction(interaction12)
+		interaction21 = {
+			'Opponent': agent1,
+			'Focal Reputation': agent2.currentReputation,
+			'Opponent Reputation': agent1Reputation,
+			'Focal Move': agent2Move,
+			'Opponent Move': agent1Move
+		}
+		agent2.recordInteraction(interaction21)
 
 	def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-		"""Must be implemented through the relevent network type. Can be Global or Local."""
-		raise NotImplementedError
+		"""Assign reputations following an interaction with each agent's globally known reputation and not the calculated reputation as default."""
+
+		agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation, agent1Move)
+		agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation, agent2Move)
+
+		agent1.updatePersonalReputation(agent1NewReputation)
+		agent2.updatePersonalReputation(agent2NewReputation)
 
 	def showHistory(self):
 		for agent in self.agentList:

@@ -20,11 +20,9 @@ class Results():
 
 
 	def exportUtilities(self):
-		# print(self.utilities)
 		utils = self.removeZeros(self.utilities)
 		utils = pd.DataFrame(utils).transpose()
 		utils = utils.add_prefix('Average Util. Strategy #')
-		# print(utils)
 		return utils
 
 	def exportActions(self):
@@ -58,25 +56,25 @@ class Results():
 	@classmethod
 	def averageOverIterations(cls, iterations):
 		"""Take a dictionary where each key is the iteration number and each value is the corresponding pandas dataframe of results. Return a single dataframe with averaged results."""
-		# print(dict[0].column.values())
-		# print(iterations)
 		iterationsAsList = list(iterations.values())
 		concatenatedResults = pd.concat(iterationsAsList, sort=False)
 		byRowIndex = concatenatedResults.groupby(concatenatedResults.index)
 		means = byRowIndex.mean()
 		return means
-		# return 0
 
 	@classmethod
 	def exportResultsToCSV(cls, experimentName, experimentConfig, experimentResults, experimentNumber):
 		"""Export the results from a single dataframe averaged over multiple iterations as a 'experimentName.csv' file."""
+
+		if 'results' not in os.listdir("CodeEvolution/"):
+			os.mkdir(f"CodeEvolution/results/")
 
 		if experimentName not in os.listdir("CodeEvolution/results"):
 			os.mkdir(f"CodeEvolution/results/{experimentName}")
 
 		experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentNumber}.csv")
 
-		with open(f"CodeEvolution/results/{experimentName}/{experimentNumber}.txt", 'w') as f:
+		with open(f"CodeEvolution/results/{experimentName}/{experimentNumber}.json", 'w') as f:
 			f.write(json.dumps(experimentConfig.configuration)) # use `json.loads` to do the reverse
 
 

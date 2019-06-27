@@ -1,23 +1,21 @@
 import random
+import pandas as pd
 
 from CodeEvolution.network import Network
-from CodeEvolution.configbuilder import ConfigBuilder
 from CodeEvolution.agent import Agent
 from CodeEvolution.results import Results
-from CodeEvolution.socialnorm import SocialNorm
-from CodeEvolution.socialdilemna import SocialDilemna, PrisonersDilemna
-from CodeEvolution.strategy import Strategy
+from CodeEvolution.configbuilder import ConfigBuilder
 
 class LrLe_Network(Network):
 	"""Network with Local Reputation and Local Evolution (LrLe)"""
 	
 	def __init__(self, _config):
 		super().__init__(_config)
-		self.createNetwork(agentType=None)
+		self.createNetwork(agentType=Agent)
 		self.evolutionaryUpdateSpeed = 0.5
 			
 	def evolutionaryUpdate(self):
-		#TODO: COMPLETE
+		"""Local Learning - Out of the subset of agents that are connected to the focal agent, adopt the strategy of the best/better performing agent with some probability."""
 		for agent in self.agentList:
 			agent.updateStrategy(self.config['updateProbability'], copyTheBest=True)
 			
@@ -88,42 +86,23 @@ class LrLe_Network(Network):
 		}
 		agent2.recordInteraction(agent2Interaction)	
 
-if __name__=="__main__":
-	
-	# Social PrisonersDilemna
-	pdBenefit = 2
-	pdCost = 1
 
-	# Network
-	size = [50]
-	density = [0.1] 
-	distribution = [0.9, 0, 0, 0, 0, 0, 0, 0, 0.1, 0]
-	socialNorm = 0
-	omega = [0.99]
+def runExperiment(config, networkType=LrLe_Network, agentType=Agent, repeat=10):
+	results = {}
+	for i in range(repeat):
+		def simulate(config):
+			N = networkType(config)
+			N.runSimulation()
+			resultsActions = N.results.exportActions()
+			resultsCensus = N.results.exportCensus()
+			resultsUtils = N.results.exportUtilities()
+			return pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
+		results[i] = simulate(config)
+	meanResults = Results.averageOverIterations(results)
+	return meanResults
 
-	# Model
-	maxperiods = 10
-	socialDilemna = PrisonersDilemna(pdBenefit, pdCost)
-	updateProbability = [0.99]
-	mutantID = 8
-	probabilityOfMutants = [0.1]
+if __name__ == "__main__":
+	config = ConfigBuilder()
+	R = runExperiment(config)
+	print(R)
 
-	###
-	### MODEL-GENERATED-PARAMETERS
-	###
-
-	config = ConfigBuilder(
-		_sizes=size,
-		_densities=density,
-		_distribution=distribution,
-		_socialNorm=socialNorm,
-		_omegas=omega,
-		_maxperiods=maxperiods,
-		_socialDilemna=socialDilemna,
-		_updateProbability=updateProbability,
-		_mutantID=mutantID,
-		_probabilityOfMutants=probabilityOfMutants)
-
-	N = LrLe_Network(config)
-	N.runSimulation()
-	print(N)
