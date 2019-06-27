@@ -2,8 +2,8 @@ import copy
 import random
 import logging
 import numpy as np
-from math import isclose
-from collections import deque
+import time 
+from collections import deque, namedtuple
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -21,16 +21,14 @@ class Network():
 		self.agentList = []
 		self.socialNorm = SocialNorm(self.config['socialNorm'])
 		self.population = nx.Graph()
-		self.currentPeriod = 0
-		self.results = Results()
-		self.tempActions = {
-			'C' : 0, 
-			'D' : 0
-		}
+		self.currentPeriod = 0	
+		self.results = Results([0,8])
+		self.tempActions = {'C' : 0, 'D' : 0}
 		self.hasConverged = False
 		self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/100))
 		self.convergenceCheckIntervals.sort()
 		self.convergenceHistory = deque(3*[None], 3)
+		self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)] #index0 captures #OfInteractions of an agent with some strategy, index1 captures the total cumulative payoff of all agents running that strategy
 		dilemnaParameters = self.config['socialDilemna']
 		if dilemnaParameters[0] == 'PD':
 			self.dilemna = PrisonersDilemna(dilemnaParameters[1], dilemnaParameters[2])
@@ -59,27 +57,36 @@ class Network():
 		census = self.getCensusProportions()
 		self.results.strategyProportions[self.currentPeriod] = census
 		
-		#add up all the utilities over the strategies
-		censusCounts = self.getCensus()
-		averageUtilities = {}.fromkeys(censusCounts.keys(), 0)
-		for agent in self.agentList:
-			agentStratID = agent.currentStrategy.currentStrategyID
-			averageUtilities[agentStratID] += agent.currentUtility
+		# #add up all the utilities over the strategies
+		# censusCounts = self.getCensus()
+		# averageUtilities = {}.fromkeys(censusCounts.keys(), 0)
+		# for agent in self.agentList:
+		# 	agentStratID = agent.currentStrategy.currentStrategyID
+		# 	averageUtilities[agentStratID] += agent.currentUtility
 			
-		#average the utilities
-		for ID, _ in averageUtilities.items():
-			if censusCounts[ID] > 0:
-				averageUtilities[ID] /= censusCounts[ID]
+		# #average the utilities
+		# for ID, _ in averageUtilities.items():
+		# 	if censusCounts[ID] > 0:
+		# 		averageUtilities[ID] /= censusCounts[ID]
 
-		#update results with utilities
+		# #update results with utilities
+		# self.results.utilities[self.currentPeriod] = averageUtilities
+
+		interactionsDict = self.utilityMonitor[0]
+		payoffDict = self.utilityMonitor[1]
+		averageUtilities = {}.fromkeys(range(10), 0)
+
+		for key, _ in averageUtilities.items():
+			if interactionsDict[key]:
+				averageUtilities[key] = payoffDict[key]/interactionsDict[key]
 		self.results.utilities[self.currentPeriod] = averageUtilities
+		
 
 	def runSimulation(self):
 		"""Run full simulation for upto total number of simulations defined in 'self.config['maxperiods']' or up until the system converges at preallocated randomly chosen convergence check intervals."""
 		self.scanStrategies()
 		mutantProbability = self.config['probabilityOfMutants']
 		while self.currentPeriod < self.config['maxperiods'] and not self.hasConverged:
-			print(Strategy.interactionCount)
 			self.resetUtility()
 			self.resetTempActions()
 			self.runSingleTimestep()
@@ -89,13 +96,13 @@ class Network():
 			if self.currentPeriod in self.convergenceCheckIntervals:
 				self.grabSnapshot()
 				self.checkConvergence()
-
+			
 			if self.hasConverged or self.currentPeriod==self.config['maxperiods']-1:
 				self.results.convergedAt = self.currentPeriod
-				return
+				break
 			else: 
 				self.currentPeriod += 1
-
+		
 	def getStrategyCounts(self):
 		"""Return a list where each element represents the strategyID of an agent"""
 
@@ -151,6 +158,14 @@ class Network():
 		"""Must be implemented through the relevent network type. Can be Global or Local."""
 		raise NotImplementedError
 
+	def updateMonitor(self, agent1, agent2, payoff1, payoff2):
+		agent1ID = agent1.currentStrategy.currentStrategyID
+		agent2ID = agent2.currentStrategy.currentStrategyID
+		self.utilityMonitor[0][agent1ID] += 1
+		self.utilityMonitor[1][agent1ID] += payoff1
+		self.utilityMonitor[0][agent2ID] += 1
+		self.utilityMonitor[1][agent2ID] += payoff2
+
 	def playSocialDilemna(self):
 
 		# Two agents chosen randomly from the population
@@ -165,15 +180,24 @@ class Network():
 		
 		# Calculate each agent's payoff
 		payoff1, payoff2 = self.dilemna.playGame(agent1Move, agent2Move)
-		Strategy.updateInteractions(agent1, payoff1)
-		Strategy.updateInteractions(agent2, payoff2)
-		
-		
-		# Update agents after interaction
+		self.updateMonitor(agent1, agent2, payoff1, payoff2)
+
+		# Update agents personal utilities for evolutionary update
 		agent1.updateUtility(payoff1)
 		agent2.updateUtility(payoff2)
+
 		self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 		self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+
+
+	def resetUtility(self):
+		"""Reset the utility of each agent in the population. To be used at the end of every timestep."""
+		for agent in self.agentList:
+			agent.currentUtility = 0
+		self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]
+
+		
+
 
 	def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
 		"""Must be implemented through the relevent network type. Can be Global or Local."""
@@ -233,18 +257,6 @@ class Network():
 			r = random.random()
 		
 		self.results.updateActions(self.tempActions)
-
-		# Update strategies
-		# for agent in self.agentList:
-		# 	agent.updateStrategy(self.config['updateProbability'])
-
-	def resetUtility(self):
-		"""Reset the utility of each agent in the population. To be used at the end of every timestep."""
-		for agent in self.agentList:
-			agent.currentUtility = 0
-		Strategy.interactionCount = {}.fromkeys(range(10),{}.fromkeys(['interactions', 'cumulative utility'], 0))
-		# Strategy.interactionCount = {}.fromkeys(range(10), namedtuple('interaction', ['strategyID', 'count']))
-
 
 	def grabSnapshot(self):
 		self.convergenceHistory.appendleft(self.getCensus())

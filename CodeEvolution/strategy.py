@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 class Strategy():
 	
 	allStates = ['11', '10', '01', '00']
@@ -15,7 +13,6 @@ class Strategy():
 					['C', 'C', 'C', 'C']] #AllC
 	census = {}.fromkeys(range(10), 0)
 	totalCountOfStrategies = 0
-	interactionCount = {}.fromkeys(range(10), namedtuple('interaction', ['count', 'utility'], defaults=(None,None)*len(range(9)))) #TODO Critical...
 	
 
 
@@ -24,6 +21,7 @@ class Strategy():
 		self.currentStrategyID = strategyID
 		self.currentStrategy = dict((key, value) for key, value in zip(Strategy.allStates, Strategy.allOutcomes[strategyID]))
 		self.updateCensus(strategyID, None)
+
 
 	def chooseAction(self, agent1Reputation, agent2Reputation):
 		stateKey = str(agent1Reputation) + str(agent2Reputation)
@@ -41,13 +39,6 @@ class Strategy():
 		if sum(Strategy.census.values()) != Strategy.totalCountOfStrategies:
 			raise Exception("Number of strategies in census is greater than number of agents")
 
-	@classmethod
-	def updateInteractions(cls, agent, payoff):
-		"""Count strategy-wide utilities and interactions"""
-		strategyID = agent.currentStrategy.currentStrategyID
-		interactionCount[strategyID].count += 1
-		interactionCount[strategyID].utility += payoff
-
 
 	@classmethod
 	def reset(cls):
@@ -58,5 +49,5 @@ class Strategy():
 		return f"{self.currentStrategyID} - {self.currentStrategy}"
 
 if __name__ == "__main__":
-	Strategy.reset()
+	pass
 

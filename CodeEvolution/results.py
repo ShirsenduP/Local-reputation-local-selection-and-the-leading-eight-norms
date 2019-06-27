@@ -4,7 +4,8 @@ import json
 
 class Results():
 
-	def __init__(self):
+	def __init__(self, strategies):
+		self.strategies = set(strategies)
 		self.actions = {'C' : [], 'D' : []}
 		self.strategyProportions = {}
 		self.utilities = {}
@@ -19,9 +20,11 @@ class Results():
 
 
 	def exportUtilities(self):
+		# print(self.utilities)
 		utils = self.removeZeros(self.utilities)
 		utils = pd.DataFrame(utils).transpose()
 		utils = utils.add_prefix('Average Util. Strategy #')
+		# print(utils)
 		return utils
 
 	def exportActions(self):
@@ -56,8 +59,9 @@ class Results():
 	def averageOverIterations(cls, iterations):
 		"""Take a dictionary where each key is the iteration number and each value is the corresponding pandas dataframe of results. Return a single dataframe with averaged results."""
 		# print(dict[0].column.values())
+		# print(iterations)
 		iterationsAsList = list(iterations.values())
-		concatenatedResults = pd.concat(iterationsAsList)
+		concatenatedResults = pd.concat(iterationsAsList, sort=False)
 		byRowIndex = concatenatedResults.groupby(concatenatedResults.index)
 		means = byRowIndex.mean()
 		return means

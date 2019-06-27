@@ -1,9 +1,6 @@
 import random
-import psutil
 import pandas as pd
-
-from pprint import pprint
-from tqdm import tqdm
+import copy
 
 from CodeEvolution.network import Network
 from CodeEvolution.configbuilder import ConfigBuilder
@@ -21,7 +18,6 @@ class GrGe_Network(Network):
 		if self.config['density'] != 1:
 			self.config['density'] = 1
 		self.createNetwork(agentType=GrGe_Agent)
-		self.evolutionaryUpdateSpeed = 0.5
 
 	def getOpponentsReputation(self, agent1, agent2):
 		"""(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is accessible to every other agent in the population."""
@@ -43,7 +39,7 @@ class GrGe_Network(Network):
 	def evolutionaryUpdate(self, alpha=10):
 		"""Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the utilities of all strategies."""
 
-		strategyUtils = self.results.utilities[self.currentPeriod]
+		strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
 
 		#find strategy with highest utility
 		bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
@@ -95,7 +91,7 @@ def runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat
 			# print(resultsActions)
 			# print(resultsCensus)
 			# print(resultsUtils)
-			N.results.exportUtilities()
+			# N.results.exportUtilities()
 			return pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
 		results[i] = simulate(config)
 	print()
@@ -104,7 +100,7 @@ def runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat
 
 if __name__ == "__main__":
 
-	config = ConfigBuilder(_maxperiods=1)
+	config = ConfigBuilder()
 	R = runExperiment(config)
 	print(R)
 	Results.exportResultsToCSV("test", config, R, 0)
