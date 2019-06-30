@@ -20,38 +20,38 @@ parser.add_argument('-p', '--profiler', help=profilerHelp, action='store_true')
 args = parser.parse_args()
 
 def main():
-	
-	with open(args.filepath) as config:	
-		tests = json.load(config)
+    
+    with open(args.filepath) as config:    
+        tests = json.load(config)
 
 
-	experimentName = args.filepath.split(sep='/')[-1]
-	numberOfExperiments = len(tests.keys())
-	repeatPerExperiment = 3
+    experimentName = args.filepath.split(sep='/')[-1]
+    numberOfExperiments = len(tests.keys())
+    repeatPerExperiment = 3
 
-	print(f"Total {numberOfExperiments} experiments")
-	results = {}
+    print(f"Total {numberOfExperiments} experiments")
+    results = {}
 
-	for experimentNumber in range(numberOfExperiments):
-		print(f"Simulation {experimentNumber}/{numberOfExperiments}", end=" ", flush=True)
-		dilemna = tests[str(experimentNumber)]['dilemna']
-		for repeat in range(repeatPerExperiment):
-			tests[str(experimentNumber)]['dilemna'] = PrisonersDilemna(dilemna[1], dilemna[2])
-			N = Network(_config=tests[str(experimentNumber)])
-			N.runSimulation()
-			results[repeat] = N.results.export()
-	
-		# Average over all iterations
-		experimentNumberResult = averageOverIterations(results)
+    for experimentNumber in range(numberOfExperiments):
+        print(f"Simulation {experimentNumber}/{numberOfExperiments}", end=" ", flush=True)
+        dilemna = tests[str(experimentNumber)]['dilemna']
+        for repeat in range(repeatPerExperiment):
+            tests[str(experimentNumber)]['dilemna'] = PrisonersDilemna(dilemna[1], dilemna[2])
+            N = Network(_config=tests[str(experimentNumber)])
+            N.runSimulation()
+            results[repeat] = N.results.export()
+    
+        # Average over all iterations
+        experimentNumberResult = averageOverIterations(results)
 
-		# Export a single CSV per experiment
-		exportResultsToCSV(experimentName, experimentNumberResult, experimentNumber)
+        # Export a single CSV per experiment
+        exportResultsToCSV(experimentName, experimentNumberResult, experimentNumber)
 
-		print("\tdone")
+        print("\tdone")
 
-	experimentInputs = list(range(numberOfExperiments))
+    experimentInputs = list(range(numberOfExperiments))
 
 if __name__=="__main__":
-	main()
+    main()
 
-	
+    

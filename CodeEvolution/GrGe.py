@@ -60,7 +60,20 @@ class GrGe_Agent(Agent):
 		"""Overwrite the default update strategy method which implements local learning. Strategy updates occur in the network.evolutionaryUpdate method."""
 		pass
 
-def runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=10):
+
+def distributionExperimentConfig(self, mutantWeight=0.1):
+	tests = [[1-mutantWeight,0,0,0,0,0,0,0,mutantWeight,0],
+			[0,1-mutantWeight,0,0,0,0,0,0,mutantWeight,0],
+			[0,0,1-mutantWeight,0,0,0,0,0,mutantWeight,0],
+			[0,0,0,1-mutantWeight,0,0,0,0,mutantWeight,0],
+			[0,0,0,0,1-mutantWeight,0,0,0,mutantWeight,0],
+			[0,0,0,0,0,1-mutantWeight,0,0,mutantWeight,0],
+			[0,0,0,0,0,0,1-mutantWeight,0,mutantWeight,0],
+			[0,0,0,0,0,0,0,1-mutantWeight,mutantWeight,0]]
+	return tests
+
+
+def runSimulation(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=10):
 	results = {}
 	for i in range(repeat):
 		def simulate(config):
@@ -72,16 +85,29 @@ def runExperiment(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat
 			return pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
 		results[i] = simulate(config)
 	meanResults = Results.averageOverIterations(results)
+	# print(meanResults)
 	return meanResults
+
+def runExperiment(parameter, parameterValues, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=1):
+	
+	config = ConfigBuilder(_distributions=parameterValues)
+	
+	for i in range(len(config.configuration)):
+		# print(f"Test {i} - ", config.configuration[i]['distribution'])
+		print(".", end="")
+		R = runSimulation(config.configuration[i], networkType=networkType, agentType=agentType, repeat=repeat)
+		Results.exportResultsToCSV("Ohtsuki_Isawa_Reproduction_2", config.configuration[i], R, i)
+	return 0
+
+
 
 if __name__ == "__main__":
 
-	config = ConfigBuilder()
-	R = runExperiment(config)
-	print(R)
-	# Results.exportResultsToCSV("test", config, R, 0)
+	distributions = distributionExperimentConfig(0.05)
+	runExperiment(parameter='_distribution', parameterValues=distributions, repeat=3)
 
-	print("END")
+
+	print("OK!")
 
 
 
