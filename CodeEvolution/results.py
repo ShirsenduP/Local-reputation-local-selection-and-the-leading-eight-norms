@@ -66,6 +66,8 @@ class Results():
     def exportResultsToCSV(cls, experimentName, experimentConfig, experimentResults, experimentNumber):
         """Export the results from a single dataframe averaged over multiple iterations as a 'experimentName.csv' file."""
 
+        print('CURRENT DIR', os.getcwd())
+
         if 'results' not in os.listdir("CodeEvolution/"):
             os.mkdir(f"CodeEvolution/results/")
 

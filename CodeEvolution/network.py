@@ -1,17 +1,13 @@
 import copy
 import random
-import logging
-import numpy as np
-import time 
-from collections import deque, namedtuple
 
-import matplotlib.pyplot as plt
+from collections import deque
 import networkx as nx
 
 from CodeEvolution.agent import Agent
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
-from CodeEvolution.socialdilemna import SocialDilemna, PrisonersDilemna
+from CodeEvolution.socialdilemna import PrisonersDilemna
 from CodeEvolution.strategy import Strategy
 
 class Network():
@@ -29,7 +25,7 @@ class Network():
         self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/100))
         self.convergenceCheckIntervals.sort()
         self.convergenceHistory = deque(3*[None], 3)
-        self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)] #index0 captures #OfInteractions of an agent with some strategy, index1 captures the total cumulative payoff of all agents running that strategy
+        self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]
         dilemnaParameters = self.config['socialDilemna']
         if dilemnaParameters[0] == 'PD':
             self.dilemna = PrisonersDilemna(dilemnaParameters[1], dilemnaParameters[2])
@@ -61,7 +57,7 @@ class Network():
     def scanStrategies(self):
         """Update the results with the proportions of all strategies at any given time."""
 
-        #update results with census        
+        # update results with census
         census = self.getCensusProportions()
         self.results.strategyProportions[self.currentPeriod] = census
 
@@ -124,7 +120,6 @@ class Network():
 
     def createNetwork(self, agentType):
         """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
-        #TODO: Check Erdos Renyi, think I am iterating through each edge TWICE -> doubling the density of the random graph - https://stackoverflow.com/questions/31079526/how-to-iterate-over-each-edge-of-a-complete-graph-exactly-once
 
         strategyDistribution = self.getStrategyCounts()
 
