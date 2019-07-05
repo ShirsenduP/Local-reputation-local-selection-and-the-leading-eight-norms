@@ -2,7 +2,7 @@ from collections import namedtuple
 
 populationDistribution = namedtuple('populationDistribution', ['mainID', 'mainProportion', 'mutantID',
                                                                'mutantProportion'])
-socialDilemna = namedtuple('socialDilemna', ['type', 'benefit', 'cost'])
+socialGame = namedtuple('socialDilemna', ['type', 'benefit', 'cost'])
 
 
 class Parameter:
@@ -13,7 +13,9 @@ class Parameter:
                  density=0.1,
                  strategyDistribution=populationDistribution(mainID=0, mainProportion=0.9, mutantID=9,
                                                              mutantProportion=0.1),
-                 socialDilemma=socialDilemna(type='prisonersDilemma', benefit=2, cost=1),
+                 socialDilemma=socialGame(type='prisonersDilemma', benefit=2, cost=1), #TODO only ever need to
+                 # call Social dilemma, prisoner's dilemma will be created automatically, maybe through the child
+                 # version of self.super.__init__()?
                  interactionProbability=0.99,
                  maxNoOfPeriods=2000,
                  updateProbability=0.1):
@@ -41,4 +43,4 @@ class Parameter:
 if __name__ == "__main__":
 
     p = Parameter()
-    print(p)
+    print(p.strategyDistribution.mainProportion)

@@ -2,7 +2,7 @@ class SocialDilemna():
     """Parent class of all social dilemna games that can be played in this experiment, providing the means through which each game outputs the respective payoffs of either side of the game."""
 
     def __init__(self):
-        pass
+        sup
 
     def playGame(self, agent1Action, agent2Action):
         if agent1Action not in ['C', 'D'] or agent2Action not in ['C', 'D']:
@@ -12,8 +12,11 @@ class SocialDilemna():
         agent2Payoff = self.payoff2[agent1Action][agent2Action]
         return [agent1Payoff, agent2Payoff]
 
-class PrisonersDilemna(SocialDilemna):
-    """Prisoner's Dilemna game parameterised by a benefit and a cost, the benefit is received by agent1 if agent2 cooperates with them, and the cost is paid by agent1 if it cooperates with agent2."""
+
+class PrisonersDilemma(SocialDilemna):
+    """
+    Prisoner's Dilemma game parameterised by a benefit and a cost, the benefit is received by agent1 if agent2
+    cooperates with them, and the cost is paid by agent1 if it cooperates with agent2."""
     
     def __init__(self, benefit, cost):
         SocialDilemna.__init__(self)
@@ -39,9 +42,5 @@ class PrisonersDilemna(SocialDilemna):
         }
 
 
-def main():
-    pass
-
-
 if __name__=='__main__':
-    main()
+    pass

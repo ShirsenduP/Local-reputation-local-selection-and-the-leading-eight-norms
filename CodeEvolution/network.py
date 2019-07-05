@@ -7,30 +7,32 @@ import networkx as nx
 from CodeEvolution.agent import Agent
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
-from CodeEvolution.socialdilemna import PrisonersDilemna
+from CodeEvolution.socialdilemma import PrisonersDilemma
 from CodeEvolution.strategy import Strategy
+from CodeEvolution.Parameter import Parameter, populationDistribution, socialGame
 
-class Network():
 
-    def __init__(self, _config, agentType=Agent):
-        self.config = _config
-        self.mainStratIDs = self.strategiesInPopulation()
+class Network:
+
+    def __init__(self, params, agentType=Agent):
+        self.params = params
+        self.mainStratIDs = [self.params.strategyDistribution.mainID, self.params.strategyDistribution.mutantID]
         self.agentList = []
-        self.socialNorm = SocialNorm(self.mainStratIDs[0])
+        self.socialNorm = SocialNorm(self.params.strategyDistribution.mainID)
         self.population = nx.Graph()
         self.currentPeriod = 0    
-        self.results = Results([self.mainStratIDs[0], self.mainStratIDs[1]])
-        self.tempActions = {'C' : 0, 'D' : 0}
+        self.results = Results([self.params.strategyDistribution.mainID, self.params.strategyDistribution.mutantID])
+        self.tempActions = {'C': 0, 'D': 0}
         self.hasConverged = False
-        self.convergenceCheckIntervals = random.sample(range(int(self.config['maxperiods']/4),self.config['maxperiods']), int(self.config['maxperiods']/100))
+        self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]
+        self.convergenceCheckIntervals = random.sample(range(int(self.params.maxNoOfPeriods/4), self.params.maxNoOfPeriods), int(self.params.maxNoOfPeriods/100))
         self.convergenceCheckIntervals.sort()
         self.convergenceHistory = deque(3*[None], 3)
-        self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]
-        dilemnaParameters = self.config['socialDilemna']
-        if dilemnaParameters[0] == 'PD':
-            self.dilemna = PrisonersDilemna(dilemnaParameters[1], dilemnaParameters[2])
+        dilemmaParameters = self.
+        if dilemmaParameters[0] == 'PD':
+            self.dilemma = PrisonersDilemma(self.params)
         else:
-            raise Exception("Social dilemna invalid, must be 'PD' currently!")
+            raise Exception("Social dilemma invalid, must be 'PD' currently!")
         
     def strategiesInPopulation(self):
         """Find the main strategy ID in the population"""
@@ -154,7 +156,7 @@ class Network():
         self.utilityMonitor[0][agent2ID] += 1
         self.utilityMonitor[1][agent2ID] += payoff2
 
-    def playSocialDilemna(self):
+    def playSocialDilemma(self):
 
         # Two agents chosen randomly from the population
         agent1, agent2 = self.chooseTwoAgents()
@@ -167,7 +169,7 @@ class Network():
         self.tempActions[agent2Move] += 1
         
         # Calculate each agent's payoff
-        payoff1, payoff2 = self.dilemna.playGame(agent1Move, agent2Move)
+        payoff1, payoff2 = self.dilemma.playGame(agent1Move, agent2Move)
         self.updateMonitor(agent1, agent2, payoff1, payoff2)
 
         # Update agents personal utilities for evolutionary update
@@ -252,10 +254,10 @@ class Network():
 
     def runSingleTimestep(self):
         """Run one single time-step with multiple interactions between randomly selected agents"""
-        self.playSocialDilemna()
+        self.playSocialDilemma()
         r = random.random()
         while r < self.config['omega']:
-            self.playSocialDilemna()
+            self.playSocialDilemma()
             r = random.random()
         
         self.results.updateActions(self.tempActions)

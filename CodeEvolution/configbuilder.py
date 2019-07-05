@@ -3,6 +3,14 @@ import datetime
 from CodeEvolution.socialdilemna import PrisonersDilemna
 from CodeEvolution.validator import Validator
 
+# TODO: Get rid of parameter class, rewrite configbuilder to config class to just take one set of parameters ->
+#  network. Then another class can create multiple config classes. Roll back one commit and carry on. Rewrite some
+#  information as named tuples + redo the way we add the initial population distribution with named tuples
+
+# TODO: Then move onto results, forget about the temporal stuff, thats saved in previous commits, change it so that
+#  only the last timestep of EVERY SIMULATION is accumulated into the results page. Its SO IMPORTANT that we get
+#  results AS SOON AS POSSIBLE!!!! Save these notes in a text file before reverting to a previous commit.
+
 class ConfigBuilder():
     
     def __init__(self,
