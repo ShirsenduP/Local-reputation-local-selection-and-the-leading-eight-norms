@@ -4,20 +4,20 @@ import json
 
 class Results():
 
-    def __init__(self, strategies):
-        self.strategies = set(strategies)
-        self.actions = {'C' : [], 'D' : []}
+    def __init__(self, config):
+        self.strategies = {config.population.mainID, config.population.mutantID}
+        self.actions = {'C': [], 'D': []}
         self.strategyProportions = {}
         self.utilities = {}
         self.convergedAt = None
 
     def updateActions(self, actions):
-        """Given a dictionary of counts of cooperators and defectors, append to network results the proportions for that particular time period"""
+        """Given a dictionary of counts of cooperators and defectors, append to network results the proportions for that
+         particular time period"""
 
         for key in actions:
             proportionAction = actions[key]/sum(actions.values())
             self.actions[key].append(proportionAction)
-
 
     def exportUtilities(self):
         utils = self.removeZeros(self.utilities)
@@ -36,8 +36,11 @@ class Results():
         census = census.add_prefix('Prop. Strategy #')
         return census
 
-    def removeZeros(self, data):
-        """Given a dictionary where each key is a timestep, and each corresponding value is another dictionary where the keys and values are the strategies and their average utilities, find the strategies that are not at the start of the simulation (as only two strategies are ever in play) and remove them from all timesteps."""
+    @staticmethod
+    def removeZeros(data):
+        """Given a dictionary where each key is a time-step, and each corresponding value is another dictionary where the
+        keys and values are the strategies and their average utilities, find the strategies that are not at the start
+        of the simulation (as only two strategies are ever in play) and remove them from all time-steps."""
         emptyKeys = []
         nonEmptyKeys = []
         for key, value in data[0].items():
@@ -55,7 +58,8 @@ class Results():
 
     @classmethod
     def averageOverIterations(cls, iterations):
-        """Take a dictionary where each key is the iteration number and each value is the corresponding pandas dataframe of results. Return a single dataframe with averaged results."""
+        """Take a dictionary where the key is the iteration number and each value is the corresponding pandas data-frame
+         of results. Return a single dataframe with averaged results."""
         iterationsAsList = list(iterations.values())
         concatenatedResults = pd.concat(iterationsAsList, sort=False)
         byRowIndex = concatenatedResults.groupby(concatenatedResults.index)
@@ -64,7 +68,7 @@ class Results():
 
     @classmethod
     def exportResultsToCSV(cls, experimentName, experimentConfig, experimentResults, experimentNumber):
-        """Export the results from a single dataframe averaged over multiple iterations as a 'experimentName.csv' file."""
+        """Export the results from a single dataframe averaged over many iterations as 'experimentName.csv' file"""
 
         if 'results' not in os.listdir("CodeEvolution/"):
             os.mkdir(f"CodeEvolution/results/")
@@ -76,7 +80,6 @@ class Results():
 
         with open(f"CodeEvolution/results/{experimentName}/{experimentNumber}.json", 'w') as f:
             f.write(json.dumps(experimentConfig)) # use `json.loads` to do the reverse
-
 
     def __str__(self):
         s = str(self.strategyProportions)

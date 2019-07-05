@@ -17,6 +17,8 @@ class PrisonersDilemna(SocialDilemna):
     
     def __init__(self, benefit, cost):
         SocialDilemna.__init__(self)
+        self.benefit = benefit
+        self.cost = cost
         self.payoff1 = {
             'C': {
                 'C': benefit-cost,
@@ -37,6 +39,9 @@ class PrisonersDilemna(SocialDilemna):
                 'D': 0
             }
         }
+
+    def __repr__(self):
+        return f"PrisonersDilemna(benefit={self.benefit}, cost={self.cost})"
 
 
 def main():

@@ -2,21 +2,10 @@ import random
 
 from CodeEvolution.strategy import Strategy
 
-class Agent():
+
+class Agent:
 
     reputation = (0,1)
-    strategyColour = {
-        0: "orange", 
-        1: "tan",
-        2: "palegreen",
-        3: "turquoise",
-        4: "cornflowerblue",
-        5: "royalblue",
-        6: "plum",
-        7: "lightpink",
-        8: "black",
-        9: "green"
-    }
 
     def __init__(self, _id, _strategy):
         self.id = _id
@@ -25,14 +14,14 @@ class Agent():
         self.currentUtility = 0
         self.neighbours = []
         self.history = {} # get LAST partner
-        self.colour = self.strategyColour[self.currentStrategy.currentStrategyID]
 
     def updateUtility(self, payoff):
         """Update the utility or cumulative payoff of an agent."""
         self.currentUtility += payoff
 
     def findBestLocalStrategy(self, copyTheBest):
-        """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the strategies with maximum utility."""
+        """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the
+         strategies with maximum utility."""
         neighbourUtilities = list(map(lambda x:x.currentUtility, self.neighbours))
         if copyTheBest:
             maxLocalUtility = max(neighbourUtilities)
@@ -45,7 +34,9 @@ class Agent():
         return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
         
     def updateStrategy(self, updateProbability, copyTheBest=True):
-        """(COPY THE BEST) Switch strategies to the strategy used by the best performing neighbour of the agent with some probability."""
+        """(COPY BEST) Switch strategies to the strategy used by the best performing neighbour of the agent with some
+         probability."""
+        # TODO Implement copyTheBetter strategyUpdate
         r = random.random()
         if r < updateProbability:
             newStrategyID = self.findBestLocalStrategy(copyTheBest)
@@ -53,11 +44,9 @@ class Agent():
                 return
             self.currentStrategy.changeStrategy(newStrategyID)
 
-    
-        # TODO: Replicator dyamics (in model_experiment.pdf)
-            
     def updatePersonalReputation(self, newRep):
-        """Update own reputation, only to be used for an agent's own reputation from their point of view in an interaction."""
+        """Update own reputation, only to be used for an agent's own reputation from their point of view in an
+        interaction."""
         self.currentReputation = newRep
 
     def summary(self):
@@ -86,6 +75,7 @@ class Agent():
         s += f"# of agents {len(self.neighbours)}"
         s += f", s={self.currentStrategy.currentStrategyID}"
         return s
+
 
 if __name__ == "__main__":
     pass
