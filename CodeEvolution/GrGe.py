@@ -11,6 +11,7 @@ from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.socialdilemna import SocialDilemna, PrisonersDilemna
 from CodeEvolution.strategy import Strategy
 
+
 class GrGe_Network(Network):
     """Global Reputation, Global Evolution - AKA the model originating from Ohtsuki and Isawa's seminal Leading Eight
      paper on social norms. This model tries to verify the original results."""
@@ -32,15 +33,15 @@ class GrGe_Network(Network):
 
         strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
 
-        #find strategy with highest utility
+        # find strategy with highest utility
         bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
 
-        #check for strategies with negative utility
+        # check for strategies with negative utility
         for strategy, utility in strategyUtils.items():
             if utility < 0:
                 strategyUtils[strategy] = 0
 
-        #if total utility is zero, no evolutionary update
+        # if total utility is zero, no evolutionary update
         totalUtil = sum(strategyUtils.values())
         if totalUtil == 0:
             return
@@ -66,46 +67,6 @@ class GrGe_Agent(Agent):
         """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
          network.evolutionaryUpdate method."""
         pass
-
-
-# def distributionExperimentConfig(self, mutantWeight=0.1):
-#     tests = [[1-mutantWeight,0,0,0,0,0,0,0,mutantWeight,0],
-#             [0,1-mutantWeight,0,0,0,0,0,0,mutantWeight,0],
-#             [0,0,1-mutantWeight,0,0,0,0,0,mutantWeight,0],
-#             [0,0,0,1-mutantWeight,0,0,0,0,mutantWeight,0],
-#             [0,0,0,0,1-mutantWeight,0,0,0,mutantWeight,0],
-#             [0,0,0,0,0,1-mutantWeight,0,0,mutantWeight,0],
-#             [0,0,0,0,0,0,1-mutantWeight,0,mutantWeight,0],
-#             [0,0,0,0,0,0,0,1-mutantWeight,mutantWeight,0]]
-#     return tests
-
-
-# def runSimulation(config, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=10):
-#     results = {}
-#     for i in range(repeat):
-#         def simulate(config):
-#             N = networkType(config)
-#             N.runSimulation()
-#             resultsActions = N.results.exportActions()
-#             resultsCensus = N.results.exportCensus()
-#             resultsUtils = N.results.exportUtilities()
-#             return pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
-#         results[i] = simulate(config)
-#     meanResults = Results.averageOverIterations(results)
-#     # print(meanResults)
-#     return meanResults
-
-# def runExperiment(parameter, parameterValues, networkType=GrGe_Network, agentType=GrGe_Agent, repeat=1):
-#
-#     config = Config(_distributions=parameterValues)
-#
-#     for i in range(len(config.configuration)):
-#         # print(f"Test {i} - ", config.configuration[i]['distribution'])
-#         print(".", end="")
-#         R = runSimulation(config.configuration[i], networkType=networkType, agentType=agentType, repeat=repeat)
-#         Results.exportResultsToCSV("Ohtsuki_Isawa_Reproduction_2", config.configuration[i], R, i)
-#     return 0
-
 
 if __name__ == "__main__":
 

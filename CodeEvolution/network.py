@@ -12,7 +12,7 @@ class Network():
 
     def __init__(self, config, agentType=Agent):
         self.config = config
-        self.mainStratIDs = (config.population.mainID, config.population.mutantID)
+        self.mainStratIDs = (config.population.ID, config.mutant.ID)
         self.agentList = []
         self.socialNorm = SocialNorm(config.socialNormID)
         self.results = Results(config)
@@ -75,7 +75,7 @@ class Network():
             self.resetTempActions()
             self.runSingleTimestep()
             self.scanStrategies()
-            self.mutation(self.config.population.mutantID)
+            self.mutation(self.config.mutant.ID)
             self.evolutionaryUpdate()
             if self.currentPeriod in self.convergenceCheckIntervals:
                 self.grabSnapshot()
@@ -91,10 +91,10 @@ class Network():
         """Return a list where each element represents the strategyID of an agent."""
 
         populationSize = self.config.size
-        mainID = self.config.population.mainID
-        mutantID = self.config.population.mutantID
-        mainProp = int(self.config.population.mainProportion * populationSize)
-        mutantProp = int(self.config.population.mutantProportion * populationSize)
+        mainID = self.config.population.ID
+        mutantID = self.config.mutant.ID
+        mainProp = int(self.config.population.Proportion * populationSize)
+        mutantProp = int(self.config.mutant.Proportion * populationSize)
 
         mainPop = [mainID] * mainProp
         mutantPop = [mutantID] * mutantProp

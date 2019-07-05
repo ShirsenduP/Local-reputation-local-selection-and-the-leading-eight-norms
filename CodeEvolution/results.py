@@ -5,7 +5,7 @@ import json
 class Results():
 
     def __init__(self, config):
-        self.strategies = {config.population.mainID, config.population.mutantID}
+        self.strategies = {config.population.ID, config.mutant.ID}
         self.actions = {'C': [], 'D': []}
         self.strategyProportions = {}
         self.utilities = {}
@@ -68,7 +68,7 @@ class Results():
 
     @classmethod
     def exportResultsToCSV(cls, experimentName, experimentConfig, experimentResults, experimentNumber):
-        """Export the results from a single dataframe averaged over many iterations as 'experimentName.csv' file"""
+        """Export the results from a single data-frame averaged over many iterations as 'experimentName.csv' file"""
 
         if 'results' not in os.listdir("CodeEvolution/"):
             os.mkdir(f"CodeEvolution/results/")
@@ -78,8 +78,11 @@ class Results():
 
         experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentNumber}.csv")
 
+        def dumper(obj):
+            return obj.__dict__
+
         with open(f"CodeEvolution/results/{experimentName}/{experimentNumber}.json", 'w') as f:
-            f.write(json.dumps(experimentConfig)) # use `json.loads` to do the reverse
+            f.write(json.dumps(experimentConfig, default=dumper)) # use `json.loads` to do the reverse
 
     def __str__(self):
         s = str(self.strategyProportions)
