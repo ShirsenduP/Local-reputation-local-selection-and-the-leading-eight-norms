@@ -1,7 +1,9 @@
-import jsonpickle
+from json import JSONEncoder
+from copy import deepcopy
 
-class SocialDilemna():
-    """Parent class of all social dilemna games that can be played in this experiment, providing the means through which each game outputs the respective payoffs of either side of the game."""
+class SocialDilemma():
+    """Parent class of all social dilemna games that can be played in this experiment, providing the means through which
+     each game outputs the respective payoffs of either side of the game."""
 
     def __init__(self):
         pass
@@ -14,12 +16,14 @@ class SocialDilemna():
         agent2Payoff = self.payoff2[agent1Action][agent2Action]
         return [agent1Payoff, agent2Payoff]
 
-class PrisonersDilemna(SocialDilemna, dict):
-    """Prisoner's Dilemna game parameterised by a benefit and a cost, the benefit is received by agent1 if agent2 cooperates with them, and the cost is paid by agent1 if it cooperates with agent2."""
+
+class PrisonersDilemma(SocialDilemma, JSONEncoder):
+    """Prisoner's Dilemna game parameterised by a benefit and a cost, the benefit is received by agent1 if agent2
+    cooperates with them, and the cost is paid by agent1 if it cooperates with agent2."""
     
     def __init__(self, benefit, cost):
-        dict.__init__(self)
-        SocialDilemna.__init__(self)
+        SocialDilemma.__init__(self)
+        self.name = type(self).__name__
         self.benefit = benefit
         self.cost = cost
         self.payoff1 = {
@@ -43,11 +47,15 @@ class PrisonersDilemna(SocialDilemna, dict):
             }
         }
 
+    def default(self, o):
+        return str(self.__dict__)
+
     def __str__(self):
         return str(self.__dict__)
 
     def __repr__(self):
-        return jsonpickle.encode(self, unpicklable=False)
+        return str(self.__dict__)
+
 
 if __name__=='__main__':
-    pass
+    s = PrisonersDilemma(2,1)

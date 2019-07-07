@@ -8,7 +8,8 @@ from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
 
-class Network():
+
+class Network:
 
     def __init__(self, config, agentType=Agent):
         self.config = config
@@ -18,33 +19,40 @@ class Network():
         self.results = Results(config)
         self.tempActions = {'C': 0, 'D': 0}
         self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]  # index0 captures
-        # #OfInteractions of an agent with some strategy, index1 captures the total cumulative payoff of all agents running that strategy
+        # #OfInteractions of an agent with some strategy, index1 captures the total cumulative payoff of all agents
+        # running that strategy
         self.currentPeriod = 0
         self.convergenceCheckIntervals = self.generateConvergenceCheckpoints(config)
-        self.convergenceHistory = deque(3*[None], 3)
+        self.convergenceHistory = deque(3 * [None], 3)
         self.hasConverged = False
         self.dilemma = config.socialDilemma
 
-        
     def generateConvergenceCheckpoints(self, config):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
         the system checks for convergence. No convergence checks occur before a quarter of the simulation has
         progressed. """
         maxPeriods = config.maxPeriods
-        checkpoints = random.sample(range(int(maxPeriods/4), maxPeriods), int(maxPeriods/100))
+        checkpoints = random.sample(range(int(maxPeriods / 4), maxPeriods), int(maxPeriods / 100))
         checkpoints.sort()
         return checkpoints
+
+    def isConnected(self):
+        isConnected = True
+        for agent in self.agentList:
+            if len(agent.neighbours) == 0:
+                isConnected = False
+        return isConnected
 
     def __del__(self):
         self.socialNorm = None
         self.currentPeriod = 0
         self.results = None
         self.resetTempActions()
-        self.hasConverged = False 
+        self.hasConverged = False
         Strategy.reset()
-   
+
     def resetTempActions(self):
-        """Reset the cooperation/defection counter to zero. To be used at the end of each timeperiod after actions have
+        """Reset the cooperation/defection counter to zero. To be used at the end of each time-period after actions have
          been recorded."""
 
         for action in self.tempActions:
@@ -63,9 +71,9 @@ class Network():
 
         for key, _ in averageUtilities.items():
             if interactionsDict[key]:
-                averageUtilities[key] = payoffDict[key]/interactionsDict[key]
+                averageUtilities[key] = payoffDict[key] / interactionsDict[key]
         self.results.utilities[self.currentPeriod] = averageUtilities
-        
+
     def runSimulation(self):
         """Run full simulation for upto total number of simulations defined in the config object' or up until the
         system converges at pre-allocated randomly chosen convergence check intervals."""
@@ -80,13 +88,13 @@ class Network():
             if self.currentPeriod in self.convergenceCheckIntervals:
                 self.grabSnapshot()
                 self.checkConvergence()
-            
-            if self.hasConverged or self.currentPeriod==self.config.maxPeriods-1:
+
+            if self.hasConverged or self.currentPeriod == self.config.maxPeriods - 1:
                 self.results.convergedAt = self.currentPeriod
                 break
-            else: 
+            else:
                 self.currentPeriod += 1
-        
+
     def getStrategyCounts(self):
         """Return a list where each element represents the strategyID of an agent."""
 
@@ -119,12 +127,12 @@ class Network():
         strategyDistribution = self.getStrategyCounts()
 
         for agentID in range(self.config.size):
-            randomIDIndex = random.randint(0, len(strategyDistribution)-1)
+            randomIDIndex = random.randint(0, len(strategyDistribution) - 1)
             self.agentList.append(agentType(_id=agentID, _strategy=strategyDistribution[randomIDIndex]))
             strategyDistribution.pop(randomIDIndex)
 
         for agentID1 in range(self.config.size):
-            for agentID2 in range(agentID1+1, self.config.size):
+            for agentID2 in range(agentID1 + 1, self.config.size):
                 if agentID1 != agentID2:
                     r = random.random()
                     if r < self.config.density:
@@ -161,7 +169,7 @@ class Network():
         agent2Move = agent2.currentStrategy.chooseAction(agent2.currentReputation, agent1Reputation)
         self.tempActions[agent1Move] += 1
         self.tempActions[agent2Move] += 1
-        
+
         # Calculate each agent's payoff
         payoff1, payoff2 = self.dilemma.playGame(agent1Move, agent2Move)
         self.updateMonitor(agent1, agent2, payoff1, payoff2)
@@ -181,19 +189,19 @@ class Network():
 
     def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
         interaction12 = {
-            'Opponent': agent2,
-            'Focal Reputation': agent1.currentReputation,
+            'Opponent'           : agent2,
+            'Focal Reputation'   : agent1.currentReputation,
             'Opponent Reputation': agent2Reputation,
-            'Focal Move': agent1Move,
-            'Opponent Move': agent2Move
+            'Focal Move'         : agent1Move,
+            'Opponent Move'      : agent2Move
         }
         agent1.recordInteraction(interaction12)
         interaction21 = {
-            'Opponent': agent1,
-            'Focal Reputation': agent2.currentReputation,
+            'Opponent'           : agent1,
+            'Focal Reputation'   : agent2.currentReputation,
             'Opponent Reputation': agent1Reputation,
-            'Focal Move': agent2Move,
-            'Opponent Move': agent1Move
+            'Focal Move'         : agent2Move,
+            'Opponent Move'      : agent1Move
         }
         agent2.recordInteraction(interaction21)
 
@@ -201,12 +209,14 @@ class Network():
         """Assign reputations following an interaction with each agent's globally known reputation and not the
         calculated reputation as default."""
 
-        agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation, agent1Move)
-        agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation, agent2Move)
+        agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation,
+                                                               agent1Move)
+        agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation,
+                                                               agent2Move)
 
         agent1.updatePersonalReputation(agent1NewReputation)
         agent2.updatePersonalReputation(agent2NewReputation)
-        #TODO Whats the point of agent1Reputation and agent2Reputation if its being newly calculated within the method? Check whats going on here
+        # TODO Whats the point of agent1Reputation and agent2Reputation if its being newly calculated within the method? Check whats going on here
 
     def showHistory(self):
         for agent in self.agentList:
@@ -218,7 +228,7 @@ class Network():
     def checkConvergence(self):
         """Check if the network has converged or not by checking the last 3 snapshots taken at randomly chosen
         intervals."""
-        
+
         history = self.convergenceHistory
 
         # Minimum 3 snapshots needed to check for convergence (as defined in self.convergenceHistory)
@@ -239,12 +249,12 @@ class Network():
     def mutation(self, mutantStrategyID):
         """Each agent has probability of () 1/n )/alpha of becoming an agent in any time period where alpha is a
         parameter > 1"""
-        probabilityOfMutation = 1/(self.config.size*self.config.mutationProbability)
+        probabilityOfMutation = 1 / (self.config.size * self.config.mutationProbability)
         for agent in self.agentList:
             r = random.random()
             if r < probabilityOfMutation:
                 agent.currentStrategy.changeStrategy(mutantStrategyID)
-        
+
     def evolutionaryUpdate(self, alpha=10):
         """Must be implemented through the relevent network type."""
         raise NotImplementedError
@@ -256,7 +266,7 @@ class Network():
         while r < self.config.omega:
             self.playSocialDilemma()
             r = random.random()
-        
+
         self.results.updateActions(self.tempActions)
 
     def grabSnapshot(self):
@@ -271,5 +281,3 @@ class Network():
 
 if __name__ == "__main__":
     pass
-
-

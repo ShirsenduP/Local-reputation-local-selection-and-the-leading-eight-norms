@@ -8,7 +8,7 @@ from CodeEvolution.config import Config
 from CodeEvolution.agent import Agent
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
-from CodeEvolution.socialdilemna import SocialDilemna, PrisonersDilemna
+from CodeEvolution.socialdilemna import SocialDilemma, PrisonersDilemma
 from CodeEvolution.strategy import Strategy
 
 
@@ -16,7 +16,7 @@ class GrGe_Network(Network):
     """Global Reputation, Global Evolution - AKA the model originating from Ohtsuki and Isawa's seminal Leading Eight
      paper on social norms. This model tries to verify the original results."""
 
-    def __init__(self, _config):
+    def __init__(self, _config=None):
         super().__init__(_config)
         if self.config.density != 1:
             self.config.density = 1
@@ -63,7 +63,7 @@ class GrGe_Agent(Agent):
         super().__init__(_id, _strategy)
         self.history = None
 
-    def updateStrategy(self, updateProbability):
+    def updateStrategy(self, updateProbability, copyTheBest=True):
         """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
          network.evolutionaryUpdate method."""
         pass

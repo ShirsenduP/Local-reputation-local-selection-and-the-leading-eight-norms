@@ -1,5 +1,5 @@
 
-from CodeEvolution.socialdilemna import PrisonersDilemna
+from CodeEvolution.socialdilemna import PrisonersDilemma
 
 from collections import namedtuple
 
@@ -30,7 +30,7 @@ class Config:
         self.population = population
         self.mutant = mutant
         self.socialNormID = population.ID  # Use the same social norm ID as the main strategy
-        self.socialDilemma = PrisonersDilemna(socialDilemma.benefit, socialDilemma.cost)
+        self.socialDilemma = PrisonersDilemma(socialDilemma.benefit, socialDilemma.cost)
         self.omega = omegas
         self.maxPeriods = maxPeriods
         self.updateProbability = updateProbability
