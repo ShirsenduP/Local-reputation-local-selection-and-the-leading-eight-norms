@@ -94,10 +94,10 @@ if __name__ == "__main__":
 
     labels = Evaluator.getStrategyLabels()
     x = np.arange(len(labels))
-    width = 0.15
+    width = 0.13
 
     # fig = plt.figure()
-    fig, ax = plt.subplots(figsize=(20, 5))
+    fig, ax = plt.subplots(figsize=(10,3))
 
     rects1A = ax.bar(x - 5 * width / 2, GrGe_AllD_Stable_Proportion, width, label='GrGe_All-D')
     rects1B = ax.bar(x - 3 * width / 2, GrGe_AllC_Stable_Proportion, width, label='GrGe_All-C')
@@ -110,8 +110,13 @@ if __name__ == "__main__":
 
     ax.set_title('Proportions of the leading eight that remain stable against All-C/D')
     ax.set_xticks(x)
-    ax.set_ylabel('Proportion of Simulations with stable strategy')
+    ax.set_ylabel('Proportion of Simulations \nwith stable strategy')
 
     ax.set_xticklabels(labels)
-    fig.legend(loc='center right')
-    plt.savefig('Leading8_density_too_high.png')
+    # Shrink current axis's height by 10% on the bottom
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0 - box.height * 0.15, box.width, box.height * 1.2])
+
+    fig.legend(loc='lower center', bbox_to_anchor=(0.5, 0.03), fancybox=True, shadow=True, ncol=6)
+    plt.show()
+    fig.savefig('Leading8_density_too_high')

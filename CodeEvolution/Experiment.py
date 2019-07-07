@@ -16,7 +16,7 @@ class Experiment:
     """This class generates a series of Config objects to run for a single experiment. Define a 'default' experiment,
      then choose (a SINGLE) variable to be varied, then add the list of values the variable will cycle through."""
 
-    def __init__(self, networkType, variable=None, values=None, defaultConfig=Config(), repeats=1):
+    def __init__(self, networkType, variable=None, values=None, defaultConfig=Config(), repeats=100):
         self.networkType = networkType
         self.default = defaultConfig
         self.variable = variable
@@ -65,7 +65,7 @@ class Experiment:
                 print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
 
             singleTest = pd.DataFrame()
-            for rep in trange(self.repeats, leave=False):
+            for _ in trange(self.repeats, leave=False):
                 singleRun = simulate(self.experiments[exp])
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
 
