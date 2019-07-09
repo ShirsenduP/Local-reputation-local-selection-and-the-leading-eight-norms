@@ -6,7 +6,7 @@ class SocialDilemma():
      each game outputs the respective payoffs of either side of the game."""
 
     def __init__(self):
-        pass
+        sup
 
     def playGame(self, agent1Action, agent2Action):
         if agent1Action not in ['C', 'D'] or agent2Action not in ['C', 'D']:

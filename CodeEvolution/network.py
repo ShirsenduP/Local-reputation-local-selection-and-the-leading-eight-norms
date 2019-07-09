@@ -7,6 +7,7 @@ from CodeEvolution.agent import Agent
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
+from CodeEvolution.Parameter import Parameter, populationDistribution, socialGame
 
 
 class Network:
