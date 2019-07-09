@@ -17,11 +17,11 @@ if __name__ == '__main__':
 
     if reRunSimulations:
         popsVsAllD = Experiment.generatePopulationList(proportion=0.9, mutantID=8)
-        reps = 100
+        reps = 5
 
         """All-D versus all the populations, initially weighted at 0/100."""
 
-        default = Config(densities=1)
+        default = Config(densities=1, size=10, maxPeriods=100)
         print(default)
         print()
         E = Experiment(networkType=GrGe_Network, defaultConfig=default, variable='population', values=popsVsAllD,

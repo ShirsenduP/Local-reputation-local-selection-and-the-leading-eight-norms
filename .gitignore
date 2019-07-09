@@ -6,4 +6,5 @@ env/
 CodeEvolution/logs/
 CodeEvolution/configurations/draft2.json
 CodeEvolution/results/
+.idea
 
