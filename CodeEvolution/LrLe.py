@@ -8,9 +8,12 @@ from CodeEvolution.agent import Agent
 class LrLe_Network(Network):
     """Network with Local Reputation and Local Evolution (LrLe)"""
 
+    name = "LrLe"
+
     def __init__(self, _config):
         super().__init__(_config)
         self.createNetwork(agentType=Agent)
+        self.name = "LrLe"
         attempts = 0
         maxAttempts = 10
         while not self.isConnected() and attempts < maxAttempts:
@@ -22,7 +25,7 @@ class LrLe_Network(Network):
         """Local Learning - Out of the subset of agents that are connected to the focal agent, adopt the strategy of the
          best/better performing agent with some probability."""
         for agent in self.agentList:
-            agent.updateStrategy(self.config['updateProbability'], copyTheBest=True)
+            agent.updateStrategy(self.config.updateProbability, copyTheBest=True)
 
     def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
         """Given the agents, their reputations, and their moves, update their personal reputations (the reputation they

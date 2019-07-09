@@ -16,6 +16,8 @@ class GrGe_Network(Network):
     """Global Reputation, Global Evolution - AKA the model originating from Ohtsuki and Isawa's seminal Leading Eight
      paper on social norms. This model tries to verify the original results."""
 
+    name = "GrGe"
+
     def __init__(self, _config=None):
         super().__init__(_config)
         if self.config.density != 1:

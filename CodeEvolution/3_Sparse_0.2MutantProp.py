@@ -4,57 +4,62 @@ from CodeEvolution.Evaluator import Evaluator
 from CodeEvolution.GrGe import GrGe_Network
 from CodeEvolution.LrGe import LrGe_Network
 from CodeEvolution.LrLe import LrLe_Network
-from CodeEvolution.config import Config, State
+from CodeEvolution.config import Config
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population
 
+
 if __name__ == '__main__':
-    """This script tests the dominance of the leading eight in all GrGe/LrGe/LrLe networks. This is inherently flawed as
-     the density of the latter two networks was 0.1 which is very high, to correctly capture the effects of the local
-      reputation and evolution rules, we need a more sparse network."""
+    """Test 3 - Sparse networks, all 8 strategies vs All-D/All-C with 20/80 mutant/population split. """
 
-    reRunSimulations = True
+    rerunSimulations = True
 
-    if reRunSimulations:
-        popsVsAllD = Experiment.generatePopulationList(proportion=0.9, mutantID=8)
-        reps = 100
+    if rerunSimulations:
+        pops = Experiment.generatePopulationList(proportion=0.8)
+        reps = 1
+        size = 500
+        sparseNetworkDensity = 2*np.log(size)/size
 
-        """All-D versus all the populations, initially weighted at 0/100."""
+        """All-D versus all the populations, initially weighted at 20/80."""
 
-        default = Config(densities=1)
-        print(default)
-        print()
-        E = Experiment(networkType=GrGe_Network, defaultConfig=default, variable='population', values=popsVsAllD,
+        default = Config(size=size, densities=1, mutant=Population(ID=8, Proportion=0.2))
+        E = Experiment(name='GrGe_All-D_Sparse_20:80_', networkType=GrGe_Network, defaultConfig=default,
+                       variable='population', values=pops,
                        repeats=reps)
-        # E.run(display=True)
+        E.run(display=True)
+        #
+        # default2 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.2))
+        # E2 = Experiment(name='LrGe_All-D_Sparse_20:80_', networkType=LrGe_Network, defaultConfig=default2,
+        #                 variable='population', values=pops,
+        #                 repeats=reps)
+        # E2.run(export=True)
+        #
+        # default3 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.2))
+        # E3 = Experiment(name='LrLe_All-D_Sparse_20:80_', networkType=LrLe_Network, defaultConfig=default3,
+        #                 variable='population', values=pops,
+        #                 repeats=reps)
+        # E3.run(export=True)
+        #
+        # """All-C versus all the populations, initially weighted at 10/90."""
+        # #
+        # default4 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=9, Proportion=0.2))
+        # E4 = Experiment(name='GrGe_All-C_Sparse_20:80_', networkType=GrGe_Network, defaultConfig=default4,
+        #                 variable='population', values=pops,
+        #                 repeats=reps)
+        # E4.run(export=True)
+        #
+        # default5 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=9, Proportion=0.2))
+        # E5 = Experiment(name='LrGe_All-C_Sparse_20:80_', networkType=LrGe_Network, defaultConfig=default5,
+        #                 variable='population', values=pops,
+        #                 repeats=reps)
+        # E5.run(export=True)
+        #
+        # default6 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=9, Proportion=0.2))
+        # E6 = Experiment(name='LrLe_All-C_Sparse_20:80_', networkType=LrLe_Network, defaultConfig=default6,
+        #                 variable='population', values=pops,
+        #                 repeats=reps)
+        # E6.run(export=True)
 
-        default2 = Config(densities=0.1)
-        E2 = Experiment(networkType=LrGe_Network, defaultConfig=default2, variable='population', values=popsVsAllD,
-                        repeats=reps)
-        E2.run(display=True)
-
-        default3 = Config(densities=0.1)
-        E3 = Experiment(networkType=LrLe_Network, defaultConfig=default3, variable='population', values=popsVsAllD,
-                        repeats=reps)
-        E3.run(display=True)
-
-    #     """All-C versus all the populations, initially weighted at 10/90."""
-    #
-    #     default4 = Config(densities=1, mutant=Population(ID=9, Proportion=0.1))
-    #     E4 = Experiment(networkType=GrGe_Network, defaultConfig=default4, variable='population', values=pops,
-    #                     repeats=reps)
-    #     E4.run(display=True)
-    #
-    #     default5 = Config(densities=0.1, mutant=Population(ID=9, Proportion=0.1))
-    #     E5 = Experiment(networkType=LrGe_Network, defaultConfig=default5, variable='population', values=pops,
-    #                     repeats=reps)
-    #     E5.run(display=True)
-    #
-    #     default6 = Config(densities=0.1, mutant=Population(ID=9, Proportion=0.1))
-    #     E6 = Experiment(networkType=LrLe_Network, defaultConfig=default6, variable='population', values=pops,
-    #                     repeats=reps)
-    #     E6.run(display=True)
-    #
     # # Plots
     #
     # GrGe_AllD = Evaluator.open_results("type_population_2019-07-07 00:48")

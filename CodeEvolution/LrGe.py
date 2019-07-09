@@ -11,9 +11,12 @@ from CodeEvolution.config import Config
 class LrGe_Network(Network):
     """Network with Local Reputation and Global Evolution (LrGe)"""
 
+    name = "LrGe"
+
     def __init__(self, _config=None):
         super().__init__(_config)
         self.createNetwork(agentType=LrGe_Agent)
+        self.name = "LrGe"
 
     def getOpponentsReputation(self, agent1, agent2):
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is

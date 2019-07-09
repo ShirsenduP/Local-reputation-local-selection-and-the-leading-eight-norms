@@ -1,14 +1,13 @@
 import time
-from pprint import pprint
+import copy
 
 import pandas as pd
 from tqdm import trange
 
 from CodeEvolution.GrGe import GrGe_Network
-from CodeEvolution.LrGe import LrGe_Network
 from CodeEvolution.LrLe import LrLe_Network
 from CodeEvolution.config import Config
-from CodeEvolution.config import Population
+from CodeEvolution.config import Population, State
 from CodeEvolution.results import Results
 
 
@@ -28,11 +27,29 @@ class Experiment:
     def generateConfigs(self):
         """Given a variable and the range of values to be tested for that variable, generate a list of Config objects
         for each of those tests"""
-        tests = []
-        for i in range(len(self.values)):
-            tests.append(Config())
-            setattr(tests[i], self.variable, self.values[i])
+        if self.variable is None or self.values is None:
+            raise ValueError("Parameters 'variable' and 'values' must not be None.")
+
+        if self.variable == 'population':
+            # Changing the initial state/population is an edge-case because of the multiple changes needed to be made
+            tests = []
+            for i in range(len(self.values)):
+                newConfig = copy.deepcopy(self.default)
+                tests.append(newConfig)
+                setattr(tests[i], 'population', Population(ID=self.values[i][0].ID, proportion=self.values[i][
+                    0].proportion))
+                setattr(tests[i], 'mutant', Population(ID=self.values[i][1].ID, proportion=self.values[i][
+                    1].proportion))
+        else:
+            # General Case
+            tests = []
+            for i in range(len(self.values)):
+                newConfig = copy.deepcopy(self.default)
+                tests.append(newConfig)
+                setattr(tests[i], self.variable, self.values[i])
+
         self.experiments = tuple(tests)
+        # print(self.experiments)
 
     def run(self, export=False, display=False, recordFull=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
@@ -40,18 +57,19 @@ class Experiment:
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
          when multiple of the same parameterised run have different lengths of simulations."""
 
-        networkType = type(self.networkType).__name__.replace("_Network", "")
-        experimentName = networkType + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M")
-        print(experimentName)
+        experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M")
+        print("\nRunning ", experimentName, 50 * "=")
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
 
         if display:
-            print("DEFAULT PARAMETERS\n")
-            pprint(self.default)
+            # pass
+            print("Default Parameters:\t")
+            print(self.default)
 
         def simulate(m_exp):
-            N = GrGe_Network(m_exp)
+            # print(m_exp)
+            N = self.networkType(m_exp)
             N.runSimulation()
             resultsActions = N.results.exportActions()
             resultsCensus = N.results.exportCensus()
@@ -60,61 +78,37 @@ class Experiment:
             resultsFull = pd.concat([resultsActions, resultsCensus], axis=1, sort=False)
             return resultsFull.tail(1)
 
-        for exp in trange(len(self.experiments)):
+        for exp in trange(len(self.experiments), disable=display):
             if display:
                 print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
 
             singleTest = pd.DataFrame()
-            for _ in trange(self.repeats, leave=False):
+            for _ in trange(self.repeats, leave=False, disable=display):
                 singleRun = simulate(self.experiments[exp])
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
 
             if display:
                 print(singleTest)
+                print()
 
             if export:
                 Results.exportResultsToCSV(experimentName, self.experiments[exp], singleTest, exp)
 
     @classmethod
-    def generatePopulationList(cls):
-        """Create a sequential list of Config objects running through all the populations at a given proportion 0.9."""
-        configs = []
-        for i in range(8):
-            configs.append(Population(ID=i, Proportion=0.9))
-        return configs
+    def generatePopulationList(cls, strategies=tuple(range(8)), proportion=0.9, mutantID=8):
+        """Create a sequential list of Config objects running through each of the strategies defined, with a given
+        proportion and a mutantID."""
+        listOfStates = []
+        mainProp = proportion
+        mutantProp = round(1 - proportion, 3)
+        for i in strategies:
+            listOfStates.append((Population(ID=i, proportion=mainProp), Population(ID=mutantID, proportion=mutantProp)))
+        listOfStates = tuple(listOfStates)
+        return listOfStates
 
 
 if __name__ == '__main__':
-
-    pops = Experiment.generatePopulationList()
-    reps = 3
-    """All-D versus all the populations, initially weighted at 10/90."""
-
-    # default = Config(densities=1, mutant=Population(ID=8, Proportion=0.1))
-    # E = Experiment(networkType=GrGe_Network, defaultConfig=default, variable='population', values=pops, repeats=reps)
-    # E.run(export=True)
-    #
-    # default2 = Config(densities=0.1)
-    # E2 = Experiment(networkType=LrGe_Network, defaultConfig=default2, variable='population', values=pops, repeats=reps)
-    # E2.run(export=True)
-    #
-    # default3 = Config(densities=0.1)
-    # E3 = Experiment(networkType=LrLe_Network, defaultConfig=default3, variable='population', values=pops, repeats=reps)
-    # E3.run(export=True)
-    #
-    # """All-C versus all the populations, initially weighted at 10/90."""
-    #
-    # default4 = Config(densities=1, mutant=Population(ID=9, Proportion=0.1))
-    # E = Experiment(networkType=GrGe_Network, defaultConfig=default4, variable='population', values=pops, repeats=reps)
-    # E.run(export=True)
-    #
-    # default5 = Config(densities=0.1, mutant=Population(ID=9, Proportion=0.1))
-    # E2 = Experiment(networkType=LrGe_Network, defaultConfig=default5, variable='population', values=pops, repeats=reps)
-    # E2.run(export=True)
-
-    default6 = Config(densities=0.1, mutant=Population(ID=9, Proportion=0.1))
-    E3 = Experiment(networkType=LrLe_Network, defaultConfig=default6, variable='population', values=pops, repeats=reps)
-    E3.run(display=True)
+    pass
 
 # TODO Need to change the experiment class so that it takes the different configs here too, GrGe/GrLe/etc
 
@@ -124,4 +118,18 @@ if __name__ == '__main__':
 
 # TODO Find a way to let programs run through the night and then switch off when the script has finished running
 
-# TODO Add a nickname to the Experiment class to prepend onto experiment names cos the type(class) isn't working
+# TODO Might need to swap the population/mutant input into two tuples..
+
+# TODO Does probabilityOfMutants do anything?! -> YES! check mutation method, needs fix from todays meeting
+
+# TODO keep track of the number of mutants added in random mutation
+
+# TODO change the convergence condition to include epsilon ( probability of mutation )
+
+# TODO final graphs get rid of the threshold, just average convergence point at the end of the simulation -> increase
+#  the timesteps
+
+# TODO plot the variation of convergence as we vary Tmax to see if it moves towards convergence - DO THIS FIRST
+
+# TODO manager for Pycharm + Latex
+#

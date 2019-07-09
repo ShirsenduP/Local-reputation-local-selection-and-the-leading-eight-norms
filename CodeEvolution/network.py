@@ -13,6 +13,7 @@ class Network:
 
     def __init__(self, config, agentType=Agent):
         self.config = config
+        self.name = "Network"
         self.mainStratIDs = (config.population.ID, config.mutant.ID)
         self.agentList = []
         self.socialNorm = SocialNorm(config.socialNormID)
@@ -101,8 +102,8 @@ class Network:
         populationSize = self.config.size
         mainID = self.config.population.ID
         mutantID = self.config.mutant.ID
-        mainProp = int(self.config.population.Proportion * populationSize)
-        mutantProp = int(self.config.mutant.Proportion * populationSize)
+        mainProp = int(self.config.population.proportion * populationSize)
+        mutantProp = int(self.config.mutant.proportion * populationSize)
 
         mainPop = [mainID] * mainProp
         mutantPop = [mutantID] * mutantProp
