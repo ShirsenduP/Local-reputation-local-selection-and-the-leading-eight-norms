@@ -23,16 +23,17 @@ class Network:
         # #OfInteractions of an agent with some strategy, index1 captures the total cumulative payoff of all agents
         # running that strategy
         self.currentPeriod = 0
-        self.convergenceCheckIntervals = self.generateConvergenceCheckpoints(config)
+        self.convergenceCheckIntervals = self.generateConvergenceCheckpoints()
         self.convergenceHistory = deque(3 * [None], 3)
         self.hasConverged = False
         self.dilemma = config.socialDilemma
+        self.mutantTracker = {}.fromkeys(range(config.maxPeriods), 0)
 
-    def generateConvergenceCheckpoints(self, config):
+    def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
         the system checks for convergence. No convergence checks occur before a quarter of the simulation has
         progressed. """
-        maxPeriods = config.maxPeriods
+        maxPeriods = self.config.maxPeriods
         checkpoints = random.sample(range(int(maxPeriods / 4), maxPeriods), int(maxPeriods / 100))
         checkpoints.sort()
         return checkpoints
@@ -145,6 +146,7 @@ class Network:
         for agent in self.agentList:
             agent.initialiseHistory()
 
+
     def getOpponentsReputation(self, agent1, agent2):
         """Must be implemented through the relevant network type. Can be Global or Local."""
         raise NotImplementedError
@@ -250,11 +252,12 @@ class Network:
     def mutation(self, mutantStrategyID):
         """Each agent has probability of () 1/n )/alpha of becoming an agent in any time period where alpha is a
         parameter > 1"""
-        probabilityOfMutation = 1 / (self.config.size * self.config.mutationProbability)
+        probabilityOfMutation = self.config.mutationProbability / self.config.size
         for agent in self.agentList:
             r = random.random()
             if r < probabilityOfMutation:
                 agent.currentStrategy.changeStrategy(mutantStrategyID)
+                self.mutantTracker[self.currentPeriod] += 1
 
     def evolutionaryUpdate(self, alpha=10):
         """Must be implemented through the relevent network type."""

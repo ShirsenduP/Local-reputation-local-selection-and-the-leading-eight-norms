@@ -93,26 +93,10 @@ class LrGe_Agent(Agent):
         super().__init__(_id, _strategy)
         self.history = None
 
-    def updateStrategy(self, updateProbability):
+    def updateStrategy(self, updateProbability, copyTheBest=True):
         """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
         network.evolutionaryUpdate method."""
         pass
-
-
-def runExperiment(config, networkType=LrGe_Network, agentType=LrGe_Agent, repeat=10):
-    results = {}
-    for i in range(repeat):
-        def simulate(config):
-            N = networkType(config)
-            N.runSimulation()
-            resultsActions = N.results.exportActions()
-            resultsCensus = N.results.exportCensus()
-            resultsUtils = N.results.exportUtilities()
-            return pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
-
-        results[i] = simulate(config)
-    meanResults = Results.averageOverIterations(results)
-    return meanResults
 
 
 if __name__ == "__main__":

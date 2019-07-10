@@ -34,8 +34,8 @@ class Agent:
         return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
         
     def updateStrategy(self, updateProbability, copyTheBest=True):
-        """(COPY BEST) Switch strategies to the strategy used by the best performing neighbour of the agent with some
-         probability."""
+        """Local Evolution - (COPY THE BEST) Switch strategies to the strategy used by the best performing neighbour of
+        the agent with some probability."""
         # TODO Implement copyTheBetter strategyUpdate
         r = random.random()
         if r < updateProbability:
@@ -71,9 +71,8 @@ class Agent:
 
     def __str__(self):
         s = "("
-        s += f"Agent {self.id}"
-        s += f"# of agents {len(self.neighbours)}"
-        s += f", s={self.currentStrategy.currentStrategyID}"
+        s += f"Agent {self.id}, id={self.currentStrategy.currentStrategyID},"
+        s += f" with {len(self.neighbours)} neighbours"
         return s
 
 

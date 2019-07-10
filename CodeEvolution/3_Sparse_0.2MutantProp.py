@@ -15,27 +15,28 @@ if __name__ == '__main__':
     rerunSimulations = True
 
     if rerunSimulations:
-        pops = Experiment.generatePopulationList(proportion=0.8)
+        pops = Experiment.generatePopulationList(proportion=1)
         reps = 1
-        size = 500
+        size = 100
         sparseNetworkDensity = 2*np.log(size)/size
 
         """All-D versus all the populations, initially weighted at 20/80."""
 
-        default = Config(size=size, densities=1, initialState=State(mainID=0, proportion=0.8, mutantID=8))
-        E = Experiment(networkType=GrGe_Network, defaultConfig=default,
-                       variable='population', values=pops,
-                       repeats=reps)
-        E.showExperiments()
-
+        # default = Config(size=size, densities=1, initialState=State(mainID=0, proportion=0.8, mutantID=8))
+        # E = Experiment(networkType=GrGe_Network, defaultConfig=default,
+        #                variable='population', values=pops,
+        #                repeats=reps)
+        # E.showExperiments()
         # E.run(display=True)
         #
-        # default2 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.2))
-        # E2 = Experiment(name='LrGe_All-D_Sparse_20:80_', networkType=LrGe_Network, defaultConfig=default2,
-        #                 variable='population', values=pops,
-        #                 repeats=reps)
-        # E2.run(export=True)
-        #
+        default2 = Config(size=size, densities=sparseNetworkDensity, initialState=State(mainID=0, proportion=1,
+                                                                                        mutantID=8),
+                          probabilityOfMutants=0.5, maxPeriods=500)
+        E2 = Experiment(networkType=LrGe_Network, defaultConfig=default2,
+                        variable='population', values=pops,
+                        repeats=reps)
+        E2.run(display=True, displayFull=True)
+
         # default3 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.2))
         # E3 = Experiment(name='LrLe_All-D_Sparse_20:80_', networkType=LrLe_Network, defaultConfig=default3,
         #                 variable='population', values=pops,

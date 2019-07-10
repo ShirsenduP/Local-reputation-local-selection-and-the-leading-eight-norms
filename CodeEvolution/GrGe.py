@@ -1,15 +1,9 @@
-from pprint import pprint
 import random
-import pandas as pd
 import copy
 
 from CodeEvolution.network import Network
 from CodeEvolution.config import Config
 from CodeEvolution.agent import Agent
-from CodeEvolution.results import Results
-from CodeEvolution.socialnorm import SocialNorm
-from CodeEvolution.socialdilemna import SocialDilemma, PrisonersDilemma
-from CodeEvolution.strategy import Strategy
 
 
 class GrGe_Network(Network):
@@ -51,7 +45,8 @@ class GrGe_Network(Network):
         # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
         # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
         for strategy, _ in strategyUtils.items():
-            strategyUtils[strategy] /= (totalUtil*alpha)
+            strategyUtils[strategy] /= (totalUtil * alpha)
+            # TODO What is the purpose of \alpha?
 
         for agent in self.agentList:
             r = random.random()
@@ -70,8 +65,8 @@ class GrGe_Agent(Agent):
          network.evolutionaryUpdate method."""
         pass
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     config = Config()
     print(config)
     N = GrGe_Network(config)
@@ -79,10 +74,3 @@ if __name__ == "__main__":
     print("OK!")
 
 
-
-
-    #TODO TESTS
-    """	1. starting 50/50 mutants and some Strategy
-        2. Initially a strategy and no mutants - at the end of each timestep, each agent has some 'probabilityOfMutants'
-         of turning into a mutant (<< .1 )
-        3. test the number of mutants needed to kill the system"""

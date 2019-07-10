@@ -51,7 +51,7 @@ class Experiment:
         self.experiments = tuple(tests)
         # print(self.experiments)
 
-    def run(self, export=False, display=False, recordFull=False):
+    def run(self, export=False, display=False, recordFull=False, displayFull=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
         so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
@@ -70,12 +70,15 @@ class Experiment:
         def simulate(m_exp):
             # print(m_exp)
             N = self.networkType(m_exp)
+            # print(N)
             N.runSimulation()
             resultsActions = N.results.exportActions()
             resultsCensus = N.results.exportCensus()
-            # resultsUtils = N.results.exportUtilities()
-            # resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
-            resultsFull = pd.concat([resultsActions, resultsCensus], axis=1, sort=False)
+            resultsUtils = N.results.exportUtilities()
+            resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
+            # resultsFull = pd.concat([resultsActions, resultsCensus], axis=1, sort=False)
+            if displayFull:
+                print(resultsFull)
             return resultsFull.tail(1)
 
         for exp in trange(len(self.experiments), disable=display):
@@ -93,6 +96,7 @@ class Experiment:
 
             if export:
                 Results.exportResultsToCSV(experimentName, self.experiments[exp], singleTest, exp)
+        print("OK!")
 
     def showExperiments(self):
         """Print to the console a condensed list of all the config files in the object's experiment list."""
@@ -115,14 +119,11 @@ class Experiment:
 if __name__ == '__main__':
     pass
 
+# TODO Issue when initial state is entirely one population. The mutant strategy disappears from the results.
 
 # TODO Check how the evolutionary update works in GrGe, looks a little funny, where is the counting the utilities and
 #  interactions way? I think I am tracking the utilities this way in the utilityMonitor, but is not yet implemented
 #  on the evolutionaryUpdate methods.
-
-# TODO Find a way to let programs run through the night and then switch off when the script has finished running
-
-# TODO Might need to swap the population/mutant input into two tuples..
 
 # TODO Does probabilityOfMutants do anything?! -> YES! check mutation method, needs fix from todays meeting
 
@@ -137,3 +138,10 @@ if __name__ == '__main__':
 
 # TODO manager for Pycharm + Latex
 #
+# TODO Find a way to let programs run through the night and then switch off when the script has finished running
+
+# TODO TESTS
+"""	1. starting 50/50 mutants and some Strategy
+    2. Initially a strategy and no mutants - at the end of each timestep, each agent has some 'probabilityOfMutants'
+     of turning into a mutant (<< .1 )
+    3. test the number of mutants needed to kill the system"""

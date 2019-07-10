@@ -3,21 +3,22 @@ from CodeEvolution.socialdilemna import PrisonersDilemma
 from collections import namedtuple
 
 Dilemma = namedtuple('Dilemma', ['type', 'benefit', 'cost'])
-State = namedtuple('InitialState', ['mainID', 'proportion', 'mutantID'])
+State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])
 Population = namedtuple('Population', ['ID', 'proportion'])
 
 
 class Config:
+    """Configuration file describing a single parametrization of a simulation """
 
     def __init__(self,
-                 initialState=State(mainID=0, proportion=0.9, mutantID=8),
-                 size=500,
-                 densities=1,
-                 socialDilemma=Dilemma(type='PD', benefit=2, cost=1),
-                 omegas=0.99,
-                 maxPeriods=2000,
-                 updateProbability=0.1,
-                 probabilityOfMutants=1):
+                 initialState: State = State(mainID=0, proportion=0.9, mutantID=8),
+                 size: int = 500,
+                 densities: float = 1,
+                 socialDilemma: Dilemma = Dilemma(type='PD', benefit=2, cost=1),
+                 omegas: float = 0.99,
+                 maxPeriods: int = 2000,
+                 updateProbability: float = 0.1,
+                 probabilityOfMutants: float = 1) -> None:
 
         # TODO Validation checks (check validator class, should be able to just copy over)
         self.size = size
