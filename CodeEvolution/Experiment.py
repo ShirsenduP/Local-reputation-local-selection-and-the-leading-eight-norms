@@ -94,6 +94,11 @@ class Experiment:
             if export:
                 Results.exportResultsToCSV(experimentName, self.experiments[exp], singleTest, exp)
 
+    def showExperiments(self):
+        """Print to the console a condensed list of all the config files in the object's experiment list."""
+        for thing in self.experiments:
+            print(thing.__dict__)
+
     @classmethod
     def generatePopulationList(cls, strategies=tuple(range(8)), proportion=0.9, mutantID=8):
         """Create a sequential list of Config objects running through each of the strategies defined, with a given
@@ -110,7 +115,6 @@ class Experiment:
 if __name__ == '__main__':
     pass
 
-# TODO Need to change the experiment class so that it takes the different configs here too, GrGe/GrLe/etc
 
 # TODO Check how the evolutionary update works in GrGe, looks a little funny, where is the counting the utilities and
 #  interactions way? I think I am tracking the utilities this way in the utilityMonitor, but is not yet implemented

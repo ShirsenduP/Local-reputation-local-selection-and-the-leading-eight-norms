@@ -35,7 +35,10 @@ class Config:
             raise Exception(f"Population proportions are {self.population.proportion} + {self.mutant.proportion} != 1")
 
     def __str__(self):
-        return str(self.__dict__)
+        s = ""
+        for thing in self.__dict__.items():
+            s += str(thing) + "\n"
+        return s
 
     def __repr__(self):
         return str(self.__dict__)

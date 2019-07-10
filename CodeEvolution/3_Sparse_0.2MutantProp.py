@@ -4,7 +4,7 @@ from CodeEvolution.Evaluator import Evaluator
 from CodeEvolution.GrGe import GrGe_Network
 from CodeEvolution.LrGe import LrGe_Network
 from CodeEvolution.LrLe import LrLe_Network
-from CodeEvolution.config import Config
+from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population
 
@@ -22,11 +22,13 @@ if __name__ == '__main__':
 
         """All-D versus all the populations, initially weighted at 20/80."""
 
-        default = Config(size=size, densities=1, mutant=Population(ID=8, Proportion=0.2))
-        E = Experiment(name='GrGe_All-D_Sparse_20:80_', networkType=GrGe_Network, defaultConfig=default,
+        default = Config(size=size, densities=1, initialState=State(mainID=0, proportion=0.8, mutantID=8))
+        E = Experiment(networkType=GrGe_Network, defaultConfig=default,
                        variable='population', values=pops,
                        repeats=reps)
-        E.run(display=True)
+        E.showExperiments()
+
+        # E.run(display=True)
         #
         # default2 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.2))
         # E2 = Experiment(name='LrGe_All-D_Sparse_20:80_', networkType=LrGe_Network, defaultConfig=default2,
