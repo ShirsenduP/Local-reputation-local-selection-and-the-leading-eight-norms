@@ -11,17 +11,14 @@ class Strategy():
                     ['C', 'D', 'C', 'D'],
                     ['D', 'D', 'D', 'D'], #AllD
                     ['C', 'C', 'C', 'C']] #AllC
-    census = {}.fromkeys(range(10), 0)
+    census = {}
     totalCountOfStrategies = 0
-    
-
 
     def __init__(self, strategyID):
         Strategy.totalCountOfStrategies += 1
         self.currentStrategyID = strategyID
         self.currentStrategy = dict((key, value) for key, value in zip(Strategy.allStates, Strategy.allOutcomes[strategyID]))
         Strategy.updateCensus(strategyID, None)
-
 
     def chooseAction(self, agent1Reputation, agent2Reputation):
         stateKey = str(agent1Reputation) + str(agent2Reputation)
@@ -32,18 +29,32 @@ class Strategy():
         self.currentStrategyID = newStrategyID
         self.currentStrategy = dict((key, value) for key, value in zip(self.allStates, self.allOutcomes[newStrategyID]))
 
+    # @classmethod
+    # def updateCensus(cls, newStrategyID, oldStrategyID=None):
+    #     Strategy.census[newStrategyID] += 1
+    #     if oldStrategyID != None:
+    #         Strategy.census[oldStrategyID] -= 1
+    #     if sum(Strategy.census.values()) != Strategy.totalCountOfStrategies:
+    #         raise Exception("Number of strategies in census is greater than number of agents")
+
     @classmethod
-    def updateCensus(cls, newStrategyID, oldStrategyID=None):
-        Strategy.census[newStrategyID] += 1
-        if oldStrategyID != None:
-            Strategy.census[oldStrategyID] -= 1
-        if sum(Strategy.census.values()) != Strategy.totalCountOfStrategies:
-            raise Exception("Number of strategies in census is greater than number of agents")
+    def updateCensus(cls, newID, oldID=None):
+        if newID in Strategy.census.keys():
+            # If strategy already exists in census then just increment counter
+            Strategy.census[newID] += 1
+        else:
+            # If strategy does not exist, then create it
+            Strategy.census[newID] = 1
+        if oldID:
+            # If an agent switches from an old strategy, decrement the old strategy
+            Strategy.census[oldID] -= 1
+
+
 
 
     @classmethod
     def reset(cls):
-        Strategy.census = {}.fromkeys(range(10),0)
+        Strategy.census = {}
         Strategy.totalCountOfStrategies = 0
 
     def __str__(self):

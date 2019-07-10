@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import json
 
-class Results():
+class Results:
 
     def __init__(self, config):
         self.strategies = {config.population.ID, config.mutant.ID}
@@ -20,8 +20,8 @@ class Results():
             self.actions[key].append(proportionAction)
 
     def exportUtilities(self):
-        utils = self.removeZeros(self.utilities)
-        utils = pd.DataFrame(utils).transpose()
+        # utils = self.removeZeros(self.utilities)
+        utils = pd.DataFrame(self.utilities).transpose()
         utils = utils.add_prefix('Average Util. Strategy #')
         return utils
 
@@ -31,8 +31,8 @@ class Results():
         return actions
 
     def exportCensus(self):
-        census = self.removeZeros(self.strategyProportions)
-        census = pd.DataFrame(census).transpose()
+        # census = self.removeZeros(self.strategyProportions)
+        census = pd.DataFrame(self.strategyProportions).transpose()
         census = census.add_prefix('Prop. Strategy #')
         return census
 
@@ -54,7 +54,6 @@ class Results():
                 data[key].pop(emptyKey, None)
 
         return data
-
 
     @classmethod
     def averageOverIterations(cls, iterations):
@@ -95,3 +94,4 @@ class Results():
         s += str(self.actions)
         return s
 
+    # TODO: Move the census from Strategy class to Results class, makes more sense to track everything from here

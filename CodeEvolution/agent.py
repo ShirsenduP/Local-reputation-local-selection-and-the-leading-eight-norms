@@ -5,7 +5,7 @@ from CodeEvolution.strategy import Strategy
 
 class Agent:
 
-    reputation = (0,1)
+    reputation = (0, 1)
 
     def __init__(self, _id, _strategy):
         self.id = _id

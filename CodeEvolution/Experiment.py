@@ -120,6 +120,7 @@ if __name__ == '__main__':
     pass
 
 # TODO Issue when initial state is entirely one population. The mutant strategy disappears from the results.
+#             SOLUTION: Results.removeZeros method, rework it to go with the mainStratIDs in config
 
 # TODO Check how the evolutionary update works in GrGe, looks a little funny, where is the counting the utilities and
 #  interactions way? I think I am tracking the utilities this way in the utilityMonitor, but is not yet implemented

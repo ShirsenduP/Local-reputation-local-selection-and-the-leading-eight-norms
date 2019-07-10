@@ -29,9 +29,9 @@ if __name__ == '__main__':
         # E.showExperiments()
         # E.run(display=True)
         #
-        default2 = Config(size=size, densities=sparseNetworkDensity, initialState=State(mainID=0, proportion=1,
+        default2 = Config(size=size, densities=1, initialState=State(mainID=0, proportion=1,
                                                                                         mutantID=8),
-                          probabilityOfMutants=0.5, maxPeriods=500)
+                          probabilityOfMutants=0.1, maxPeriods=500)
         E2 = Experiment(networkType=LrGe_Network, defaultConfig=default2,
                         variable='population', values=pops,
                         repeats=reps)

@@ -19,7 +19,7 @@ class Network:
         self.socialNorm = SocialNorm(config.socialNormID)
         self.results = Results(config)
         self.tempActions = {'C': 0, 'D': 0}
-        self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]  # index0 captures
+        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]  # index0 captures
         # #OfInteractions of an agent with some strategy, index1 captures the total cumulative payoff of all agents
         # running that strategy
         self.currentPeriod = 0
@@ -69,7 +69,7 @@ class Network:
 
         interactionsDict = self.utilityMonitor[0]
         payoffDict = self.utilityMonitor[1]
-        averageUtilities = {}.fromkeys(range(10), 0)
+        averageUtilities = {}.fromkeys(self.mainStratIDs, 0)
 
         for key, _ in averageUtilities.items():
             if interactionsDict[key]:
@@ -146,7 +146,6 @@ class Network:
         for agent in self.agentList:
             agent.initialiseHistory()
 
-
     def getOpponentsReputation(self, agent1, agent2):
         """Must be implemented through the relevant network type. Can be Global or Local."""
         raise NotImplementedError
@@ -188,7 +187,7 @@ class Network:
         """Reset the utility of each agent in the population. To be used at the end of every timestep."""
         for agent in self.agentList:
             agent.currentUtility = 0
-        self.utilityMonitor = [{}.fromkeys(range(10), 0), {}.fromkeys(range(10), 0)]
+        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
 
     def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
         interaction12 = {
