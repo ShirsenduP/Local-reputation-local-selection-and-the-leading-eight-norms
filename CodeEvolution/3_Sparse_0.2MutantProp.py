@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 from matplotlib import pyplot as plt
 from CodeEvolution.Evaluator import Evaluator
@@ -9,6 +10,9 @@ from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population
 
 if __name__ == '__main__':
+
+    logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
+
     """Test 3 - Sparse networks, all 8 strategies vs All-D/All-C with 20/80 mutant/population split. """
 
     rerunSimulations = True
@@ -16,19 +20,21 @@ if __name__ == '__main__':
     if rerunSimulations:
         pops = Experiment.generatePopulationList(strategies=(0,), proportion=0.9, mutantID=8)
         reps = 1
-        size = 200
+        size = 50
         sparseNetworkDensity = 2 * np.log(size) / size
+        # sparseNetworkDensity = 1
 
         """All-D versus all the populations, initially weighted at 20/80."""
 
         default = Config(size=size, densities=sparseNetworkDensity,
-                         initialState=State(mainID=0, proportion=0.95, mutantID=8), maxPeriods=1000,
-                         probabilityOfMutants=0.1, omegas=0.99)
+                         initialState=State(mainID=0, proportion=0.9, mutantID=8), maxPeriods=10,
+                         probabilityOfMutants=0.9, omegas=0.5)
         E = Experiment(networkType=LrGe_Network, defaultConfig=default,
                        variable='density', values=[sparseNetworkDensity],
                        repeats=reps)
         E.showExperiments()
-        E.run(display=True, displayFull=True)
+        # E.run(display=True, displayFull=True)
+        E.run()
         #
         # default2 = Config(size=size, densities=1, initialState=State(mainID=0, proportion=1, mutantID=8),
         #                   probabilityOfMutants=0.5, maxPeriods=2000)

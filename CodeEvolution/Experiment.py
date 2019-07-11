@@ -123,17 +123,14 @@ if __name__ == '__main__':
 
 # TODO LOGGING NEEDED URGENTLY for each interaction
 
-# TODO keep track of the number of mutants added in random mutation
-
 # TODO change the convergence condition to include epsilon ( probability of mutation )
 
-# TODO final graphs get rid of the threshold, just average convergence point at the end of the simulation -> increase
+# TODO FIRST TEST final graphs get rid of the threshold, just average convergence point at the end of the simulation ->
+#  increase
 #  the timesteps
 
 # TODO plot the variation of convergence as we vary Tmax to see if it moves towards convergence - DO THIS FIRST
 
-# TODO manager for Pycharm + Latex
-#
 # TODO Find a way to let programs run through the night and then switch off when the script has finished running
 
 # TODO TESTS

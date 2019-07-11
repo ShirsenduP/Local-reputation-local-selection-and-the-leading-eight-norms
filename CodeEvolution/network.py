@@ -1,5 +1,6 @@
 import copy
 import random
+import logging
 
 from collections import deque
 
@@ -27,6 +28,7 @@ class Network:
         self.convergenceHistory = deque(3 * [None], 3)
         self.hasConverged = False
         self.dilemma = config.socialDilemma
+        logging.debug(f"Network Parameters: \t{self.__dict__}")
 
     def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
@@ -80,11 +82,14 @@ class Network:
         system converges at pre-allocated randomly chosen convergence check intervals."""
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
+            debugNetwork = str(self)
+            logging.debug(f"T = {self.currentPeriod} - \ncensus: {debugNetwork}")
             self.resetUtility()
             self.resetTempActions()
             self.runSingleTimestep()
             self.scanStrategies()
             # print(self)
+            # logging.debug(self)
             self.evolutionaryUpdate()
             self.mutation(self.config.mutant.ID)
             if self.currentPeriod in self.convergenceCheckIntervals:
@@ -127,6 +132,12 @@ class Network:
         """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
 
         strategyDistribution = self.getStrategyCounts()
+
+        # Check for incorrect parameters
+        if len(strategyDistribution) != self.config.size:
+            agentCount = self.config.population.proportion*self.config.size
+            raise Exception(f"The initial proportion of agents given running the main strategy must be such that the"
+                            f" corresponding number of agents is a whole number (we cannot have {agentCount} agents!).")
 
         for agentID in range(self.config.size):
             randomIDIndex = random.randint(0, len(strategyDistribution) - 1)
@@ -181,13 +192,14 @@ class Network:
         agent2.updateUtility(payoff2)
 
         self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        self.updateReputation(agent1, agent2, agent1Move, agent2Move)
 
     def resetUtility(self):
         """Reset the utility of each agent in the population. To be used at the end of every timestep."""
         for agent in self.agentList:
             agent.currentUtility = 0
         self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
+        logging.debug(f"(t={self.currentPeriod})Network utility monitor, and agent utility trackers reset.")
 
     def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
         interaction12 = {
@@ -207,7 +219,14 @@ class Network:
         }
         agent2.recordInteraction(interaction21)
 
-    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        # Debugging
+        debugMessage = f"(id: {agent1.id}, rep: {agent1Reputation}, " \
+            f"str: {agent1.currentStrategy.currentStrategyID}, move: {agent1Move})\t"
+        debugMessage += f"(id: {agent2.id}, rep: {agent2Reputation}, " \
+            f"str: {agent1.currentStrategy.currentStrategyID}, move: {agent2Move})"
+        logging.debug(debugMessage)
+
+    def updateReputation(self, agent1, agent2, agent1Move, agent2Move):
         """Assign reputations following an interaction with each agent's globally known reputation and not the
         calculated reputation as default."""
 
@@ -218,7 +237,6 @@ class Network:
 
         agent1.updatePersonalReputation(agent1NewReputation)
         agent2.updatePersonalReputation(agent2NewReputation)
-        # TODO Whats the point of agent1Reputation and agent2Reputation if its being newly calculated within the method? Check whats going on here
 
     def showHistory(self):
         for agent in self.agentList:
@@ -237,8 +255,8 @@ class Network:
         if None in history:
             return
 
-        if history[2] == history[1] and history[1] == history[0]:
-            print(f"HAS CONVERGED AT {history}, checks at {self.convergenceCheckIntervals}")
+        if history[2][1] == history[1][1] and history[1][1] == history[0][1]:
+            # print(f"HAS CONVERGED AT {history}")
             self.hasConverged = True
             self.results.convergedAt = self.currentPeriod
 
@@ -282,7 +300,7 @@ class Network:
         self.results.updateActions(self.tempActions)
 
     def grabSnapshot(self):
-        self.convergenceHistory.appendleft(self.getCensus())
+        self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
 
     def __str__(self):
         s = ""

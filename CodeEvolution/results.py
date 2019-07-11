@@ -38,9 +38,8 @@ class Results:
         return census
 
     def exportMutations(self):
-        mutations = pd.Series(self.mutantTracker).transpose()
+        mutations = pd.Series(self.mutantTracker)
         mutations = mutations.rename("# of Mutants Added")
-        print(mutations)
         return mutations
 
     @staticmethod

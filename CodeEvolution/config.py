@@ -33,7 +33,8 @@ class Config:
         self.mutationProbability = probabilityOfMutants
 
         if self.population.proportion + self.mutant.proportion != 1:
-            raise Exception(f"Population proportions are {self.population.proportion} + {self.mutant.proportion} != 1")
+            total = self.population.proportion + self.mutant.proportion
+            raise Exception(f"Population proportions sum to {total}, must sum to 1.")
 
     def __str__(self):
         s = ""

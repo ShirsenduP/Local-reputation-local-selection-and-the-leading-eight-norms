@@ -1,11 +1,9 @@
 import random
 import copy
-import pandas as pd
+import logging
 
 from CodeEvolution.network import Network
 from CodeEvolution.agent import Agent
-from CodeEvolution.results import Results
-from CodeEvolution.config import Config
 
 
 class LrGe_Network(Network):
@@ -64,7 +62,7 @@ class LrGe_Network(Network):
         utilities of all strategies. COPIED FROM GrGe -> MAKE SURE ITS UP TO DATE UNTIL BETTER SOLUTION FOUND"""
 
         strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
-
+        logging.debug(f"(Global) Average utility: {strategyUtils}")
         # find strategy with highest utility
         bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
 
