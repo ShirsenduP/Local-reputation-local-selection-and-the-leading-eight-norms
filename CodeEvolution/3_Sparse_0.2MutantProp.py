@@ -8,34 +8,34 @@ from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population
 
-
 if __name__ == '__main__':
     """Test 3 - Sparse networks, all 8 strategies vs All-D/All-C with 20/80 mutant/population split. """
 
     rerunSimulations = True
 
     if rerunSimulations:
-        pops = Experiment.generatePopulationList(proportion=1)
+        pops = Experiment.generatePopulationList(strategies=(0,), proportion=0.9, mutantID=8)
         reps = 1
-        size = 100
-        sparseNetworkDensity = 2*np.log(size)/size
+        size = 200
+        sparseNetworkDensity = 2 * np.log(size) / size
 
         """All-D versus all the populations, initially weighted at 20/80."""
 
-        # default = Config(size=size, densities=1, initialState=State(mainID=0, proportion=0.8, mutantID=8))
-        # E = Experiment(networkType=GrGe_Network, defaultConfig=default,
-        #                variable='population', values=pops,
-        #                repeats=reps)
-        # E.showExperiments()
-        # E.run(display=True)
+        default = Config(size=size, densities=sparseNetworkDensity,
+                         initialState=State(mainID=0, proportion=0.95, mutantID=8), maxPeriods=1000,
+                         probabilityOfMutants=0.1, omegas=0.99)
+        E = Experiment(networkType=LrGe_Network, defaultConfig=default,
+                       variable='density', values=[sparseNetworkDensity],
+                       repeats=reps)
+        E.showExperiments()
+        E.run(display=True, displayFull=True)
         #
-        default2 = Config(size=size, densities=1, initialState=State(mainID=0, proportion=1,
-                                                                                        mutantID=8),
-                          probabilityOfMutants=0.1, maxPeriods=500)
-        E2 = Experiment(networkType=LrGe_Network, defaultConfig=default2,
-                        variable='population', values=pops,
-                        repeats=reps)
-        E2.run(display=True, displayFull=True)
+        # default2 = Config(size=size, densities=1, initialState=State(mainID=0, proportion=1, mutantID=8),
+        #                   probabilityOfMutants=0.5, maxPeriods=2000)
+        # E2 = Experiment(networkType=LrGe_Network, defaultConfig=default2,
+        #                 variable='population', values=pops,
+        #                 repeats=reps)
+        # E2.run(display=True, displayFull=True)
 
         # default3 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.2))
         # E3 = Experiment(name='LrLe_All-D_Sparse_20:80_', networkType=LrLe_Network, defaultConfig=default3,

@@ -75,10 +75,12 @@ class Experiment:
             resultsActions = N.results.exportActions()
             resultsCensus = N.results.exportCensus()
             resultsUtils = N.results.exportUtilities()
-            resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
+            resultsMutations = N.results.exportMutations()
+            resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils, resultsMutations], axis=1, sort=False)
             # resultsFull = pd.concat([resultsActions, resultsCensus], axis=1, sort=False)
             if displayFull:
                 print(resultsFull)
+            # print(N)
             return resultsFull.tail(1)
 
         for exp in trange(len(self.experiments), disable=display):
@@ -119,14 +121,7 @@ class Experiment:
 if __name__ == '__main__':
     pass
 
-# TODO Issue when initial state is entirely one population. The mutant strategy disappears from the results.
-#             SOLUTION: Results.removeZeros method, rework it to go with the mainStratIDs in config
-
-# TODO Check how the evolutionary update works in GrGe, looks a little funny, where is the counting the utilities and
-#  interactions way? I think I am tracking the utilities this way in the utilityMonitor, but is not yet implemented
-#  on the evolutionaryUpdate methods.
-
-# TODO Does probabilityOfMutants do anything?! -> YES! check mutation method, needs fix from todays meeting
+# TODO LOGGING NEEDED URGENTLY for each interaction
 
 # TODO keep track of the number of mutants added in random mutation
 

@@ -38,16 +38,20 @@ class Strategy():
     #         raise Exception("Number of strategies in census is greater than number of agents")
 
     @classmethod
-    def updateCensus(cls, newID, oldID=None):
-        if newID in Strategy.census.keys():
+    def updateCensus(cls, newID, oldID):
+        if newID == oldID:
+            # If changing to the same strategy, no need to make any change
+            return
+        elif newID in Strategy.census.keys():
             # If strategy already exists in census then just increment counter
             Strategy.census[newID] += 1
         else:
             # If strategy does not exist, then create it
             Strategy.census[newID] = 1
-        if oldID:
+        if oldID is not None:
             # If an agent switches from an old strategy, decrement the old strategy
             Strategy.census[oldID] -= 1
+        # print(f"new: {newID}, old: {oldID}, census: {Strategy.census}")
 
 
 

@@ -13,7 +13,7 @@ class Agent:
         self.currentReputation = random.choice(Agent.reputation)
         self.currentUtility = 0
         self.neighbours = []
-        self.history = {} # get LAST partner
+        self.history = {}  # get LAST partner
 
     def updateUtility(self, payoff):
         """Update the utility or cumulative payoff of an agent."""
@@ -69,10 +69,13 @@ class Agent:
             s += f"Last interaction with neighbour {neighbour.id} was {self.history[neighbour]}\n"
         return s
 
+    def getNeighboursUtilities(self):
+        return [(agent.id, agent.currentStrategy.currentStrategyID, agent.currentUtility) for agent in self.neighbours]
+
     def __str__(self):
         s = "("
         s += f"Agent {self.id}, id={self.currentStrategy.currentStrategyID},"
-        s += f" with {len(self.neighbours)} neighbours"
+        s += f" with neighbours {self.getNeighboursUtilities()}"
         return s
 
 

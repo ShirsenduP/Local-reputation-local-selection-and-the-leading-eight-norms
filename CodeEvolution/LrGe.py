@@ -41,6 +41,7 @@ class LrGe_Network(Network):
             agent2PastMove = agent2ThirdPartyInteraction['Focal Move']
         except TypeError:  # no previous interaction
             agent2Reputation = random.randint(0, 1)
+            # print(f"flop {agent1.id}")
         else:
             agent2Reputation = self.socialNorm.assignReputation(agent2PastReputation, agent2NeighbourPastReputation,
                                                                 agent2PastMove)
@@ -51,6 +52,7 @@ class LrGe_Network(Network):
             agent1PastMove = agent1ThirdPartyInteraction['Focal Move']
         except TypeError:  # no previous interaction
             agent1Reputation = random.randint(0, 1)
+            # print(f"flop {agent2.id}")
         else:
             agent1Reputation = self.socialNorm.assignReputation(agent1PastReputation, agent1NeighbourPastReputation,
                                                                 agent1PastMove)
@@ -74,17 +76,23 @@ class LrGe_Network(Network):
         # if total utility is zero, no evolutionary update
         totalUtil = sum(strategyUtils.values())
         if totalUtil == 0:
+            # print(f"update skipped because at t = {self.currentPeriod} we have {strategyUtils.values()}")
             return
 
         # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
         # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
         for strategy, _ in strategyUtils.items():
             strategyUtils[strategy] /= (totalUtil * alpha)
+            # TODO this alpha is being funny, what is its point? its arbitrary.
+
+        # print(f"t = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
 
         for agent in self.agentList:
             r = random.random()
             if r < strategyUtils[bestStrategy]:
                 agent.currentStrategy.changeStrategy(bestStrategy)
+                # TODO This bit is weird, need to log this function so I can see what updates are happening and what
+                #  are not happening.
 
 
 class LrGe_Agent(Agent):

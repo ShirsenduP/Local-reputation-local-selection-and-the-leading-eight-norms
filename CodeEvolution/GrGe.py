@@ -40,6 +40,7 @@ class GrGe_Network(Network):
         # if total utility is zero, no evolutionary update
         totalUtil = sum(strategyUtils.values())
         if totalUtil == 0:
+            # print(f"update skipped because at t = {self.currentPeriod} we have {strategyUtils.values()}")
             return
 
         # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
@@ -47,6 +48,8 @@ class GrGe_Network(Network):
         for strategy, _ in strategyUtils.items():
             strategyUtils[strategy] /= (totalUtil * alpha)
             # TODO What is the purpose of \alpha?
+
+        # print(f"t = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
 
         for agent in self.agentList:
             r = random.random()

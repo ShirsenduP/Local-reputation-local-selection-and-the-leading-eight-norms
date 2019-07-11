@@ -10,6 +10,7 @@ class Results:
         self.strategyProportions = {}
         self.utilities = {}
         self.convergedAt = None
+        self.mutantTracker = {}
 
     def updateActions(self, actions):
         """Given a dictionary of counts of cooperators and defectors, append to network results the proportions for that
@@ -35,6 +36,12 @@ class Results:
         census = pd.DataFrame(self.strategyProportions).transpose()
         census = census.add_prefix('Prop. Strategy #')
         return census
+
+    def exportMutations(self):
+        mutations = pd.Series(self.mutantTracker).transpose()
+        mutations = mutations.rename("# of Mutants Added")
+        print(mutations)
+        return mutations
 
     @staticmethod
     def removeZeros(data):

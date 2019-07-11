@@ -27,7 +27,6 @@ class Network:
         self.convergenceHistory = deque(3 * [None], 3)
         self.hasConverged = False
         self.dilemma = config.socialDilemma
-        self.mutantTracker = {}.fromkeys(range(config.maxPeriods), 0)
 
     def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
@@ -85,8 +84,9 @@ class Network:
             self.resetTempActions()
             self.runSingleTimestep()
             self.scanStrategies()
-            self.mutation(self.config.mutant.ID)
+            # print(self)
             self.evolutionaryUpdate()
+            self.mutation(self.config.mutant.ID)
             if self.currentPeriod in self.convergenceCheckIntervals:
                 self.grabSnapshot()
                 self.checkConvergence()
@@ -176,7 +176,7 @@ class Network:
         payoff1, payoff2 = self.dilemma.playGame(agent1Move, agent2Move)
         self.updateMonitor(agent1, agent2, payoff1, payoff2)
 
-        # Update agents personal utilities for evolutionary update
+        # Update agents personal utilities for (LOCAL) evolutionary update
         agent1.updateUtility(payoff1)
         agent2.updateUtility(payoff2)
 
@@ -238,6 +238,7 @@ class Network:
             return
 
         if history[2] == history[1] and history[1] == history[0]:
+            print(f"HAS CONVERGED AT {history}, checks at {self.convergenceCheckIntervals}")
             self.hasConverged = True
             self.results.convergedAt = self.currentPeriod
 
@@ -249,14 +250,22 @@ class Network:
         return agent1, agent2
 
     def mutation(self, mutantStrategyID):
-        """Each agent has probability of () 1/n )/alpha of becoming an agent in any time period where alpha is a
-        parameter > 1"""
+        """Each agent has probability of (alpha/n) of becoming a mutant in any time period where alpha is the
+        expected number of mutants added per time-step."""
         probabilityOfMutation = self.config.mutationProbability / self.config.size
         for agent in self.agentList:
             r = random.random()
             if r < probabilityOfMutation:
+                # print(f"agent {agent.id} mutation, {agent.currentStrategy.currentStrategyID} to {mutantStrategyID}")
                 agent.currentStrategy.changeStrategy(mutantStrategyID)
-                self.mutantTracker[self.currentPeriod] += 1
+                if self.currentPeriod not in self.results.mutantTracker.keys():
+                    self.results.mutantTracker[self.currentPeriod] = 1
+                else:
+                    self.results.mutantTracker[self.currentPeriod] += 1
+
+        # If no mutants added, append 0 to mutantTracker
+        if self.currentPeriod not in self.results.mutantTracker.keys():
+            self.results.mutantTracker[self.currentPeriod] = 0
 
     def evolutionaryUpdate(self, alpha=10):
         """Must be implemented through the relevent network type."""
