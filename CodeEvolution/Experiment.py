@@ -40,6 +40,7 @@ class Experiment:
                     0].proportion))
                 setattr(tests[i], 'mutant', Population(ID=self.values[i][1].ID, proportion=self.values[i][
                     1].proportion))
+                setattr(tests[i], 'socialNormID', self.values[i][0].ID)
         else:
             # General Case
             tests = []
@@ -75,8 +76,8 @@ class Experiment:
             resultsActions = N.results.exportActions()
             resultsCensus = N.results.exportCensus()
             resultsUtils = N.results.exportUtilities()
-            resultsMutations = N.results.exportMutations()
-            resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils, resultsMutations], axis=1, sort=False)
+            # resultsMutations = N.results.exportMutations()
+            resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
             # resultsFull = pd.concat([resultsActions, resultsCensus], axis=1, sort=False)
             if displayFull:
                 print(resultsFull)
@@ -122,8 +123,6 @@ if __name__ == '__main__':
     pass
 
 # TODO LOGGING NEEDED URGENTLY for each interaction
-
-# TODO change the convergence condition to include epsilon ( probability of mutation )
 
 # TODO FIRST TEST final graphs get rid of the threshold, just average convergence point at the end of the simulation ->
 #  increase

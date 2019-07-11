@@ -83,7 +83,7 @@ class Network:
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
             debugNetwork = str(self)
-            logging.debug(f"T = {self.currentPeriod} - \ncensus: {debugNetwork}")
+            # logging.debug(f"T = {self.currentPeriod} - \ncensus: {debugNetwork}")
             self.resetUtility()
             self.resetTempActions()
             self.runSingleTimestep()
@@ -135,7 +135,7 @@ class Network:
 
         # Check for incorrect parameters
         if len(strategyDistribution) != self.config.size:
-            agentCount = self.config.population.proportion*self.config.size
+            agentCount = self.config.population.proportion * self.config.size
             raise Exception(f"The initial proportion of agents given running the main strategy must be such that the"
                             f" corresponding number of agents is a whole number (we cannot have {agentCount} agents!).")
 
@@ -245,18 +245,34 @@ class Network:
             s += "\n"
             print(s)
 
+    # def checkConvergence(self):
+    #     """Check if the network has converged or not by checking the last 3 snapshots taken at
+    #     randomly chosen intervals."""
+    #
+    #     history = self.convergenceHistory
+    #
+    #     # Minimum 3 snapshots needed to check for convergence (as defined in self.convergenceHistory)
+    #     if None in history:
+    #         return
+    #
+    #     if history[2][1] == history[1][1] and history[1][1] == history[0][1]:
+    #         # print(f"HAS CONVERGED AT {history}")
+    #         self.hasConverged = True
+    #         self.results.convergedAt = self.currentPeriod
+
     def checkConvergence(self):
-        """Check if the network has converged or not by checking the last 3 snapshots taken at randomly chosen
-        intervals."""
+        """Check if the system has converged. """
 
-        history = self.convergenceHistory
-
-        # Minimum 3 snapshots needed to check for convergence (as defined in self.convergenceHistory)
-        if None in history:
+        if None in self.convergenceHistory:
             return
 
-        if history[2][1] == history[1][1] and history[1][1] == history[0][1]:
-            # print(f"HAS CONVERGED AT {history}")
+        history = [snapshot[1] for snapshot in self.convergenceHistory]
+        logging.warn(f"CONVERGENCE CHECKPOINT {self.convergenceHistory}")
+        mainID = self.mainStratIDs[0]
+        epsilon = self.config.mutationProbability
+
+        if abs(history[0][mainID] - history[1][mainID]) < 2 * epsilon or \
+                abs(history[0][mainID] - history[2][mainID]) < 2 * epsilon:
             self.hasConverged = True
             self.results.convergedAt = self.currentPeriod
 
@@ -286,7 +302,7 @@ class Network:
             self.results.mutantTracker[self.currentPeriod] = 0
 
     def evolutionaryUpdate(self, alpha=10):
-        """Must be implemented through the relevent network type."""
+        """Must be implemented through the relevant network type."""
         raise NotImplementedError
 
     def runSingleTimestep(self):

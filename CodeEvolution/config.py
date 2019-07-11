@@ -18,7 +18,7 @@ class Config:
                  omegas: float = 0.99,
                  maxPeriods: int = 2000,
                  updateProbability: float = 0.1,
-                 probabilityOfMutants: float = 1) -> None:
+                 mutationProbability : float = 1) -> None:
 
         # TODO Validation checks (check validator class, should be able to just copy over)
         self.size = size
@@ -30,7 +30,7 @@ class Config:
         self.omega = omegas
         self.maxPeriods = maxPeriods
         self.updateProbability = updateProbability
-        self.mutationProbability = probabilityOfMutants
+        self.mutationProbability = mutationProbability
 
         if self.population.proportion + self.mutant.proportion != 1:
             total = self.population.proportion + self.mutant.proportion

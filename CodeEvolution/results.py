@@ -88,9 +88,9 @@ class Results:
         def dumper(obj):
             return obj.__dict__
 
-        with open(f"CodeEvolution/results/{experimentName}/{experimentNumber}.json", 'w') as f:
-            f.write(json.dumps(experimentConfig, default=dumper, indent=4)) # use `json.loads` to do
-            # the reverse
+        # with open(f"CodeEvolution/results/{experimentName}/{experimentNumber}.json", 'w') as f:
+            # f.write(json.dumps(experimentConfig, default=dumper, indent=4))
+            # f.write(json.dumps(experimentConfig, indent=4))
 
     def __str__(self):
         s = str(self.strategyProportions)

@@ -7,7 +7,6 @@ import matplotlib as mpl
 
 mpl.style.use('seaborn')
 
-
 class Evaluator:
 
     @staticmethod
