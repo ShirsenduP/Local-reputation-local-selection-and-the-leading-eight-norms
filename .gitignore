@@ -2,7 +2,7 @@
 __pycache__/
 venv/
 env/
-.log
+*.log
 CodeEvolution/logs/
 CodeEvolution/configurations/draft2.json
 CodeEvolution/results/
