@@ -1,6 +1,7 @@
 from json import JSONEncoder
 from copy import deepcopy
 
+
 class SocialDilemma():
     """Parent class of all social dilemna games that can be played in this experiment, providing the means through which
      each game outputs the respective payoffs of either side of the game."""
@@ -20,7 +21,7 @@ class SocialDilemma():
 class PrisonersDilemma(SocialDilemma, JSONEncoder):
     """Prisoner's Dilemna game parameterised by a benefit and a cost, the benefit is received by agent1 if agent2
     cooperates with them, and the cost is paid by agent1 if it cooperates with agent2."""
-    
+
     def __init__(self, benefit, cost):
         SocialDilemma.__init__(self)
         self.name = type(self).__name__
@@ -54,8 +55,11 @@ class PrisonersDilemma(SocialDilemma, JSONEncoder):
         return str(self.__dict__)
 
     def __repr__(self):
-        return str(self.__dict__)
+        output = deepcopy(self.__dict__)
+        output.pop('payoff1')
+        output.pop('payoff2')
+        return str(output)
 
 
 if __name__=='__main__':
-    s = PrisonersDilemma(2,1)
+    pass

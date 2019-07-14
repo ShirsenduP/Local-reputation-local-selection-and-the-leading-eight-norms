@@ -89,9 +89,9 @@ class Agent:
         s += f" with neighbours {self.getNeighboursUtilities()}"
         return s
 
-    def __repr__(self):
-        s = f"A(id:{self.id})"
-        return s
+    # def __repr__(self):
+    #     s = f"A(id:{self.id})"
+    #     return s
 
 
 if __name__ == "__main__":

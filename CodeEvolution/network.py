@@ -31,6 +31,24 @@ class Network:
         self.dilemma = config.socialDilemma
         logging.debug(f"Network Parameters: \t{self.__dict__}")
 
+    def generate(self, agentType):
+        self.createNetwork(agentType)
+        attempts = 0
+        maxAttempts = 20
+        while not self.isConnected() and attempts < maxAttempts:
+            self.createNetwork(agentType)
+            attempts += 1
+            logging.error(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+            numberOfUnconnectedAgents = 0
+            for agent in self.agentList:
+                if len(agent.neighbours) == 0:
+                    numberOfUnconnectedAgents += 1
+            logging.error(f"{numberOfUnconnectedAgents} disconnected agents.")
+
+        if attempts == maxAttempts:
+            logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
+            raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
+
     def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
         the system checks for convergence. No convergence checks occur before a quarter of the simulation has
@@ -41,11 +59,14 @@ class Network:
         return checkpoints
 
     def isConnected(self):
-        isConnected = True
+        if len(self.agentList) == 0:
+            logging.critical("Unconnected Network")
+            return False
         for agent in self.agentList:
             if len(agent.neighbours) == 0:
-                isConnected = False
-        return isConnected
+                logging.critical("Unconnected Network")
+                return False
+        return True
 
     def __del__(self):
         self.socialNorm = None
@@ -193,7 +214,7 @@ class Network:
         agent2.updateUtility(payoff2)
 
         self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        self.updateReputation(agent1, agent2, agent1Move, agent2Move)
+        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 
     def resetUtility(self):
         """Reset the utility of each agent in the population. To be used at the end of every timestep."""
@@ -212,9 +233,7 @@ class Network:
         agent1.broadcastReputation(agent1NewRep, self.config.delta)
         agent2.broadcastReputation(agent2NewRep, self.config.delta)
 
-
-
-    def updateReputation(self, agent1, agent2, agent1Move, agent2Move):
+    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
         """Assign reputations following an interaction with each agent's globally known reputation and not the
         calculated reputation as default."""
 
@@ -255,20 +274,25 @@ class Network:
             return
 
         history = [snapshot[1] for snapshot in self.convergenceHistory]
-        logging.warn(f"CONVERGENCE CHECKPOINT {self.convergenceHistory}")
         mainID = self.mainStratIDs[0]
         epsilon = self.config.mutationProbability
 
-        if abs(history[0][mainID] - history[1][mainID]) < 2 * epsilon or \
+        if abs(history[0][mainID] - history[1][mainID]) < 2 * epsilon and \
                 abs(history[0][mainID] - history[2][mainID]) < 2 * epsilon:
             self.hasConverged = True
             self.results.convergedAt = self.currentPeriod
+            logging.warn(f"CONVERGENCE CHECKPOINT {self.convergenceHistory}")
 
     def chooseTwoAgents(self):
         agent1 = random.choice(self.agentList)
+        print(agent1)
         agent2 = random.choice(self.agentList)
+        print(agent2)
+        print(agent2 == agent1)
         while agent2 == agent1:
+            print(agent2 == agent1)
             agent2 = random.choice(self.agentList)
+            print(agent2)
         return agent1, agent2
 
     def mutation(self, mutantStrategyID):
@@ -314,13 +338,4 @@ class Network:
 
 
 if __name__ == "__main__":
-    C = Config(size=4, initialState=State(0, 1, 8))
-    N = Network(C, agentType=Agent)
-    N.createNetwork(Agent)
-    for agent in N.agentList:
-        print(agent.history)
-
-    N.agentList[3].broadcastReputation(4)
-    for agent in N.agentList:
-        print(agent.history)
-
+    pass
