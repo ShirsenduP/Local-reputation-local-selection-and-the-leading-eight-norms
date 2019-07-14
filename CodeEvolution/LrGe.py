@@ -28,32 +28,16 @@ class LrGe_Network(Network):
         while agent1Neighbour == agent2:
             agent1Neighbour = random.choice(agent1.neighbours)
 
-        # Get the agent's last interaction with their neighbour
-        agent2ThirdPartyInteraction = agent2.history[agent2Neighbour]
-        agent1ThirdPartyInteraction = agent1.history[agent1Neighbour]
-
         # Calculate agents' reputations using social norm, if no history, assign random reputation
-        try:
-            agent2PastReputation = agent2ThirdPartyInteraction['Focal Reputation']
-            agent2NeighbourPastReputation = agent2ThirdPartyInteraction['Opponent Reputation']
-            agent2PastMove = agent2ThirdPartyInteraction['Focal Move']
-        except TypeError:  # no previous interaction
-            agent2Reputation = random.randint(0, 1)
-            # print(f"flop {agent1.id}")
-        else:
-            agent2Reputation = self.socialNorm.assignReputation(agent2PastReputation, agent2NeighbourPastReputation,
-                                                                agent2PastMove)
+        agent2Reputation = agent2Neighbour.history[agent2]
+        agent1Reputation = agent1Neighbour.history[agent1]
 
-        try:
-            agent1PastReputation = agent1ThirdPartyInteraction['Focal Reputation']
-            agent1NeighbourPastReputation = agent1ThirdPartyInteraction['Opponent Reputation']
-            agent1PastMove = agent1ThirdPartyInteraction['Focal Move']
-        except TypeError:  # no previous interaction
+        # If opponent has had no previous interaction, his neighbours will not have any relevant information,
+        # hence assign reputation randomly.
+        if agent2Reputation is None:
+            agent2Reputation = random.randint(0, 1)
+        if agent1Reputation is None:
             agent1Reputation = random.randint(0, 1)
-            # print(f"flop {agent2.id}")
-        else:
-            agent1Reputation = self.socialNorm.assignReputation(agent1PastReputation, agent1NeighbourPastReputation,
-                                                                agent1PastMove)
 
         return agent1Reputation, agent2Reputation
 

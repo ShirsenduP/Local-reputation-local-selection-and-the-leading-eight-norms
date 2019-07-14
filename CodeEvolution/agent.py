@@ -1,10 +1,10 @@
 import random
+import logging
 
 from CodeEvolution.strategy import Strategy
 
 
 class Agent:
-
     reputation = (0, 1)
 
     def __init__(self, _id, _strategy):
@@ -22,7 +22,7 @@ class Agent:
     def findBestLocalStrategy(self, copyTheBest):
         """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the
          strategies with maximum utility."""
-        neighbourUtilities = list(map(lambda x:x.currentUtility, self.neighbours))
+        neighbourUtilities = list(map(lambda x: x.currentUtility, self.neighbours))
         if copyTheBest:
             maxLocalUtility = max(neighbourUtilities)
             indices = [i for i, x in enumerate(neighbourUtilities) if x == maxLocalUtility]
@@ -32,7 +32,7 @@ class Agent:
         bestLocalStrategyID = random.choice(indices)
 
         return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
-        
+
     def updateStrategy(self, updateProbability, copyTheBest=True):
         """Local Evolution - (COPY THE BEST) Switch strategies to the strategy used by the best performing neighbour of
         the agent with some probability."""
@@ -63,13 +63,24 @@ class Agent:
         if interaction['Opponent'] in self.neighbours:
             self.history[interaction['Opponent']] = interaction
 
+    def broadcastReputation(self, newReputation, delta):
+        """Broadcast an agent's reputation following an interaction to all of his neighbours. Delta is the
+        probability that a neighbour views the the agent's new reputation."""
+        for agent in self.neighbours:
+            r = random.random()
+            if r < delta:
+                agent.history[self] = newReputation
+                logging.debug(f"A({self.id}) broadcast to {self.history}")
+
     def getHistory(self):
+        """Print to the console the reputations of his neighbours from his point of view."""
         s = ""
         for neighbour in self.neighbours:
             s += f"Last interaction with neighbour {neighbour.id} was {self.history[neighbour]}\n"
         return s
 
     def getNeighboursUtilities(self):
+        """Return a list of the utilities of every neighbour of the focal agent."""
         return [(agent.id, agent.currentStrategy.currentStrategyID, agent.currentUtility) for agent in self.neighbours]
 
     def __str__(self):
@@ -78,12 +89,10 @@ class Agent:
         s += f" with neighbours {self.getNeighboursUtilities()}"
         return s
 
+    def __repr__(self):
+        s = f"A(id:{self.id})"
+        return s
+
 
 if __name__ == "__main__":
     pass
-
-
-
-
-
-

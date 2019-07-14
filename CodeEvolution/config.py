@@ -18,6 +18,7 @@ class Config:
                  omegas: float = 0.99,
                  maxPeriods: int = 2000,
                  updateProbability: float = 0.1,
+                 delta: float = 0.5,
                  mutationProbability : float = 1) -> None:
 
         # TODO Validation checks (check validator class, should be able to just copy over)
@@ -30,6 +31,7 @@ class Config:
         self.omega = omegas
         self.maxPeriods = maxPeriods
         self.updateProbability = updateProbability
+        self.delta = delta
         self.mutationProbability = mutationProbability
 
         if self.population.proportion + self.mutant.proportion != 1:

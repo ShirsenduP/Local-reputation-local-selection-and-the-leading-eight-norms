@@ -130,7 +130,10 @@ if __name__ == '__main__':
 
 # TODO plot the variation of convergence as we vary Tmax to see if it moves towards convergence - DO THIS FIRST
 
+# TODO Let Prisoners dilemma class be serializable
+
 # TODO Find a way to let programs run through the night and then switch off when the script has finished running
+
 
 # TODO TESTS
 """	1. starting 50/50 mutants and some Strategy

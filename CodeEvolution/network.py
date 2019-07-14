@@ -5,6 +5,7 @@ import logging
 from collections import deque
 
 from CodeEvolution.agent import Agent
+from CodeEvolution.config import Config, State
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
@@ -202,29 +203,16 @@ class Network:
         logging.debug(f"(t={self.currentPeriod})Network utility monitor, and agent utility trackers reset.")
 
     def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-        interaction12 = {
-            'Opponent'           : agent2,
-            'Focal Reputation'   : agent1.currentReputation,
-            'Opponent Reputation': agent2Reputation,
-            'Focal Move'         : agent1Move,
-            'Opponent Move'      : agent2Move
-        }
-        agent1.recordInteraction(interaction12)
-        interaction21 = {
-            'Opponent'           : agent1,
-            'Focal Reputation'   : agent2.currentReputation,
-            'Opponent Reputation': agent1Reputation,
-            'Focal Move'         : agent2Move,
-            'Opponent Move'      : agent1Move
-        }
-        agent2.recordInteraction(interaction21)
+        """Update the local information, broadcast information about each agent's reputations to their respective
+        neighbours."""
 
-        # Debugging
-        debugMessage = f"(id: {agent1.id}, rep: {agent1Reputation}, " \
-            f"str: {agent1.currentStrategy.currentStrategyID}, move: {agent1Move})\t"
-        debugMessage += f"(id: {agent2.id}, rep: {agent2Reputation}, " \
-            f"str: {agent1.currentStrategy.currentStrategyID}, move: {agent2Move})"
-        logging.debug(debugMessage)
+        agent1NewRep = self.socialNorm.assignReputation(agent1Reputation, agent2Reputation, agent1Move)
+        agent2NewRep = self.socialNorm.assignReputation(agent2Reputation, agent1Reputation, agent2Move)
+
+        agent1.broadcastReputation(agent1NewRep, self.config.delta)
+        agent2.broadcastReputation(agent2NewRep, self.config.delta)
+
+
 
     def updateReputation(self, agent1, agent2, agent1Move, agent2Move):
         """Assign reputations following an interaction with each agent's globally known reputation and not the
@@ -326,4 +314,13 @@ class Network:
 
 
 if __name__ == "__main__":
-    pass
+    C = Config(size=4, initialState=State(0, 1, 8))
+    N = Network(C, agentType=Agent)
+    N.createNetwork(Agent)
+    for agent in N.agentList:
+        print(agent.history)
+
+    N.agentList[3].broadcastReputation(4)
+    for agent in N.agentList:
+        print(agent.history)
+

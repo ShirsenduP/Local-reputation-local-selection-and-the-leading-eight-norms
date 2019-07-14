@@ -13,23 +13,25 @@ from CodeEvolution.Experiment import Population
 if __name__ == '__main__':
 
     logging.basicConfig(filename='debug.log', filemode='w', level=logging.CRITICAL)
+    # logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
 
     """Test 4 - Sparse networks, testing the length of time til convergence."""
 
     rerunSimulations = True
 
     if rerunSimulations:
-        size = 100
-        sparse = 0.2
+        size = 250
+        sparse = 2*np.log(size)/size
         rangeOfMaxPeriods = [2000]
 
         """All-D versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
         ten time-steps on average."""
 
+        pops = Experiment.generatePopulationList(proportion=1, mutantID=8)
         default = Config(size=size, initialState=State(mainID=0, proportion=1, mutantID=8),
-                         mutationProbability=0.1, densities=sparse)
-        E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=2,
-                       variable='maxPeriods', values=rangeOfMaxPeriods)
+                         mutationProbability=0.05, densities=sparse, omegas=0.99)
+        E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=20,
+                       variable='population', values=pops)
         E.showExperiments()
         E.run(displayFull=True)
 
