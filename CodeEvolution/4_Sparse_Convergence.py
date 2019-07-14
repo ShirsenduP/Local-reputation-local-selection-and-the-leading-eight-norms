@@ -12,7 +12,7 @@ from CodeEvolution.Experiment import Population
 
 if __name__ == '__main__':
 
-    logging.basicConfig(filename='debug.log', filemode='w', level=logging.CRITICAL)
+    logging.basicConfig(filename='debug.log', filemode='w', level=logging.INFO)
     # logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
 
     """Test 4 - Sparse networks, testing the length of time til convergence."""
@@ -20,20 +20,20 @@ if __name__ == '__main__':
     rerunSimulations = True
 
     if rerunSimulations:
-        size = 250
+        size = 2
         sparse = 2*np.log(size)/size
         rangeOfMaxPeriods = [2000]
 
         """All-D versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
         ten time-steps on average."""
 
-        pops = Experiment.generatePopulationList(proportion=1, mutantID=8)
-        default = Config(size=size, initialState=State(mainID=0, proportion=1, mutantID=8),
-                         mutationProbability=0.05, densities=sparse, omegas=0.99)
-        E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=20,
-                       variable='population', values=pops)
+        # pops = Experiment.generatePopulationList(strategies=(0,), proportion=1, mutantID=9)
+        default = Config(size=size, initialState=State(mainID=0, proportion=1, mutantID=9),
+                         densities=sparse, omegas=0.9)
+        E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=10,
+                       variable='mutationProbability', values=[0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 3])
         E.showExperiments()
-        E.run(displayFull=True)
+        E.run(display=True)
 
     # PLOTS
     #

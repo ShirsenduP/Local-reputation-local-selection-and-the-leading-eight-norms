@@ -13,8 +13,8 @@ class LrGe_Network(Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.createNetwork(agentType=LrGe_Agent)
         self.name = "LrGe"
+        self.generate(agentType=LrGe_Agent)
 
     def getOpponentsReputation(self, agent1, agent2):
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
@@ -46,7 +46,7 @@ class LrGe_Network(Network):
         utilities of all strategies. COPIED FROM GrGe -> MAKE SURE ITS UP TO DATE UNTIL BETTER SOLUTION FOUND"""
 
         strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
-        logging.debug(f"(Global) Average utility: {strategyUtils}")
+        logging.info(f"(Global) Average utility: {strategyUtils}")
         # find strategy with highest utility
         bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
 
