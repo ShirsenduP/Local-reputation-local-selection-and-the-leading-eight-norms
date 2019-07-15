@@ -1,6 +1,8 @@
 import copy
 import random
 import logging
+import numpy as np
+from tqdm import trange
 
 from collections import deque
 
@@ -31,11 +33,23 @@ class Network:
         self.dilemma = config.socialDilemma
         logging.debug(f"Network Parameters: \t{self.__dict__}")
 
+    def getSparsityParameter(self):
+        """Return the minimum probability p for the G(n,p) Erdos-Renyi Random Network model for the network to be
+        connected."""
+        return 2*np.log(self.config.size)/self.config.size
+
     def generate(self, agentType):
+        """Regenerate network until """
+        if self.config.density < self.getSparsityParameter():
+            raise Exception("Density too low for network to be connected. Exiting.")
+
         self.createNetwork(agentType)
         attempts = 0
-        maxAttempts = 20
-        while not self.isConnected() and attempts < maxAttempts:
+        maxAttempts = 5
+        while not self.hasMinTwoDegree() and attempts < maxAttempts:
+            # TODO Recheck logic here, are we consistently getting network to satisfy minimum 2 neighbours constraints?
+            # Reset network
+            self.agentList = []
             self.createNetwork(agentType)
             attempts += 1
             logging.error(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
@@ -47,7 +61,7 @@ class Network:
 
         if attempts == maxAttempts:
             logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
-            raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
+            # raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
 
     def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
@@ -57,6 +71,24 @@ class Network:
         checkpoints = random.sample(range(int(maxPeriods / 4), maxPeriods), int(maxPeriods / 100))
         checkpoints.sort()
         return checkpoints
+
+    def getMinDegree(self):
+        """Return the minimum degree of all agents within the network"""
+        minDegree = np.inf
+        for agent in self.agentList:
+            if len(agent.neighbours) < minDegree:
+                minDegree = len(agent.neighbours)
+        return minDegree
+
+    def hasMinTwoDegree(self):
+        """Check if each agent on the network has a minimum of two neighbours."""
+        if len(self.agentList) == 0:
+            return False
+
+        for agent in self.agentList:
+            if len(agent.neighbours) < 2:
+                return False
+        return True
 
     def isConnected(self):
         if len(self.agentList) == 0:
@@ -338,4 +370,20 @@ class Network:
 
 
 if __name__ == "__main__":
-    pass
+    s = 2*np.log(500)/500
+    # print(s)
+    C = Config(densities=s)
+    # N = Network(C)
+    # N.generate(Agent)
+    # print(N.getMinDegree())
+    # print(N.hasMinTwoDegree())
+
+    d = 0
+    count = 1000
+    for _ in trange(count):
+        N = Network(C)
+        N.generate(Agent)
+        if not N.hasMinTwoDegree():
+            print(N.getMinDegree())
+            d += 1
+    print(d/count)

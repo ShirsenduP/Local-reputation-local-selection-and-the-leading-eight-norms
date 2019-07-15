@@ -2,7 +2,6 @@ import time
 import copy
 
 import pandas as pd
-from tqdm import trange
 
 from CodeEvolution.GrGe import GrGe_Network
 from CodeEvolution.LrLe import LrLe_Network

@@ -1,3 +1,4 @@
+import logging
 import random
 
 from CodeEvolution.config import Config, State
@@ -38,13 +39,24 @@ class LrLe_Network(Network):
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
         accessible only to neighbours of that agent."""
 
+        maxChecks = self.config.size
+        check1 = 0
+        check2 = 0
+
         # Choose neighbour of each agent (except the opponent of that agent)
         agent2Neighbour = random.choice(agent2.neighbours)
         agent1Neighbour = random.choice(agent1.neighbours)
-        while agent2Neighbour == agent1:
+
+        while agent2Neighbour == agent1 and check1 < maxChecks:
             agent2Neighbour = random.choice(agent2.neighbours)
-        while agent1Neighbour == agent2:
+            check1 += 1
+        while agent1Neighbour == agent2 and check2 < maxChecks:
             agent1Neighbour = random.choice(agent1.neighbours)
+            check2 += 1
+
+        if check1 == maxChecks or check2 == maxChecks:
+            logging.warning(f"{agent1.id} or {agent2.id} in this network cannot find a neighbour of his opponent that "
+                            f"is not himself.")
 
         # Calculate agents' reputations using social norm, if no history, assign random reputation
         agent2Reputation = agent2Neighbour.history[agent2]
