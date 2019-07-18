@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 import os
 import json
@@ -22,7 +24,7 @@ class Results:
 
     def exportUtilities(self):
         # utils = self.removeZeros(self.utilities)
-        utils = pd.DataFrame(self.utilities).transpose()
+        utils = pd.DataFrame(self.utilities) # .transpose()
         utils = utils.add_prefix('Average Util. Strategy #')
         return utils
 
@@ -35,6 +37,8 @@ class Results:
         # census = self.removeZeros(self.strategyProportions)
         census = pd.DataFrame(self.strategyProportions).transpose()
         census = census.add_prefix('Prop. Strategy #')
+        # if (census > 1.0).any():
+        #     logging.critical("Census thinks there are more agents than there are.")
         return census
 
     def exportMutations(self):
@@ -83,7 +87,12 @@ class Results:
         if experimentName not in os.listdir("CodeEvolution/results"):
             os.mkdir(f"CodeEvolution/results/{experimentName}")
 
-        experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentNumber}.csv")
+        try:
+            experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentNumber}.csv")
+        except FileNotFoundError as e:
+            logging.warning(e)
+            experimentResults.to_csv(f"{experimentName}_{experimentNumber}.csv")
+
 
         def dumper(obj):
             return obj.__dict__

@@ -1,16 +1,19 @@
-class Strategy():
+import logging
+
+
+class Strategy:
     
     allStates = ['11', '10', '01', '00']
-    allOutcomes =  [['C', 'D', 'C', 'C'],
-                    ['C', 'D', 'C', 'C'],
-                    ['C', 'D', 'C', 'D'],
-                    ['C', 'D', 'C', 'D'],
-                    ['C', 'D', 'C', 'D'],
-                    ['C', 'D', 'C', 'D'],
-                    ['C', 'D', 'C', 'D'],
-                    ['C', 'D', 'C', 'D'],
-                    ['D', 'D', 'D', 'D'], #AllD
-                    ['C', 'C', 'C', 'C']] #AllC
+    allOutcomes = [['C', 'D', 'C', 'C'],
+                   ['C', 'D', 'C', 'C'],
+                   ['C', 'D', 'C', 'D'],
+                   ['C', 'D', 'C', 'D'],
+                   ['C', 'D', 'C', 'D'],
+                   ['C', 'D', 'C', 'D'],
+                   ['C', 'D', 'C', 'D'],
+                   ['C', 'D', 'C', 'D'],
+                   ['D', 'D', 'D', 'D'],  # AllD
+                   ['C', 'C', 'C', 'C']]  # AllC
     census = {}
     totalCountOfStrategies = 0
 
@@ -39,10 +42,7 @@ class Strategy():
 
     @classmethod
     def updateCensus(cls, newID, oldID):
-        if newID == oldID:
-            # If changing to the same strategy, no need to make any change
-            return
-        elif newID in Strategy.census.keys():
+        if newID in Strategy.census.keys():
             # If strategy already exists in census then just increment counter
             Strategy.census[newID] += 1
         else:
@@ -51,10 +51,12 @@ class Strategy():
         if oldID is not None:
             # If an agent switches from an old strategy, decrement the old strategy
             Strategy.census[oldID] -= 1
-        # print(f"new: {newID}, old: {oldID}, census: {Strategy.census}")
 
-
-
+        # Error checking
+        if sum(Strategy.census.values()) != Strategy.totalCountOfStrategies:
+            logging.critical(f"Census({sum(Strategy.census.values())}) "
+                             f"and total count of strategies ({Strategy.totalCountOfStrategies}) are out of "
+                             f"balance!")
 
     @classmethod
     def reset(cls):
@@ -63,6 +65,7 @@ class Strategy():
 
     def __str__(self):
         return f"{self.currentStrategyID} - {self.currentStrategy}"
+
 
 if __name__ == "__main__":
     pass

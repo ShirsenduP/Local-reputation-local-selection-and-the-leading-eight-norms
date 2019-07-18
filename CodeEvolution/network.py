@@ -20,6 +20,7 @@ class Network:
         self.name = "Network"
         self.mainStratIDs = (config.population.ID, config.mutant.ID)
         self.agentList = []
+        Strategy.reset()
         self.socialNorm = SocialNorm(config.socialNormID)
         self.results = Results(config)
         self.tempActions = {'C': 0, 'D': 0}
@@ -43,14 +44,18 @@ class Network:
         if self.config.density < self.getSparsityParameter():
             raise Exception("Density too low for network to be connected. Exiting.")
 
+        Strategy.reset()
         self.createNetwork(agentType)
+
         attempts = 0
         maxAttempts = 5
         while not self.hasMinTwoDegree() and attempts < maxAttempts:
             # TODO Recheck logic here, are we consistently getting network to satisfy minimum 2 neighbours constraints?
             # Reset network
+            Strategy.reset()
             self.agentList = []
             self.createNetwork(agentType)
+
             attempts += 1
             logging.error(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
             numberOfUnconnectedAgents = 0
@@ -106,7 +111,9 @@ class Network:
         self.results = None
         self.resetTempActions()
         self.hasConverged = False
-        Strategy.reset()
+        # Strategy.reset()
+        for agent in self.agentList:
+            del agent.currentStrategy
 
     def resetTempActions(self):
         """Reset the cooperation/defection counter to zero. To be used at the end of each time-period after actions have
@@ -136,7 +143,7 @@ class Network:
         system converges at pre-allocated randomly chosen convergence check intervals."""
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
-            debugNetwork = str(self)
+            # debugNetwork = str(self)
             # logging.debug(f"T = {self.currentPeriod} - \ncensus: {debugNetwork}")
             self.resetUtility()
             self.resetTempActions()
@@ -284,21 +291,6 @@ class Network:
             s += "\n"
             print(s)
 
-    # def checkConvergence(self):
-    #     """Check if the network has converged or not by checking the last 3 snapshots taken at
-    #     randomly chosen intervals."""
-    #
-    #     history = self.convergenceHistory
-    #
-    #     # Minimum 3 snapshots needed to check for convergence (as defined in self.convergenceHistory)
-    #     if None in history:
-    #         return
-    #
-    #     if history[2][1] == history[1][1] and history[1][1] == history[0][1]:
-    #         # print(f"HAS CONVERGED AT {history}")
-    #         self.hasConverged = True
-    #         self.results.convergedAt = self.currentPeriod
-
     def checkConvergence(self):
         """Check if the system has converged. """
 
@@ -317,14 +309,12 @@ class Network:
 
     def chooseTwoAgents(self):
         agent1 = random.choice(self.agentList)
-        print(agent1)
         agent2 = random.choice(self.agentList)
-        print(agent2)
-        print(agent2 == agent1)
+        # print(agent2 == agent1)
         while agent2 == agent1:
-            print(agent2 == agent1)
+            # print(agent2 == agent1)
             agent2 = random.choice(self.agentList)
-            print(agent2)
+            # print(agent2)
         return agent1, agent2
 
     def mutation(self, mutantStrategyID):

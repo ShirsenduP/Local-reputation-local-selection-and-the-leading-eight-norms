@@ -1,8 +1,11 @@
+import logging
 import time
 import copy
 
 import pandas as pd
+from tqdm import trange
 
+from CodeEvolution import Strategy
 from CodeEvolution.GrGe import GrGe_Network
 from CodeEvolution.LrLe import LrLe_Network
 from CodeEvolution.config import Config
@@ -57,7 +60,7 @@ class Experiment:
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
          when multiple of the same parameterised run have different lengths of simulations."""
 
-        experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M")
+        experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
         print("\nRunning ", experimentName, 50 * "=")
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
@@ -68,29 +71,34 @@ class Experiment:
             print(self.default)
 
         def simulate(m_exp):
-            # print(m_exp)
             N = self.networkType(m_exp)
             # print(N)
             N.runSimulation()
             resultsActions = N.results.exportActions()
             resultsCensus = N.results.exportCensus()
+            # print(resultsCensus)
+            # if (resultsCensus>1).any():
+            #     logging.critical("Census thinks there are more agents than there are.")
             resultsUtils = N.results.exportUtilities()
             # resultsMutations = N.results.exportMutations()
-            resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
-            # resultsFull = pd.concat([resultsActions, resultsCensus], axis=1, sort=False)
+            # resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
+            resultsFull = pd.concat([resultsCensus], axis=1, sort=False)
             if displayFull:
                 print(resultsFull)
-            # print(N)
+            # del N
+
             return resultsFull.tail(1)
 
-        for exp in trange(len(self.experiments), disable=display):
+        for exp in trange(len(self.experiments), leave=False):
             if display:
                 print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
 
             singleTest = pd.DataFrame()
-            for _ in trange(self.repeats, leave=False, disable=display):
+            for _ in trange(self.repeats, leave=False):
+                Strategy.reset()
                 singleRun = simulate(self.experiments[exp])
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
+                Strategy.reset()
 
             if display:
                 print(singleTest)
@@ -120,6 +128,8 @@ class Experiment:
 
 if __name__ == '__main__':
     pass
+
+# TODO IF FILES ALREADY EXIST IN DIRECTORY, CREATE NEW FOLDER - DO NOT OVERWRITE THIS IS BLOODY ANNOYING
 
 # TODO LOGGING NEEDED URGENTLY for each interaction
 
