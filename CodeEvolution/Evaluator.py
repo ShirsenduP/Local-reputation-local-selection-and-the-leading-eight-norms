@@ -72,6 +72,60 @@ class Evaluator:
 
         return output
 
+    @staticmethod
+    def plotAllStrategies(title, dataPath, mutantID, save=False):
+        """Given the name of an experiment in the results directory, plot the data in a scatterplot where each point
+        represents a single simulation with the (x,y) coordinate representing (timestep at convergence,
+        final proportion of mutants)."""
+
+        data = Evaluator.open_results(dataPath)
+        strategyID = iter(range(len(data)))
+
+        for strategy in data.values():
+            x = strategy['Unnamed: 0']
+            y = strategy[f'Prop. Strategy #{mutantID}']
+            seriesID = next(strategyID)
+            plt.scatter(x, y, label=str(seriesID), marker=seriesID, s=40, alpha=0.3)
+
+        plt.title(title)
+        plt.xlabel('Time-steps to convergence')
+        plt.ylabel('Final proportion of Mutants')
+        plt.legend(loc='center left')
+        if save:
+            resultsDir = os.getcwd() + '/results/' + dataPath + '/' + title
+            plt.savefig(resultsDir)
+        else:
+            plt.show()
+
+    @staticmethod
+    def plotAllStrategiesSummary(title, dataPath, mutantID, save=False):
+        """Given the name of an experiment in the results directory, plot the means of the proportions of mutants
+        amongst each strategy along with error bars. Optionally save plot as .png in dataPath directory."""
+
+        data = Evaluator.open_results(dataPath)
+        strategies = list(range(8))
+        mean = [datum[f'Prop. Strategy #{mutantID}'].mean() for datum in data.values()]
+        dev = [datum[f'Prop. Strategy #{mutantID}'].std() for datum in data.values()]
+
+        fig, ax = plt.subplots()
+        ax.errorbar(strategies, mean,
+                    yerr=dev,
+                    ecolor='grey',
+                    solid_capstyle='projecting',
+                    capsize=5,
+                    elinewidth=2,
+                    markeredgewidth=2)
+
+        plt.title(title)
+        plt.xlabel("Strategy ID")
+        plt.ylabel(f"Final proportion of Mutants {mutantID}")
+
+        if save:
+            resultsDir = os.getcwd() + '/results/' + dataPath + '/' + title
+            plt.savefig(resultsDir)
+        else:
+            plt.show()
+
 
 if __name__ == "__main__":
     pass

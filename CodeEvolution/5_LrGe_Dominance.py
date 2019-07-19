@@ -7,16 +7,16 @@ from CodeEvolution.LrGe import LrGe_Network
 from CodeEvolution.config import Config
 from CodeEvolution.Experiment import Experiment
 
+logging.basicConfig(filename='debug.log', filemode='w', level=logging.CRITICAL)
+
 if __name__ == '__main__':
     """Test 5 - MAIN RESULT -> Testing dominance of Leading 8 on sparse network with LrGe setup"""
-
-    logging.basicConfig(filename='debug.log', filemode='w', level=logging.CRITICAL)
-    # logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
 
     rerunSimulations = False
 
     if rerunSimulations:
 
+        # Default Parameters for simulations
         default = Config(size=200, sparseDensity=True, mutationProbability=0.1)
 
         """All-D versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
@@ -37,19 +37,13 @@ if __name__ == '__main__':
 
     # PLOTS
 
-    s0 = Evaluator.open_results("LrGe_population_2019-07-18 21:35:02")
-    # s0 = Evaluator.open_results("LrGe_population_2019-07-18 23:24:50")
-    s = iter(range(8))
-    for thing in s0.values():
-        print(thing)
-        x = thing['Unnamed: 0']
-        y = thing['Prop. Strategy #8']
-        seriesID = next(s)
-        plt.scatter(x, y, label=str(seriesID), marker=seriesID, s=40, alpha=0.3)
+    Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-D',
+                                dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
+    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-D',
+                                       dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
+    Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-C',
+                                dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
+    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-C',
+                                       dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
 
-    plt.xlabel('Time-steps to convergence')
-    plt.ylabel('Final proportion of Mutants')
-    plt.legend(loc='center left')
-    plt.show()
-    averageds0 = [frame for frame in s0.values()]
-    print(pd.DataFrame(averageds0))
+
