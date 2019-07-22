@@ -1,10 +1,13 @@
 import copy
 import random
 import logging
+
+import networkx as nx
 import numpy as np
 from tqdm import trange
 
 from collections import deque
+from matplotlib import pyplot as plt
 
 from CodeEvolution.agent import Agent
 from CodeEvolution.config import Config, State
@@ -20,7 +23,6 @@ class Network:
         self.name = "Network"
         self.mainStratIDs = (config.population.ID, config.mutant.ID)
         self.agentList = []
-        Strategy.reset()
         self.socialNorm = SocialNorm(config.socialNormID)
         self.results = Results(config)
         self.tempActions = {'C': 0, 'D': 0}
@@ -34,8 +36,12 @@ class Network:
         self.dilemma = config.socialDilemma
         logging.debug(f"Network Parameters: \t{self.__dict__}")
 
-    def toNetworkxGraph(self):
+    def plotGraph(self):
         arr = self.toNumpyArray()
+        G = nx.from_numpy_array(arr)
+        plt.subplot()
+        nx.draw(G)
+        plt.show()
 
     def toNumpyArray(self):
         """Return a numpy adjacency matrix representing this network object."""
