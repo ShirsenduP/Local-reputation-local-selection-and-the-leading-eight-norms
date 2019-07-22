@@ -15,7 +15,7 @@ from CodeEvolution.strategy import Strategy
 
 class Network:
 
-    def __init__(self, config, agentType=Agent):
+    def __init__(self, config=Config(), agentType=Agent):
         self.config = config
         self.name = "Network"
         self.mainStratIDs = (config.population.ID, config.mutant.ID)
@@ -33,6 +33,40 @@ class Network:
         self.hasConverged = False
         self.dilemma = config.socialDilemma
         logging.debug(f"Network Parameters: \t{self.__dict__}")
+
+    def toNetworkxGraph(self):
+        arr = self.toNumpyArray()
+
+    def toNumpyArray(self):
+        """Return a numpy adjacency matrix representing this network object."""
+
+        if len(self.agentList) == 0:
+            raise Exception("Network has not yet been created.")
+
+        n = self.config.size
+        adjacencyArray = np.zeros(shape=(n, n), dtype=int)
+
+        for agent in self.agentList:
+            for neighbour in agent.neighbours:
+                adjacencyArray[agent.id][neighbour.id] = 1
+
+        return adjacencyArray
+
+    def getDensity(self):
+        """Return the actual density of the generated network."""
+        # Number of actual connections / number of potential connections
+
+        actualConnections = 0
+        for agent in self.agentList:
+            # Add the number of connections of every single agent
+            actualConnections += len(agent.neighbours)
+        # Each connection is counted twice so divide
+        actualConnections /= 2
+
+        n = self.config.size
+        potentialConnections = 0.5*n*(n-1)
+
+        return actualConnections/potentialConnections
 
     def getSparsityParameter(self):
         """Return the minimum probability p for the G(n,p) Erdos-Renyi Random Network model for the network to be

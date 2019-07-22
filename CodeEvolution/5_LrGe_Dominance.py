@@ -39,11 +39,13 @@ if __name__ == '__main__':
 
     Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-D',
                                 dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
-    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-D',
+    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs '
+                                             'All-D_',
                                        dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
     Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-C',
                                 dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
-    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-C',
+    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs '
+                                             'All-C_',
                                        dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
 
 

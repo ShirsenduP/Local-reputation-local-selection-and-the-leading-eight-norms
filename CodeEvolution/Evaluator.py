@@ -116,12 +116,13 @@ class Evaluator:
                     elinewidth=2,
                     markeredgewidth=2)
 
+        plt.rcParams.update({'font.size': 40})
         plt.title(title)
         plt.xlabel("Strategy ID")
         plt.ylabel(f"Final proportion of Mutants {mutantID}")
 
         if save:
-            resultsDir = os.getcwd() + '/results/' + dataPath + '/' + title
+            resultsDir = os.getcwd() + '/results/' + dataPath + '/' + dataPath
             plt.savefig(resultsDir)
         else:
             plt.show()
