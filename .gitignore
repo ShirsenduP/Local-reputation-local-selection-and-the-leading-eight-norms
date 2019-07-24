@@ -8,4 +8,5 @@ CodeEvolution/configurations/draft2.json
 CodeEvolution/results/
 .idea
 CodeEvolution/debug.log
-
+CodeEvolution/simonesCode/
+CodeEvolution/test.py
