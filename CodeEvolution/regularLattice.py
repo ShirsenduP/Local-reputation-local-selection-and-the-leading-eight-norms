@@ -1,3 +1,4 @@
+import collections
 import logging
 
 from scipy import stats
@@ -22,6 +23,14 @@ class RegularLattice(Network):
         self.nxGraph = None
         self.modeDegree = None
         logging.warn("Ignoring density value in config object for regular lattice!")
+
+    def getDegreeDistribution(self):
+        """Return a degree distribution of the graph as a dictionary where the keys are the range of possible
+        degrees, and the values are the number of agents with that many neighbours."""
+
+        degreeSequence = sorted([d for n, d in self.nxGraph.degree()], reverse=True)
+        degreeCount = collections.Counter(degreeSequence)
+        return degreeCount
 
     def makeNwsSmallWorld(self, k, p=0):
         """Using networkx algorithm, generate a Newmann-Watts-Strogratz Small World network where n agents are
@@ -130,9 +139,11 @@ class RegularLattice(Network):
 
 
 if __name__ == "__main__":
-    C = Config(size=10, initialState=State(0, 1, 8), densities=None)
+    C = Config(size=24, initialState=State(0, 1, 8), densities=None)
     N = RegularLattice(C)
+    N.makeNwsSmallWorld(k=4)
     N.createNetwork()
-    print(N.isRegular())
+    # print(N.isRegular())
     N.plotGraph()
-    print(N.getDensity())
+    # print(N.getDegreeDistribution())
+    print(N)
