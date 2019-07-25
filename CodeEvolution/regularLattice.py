@@ -132,7 +132,6 @@ class RegularLattice(Network):
 if __name__ == "__main__":
     C = Config(size=10, initialState=State(0, 1, 8), densities=None)
     N = RegularLattice(C)
-    N.makeCliqueLattice()
     N.createNetwork()
     print(N.isRegular())
     N.plotGraph()
