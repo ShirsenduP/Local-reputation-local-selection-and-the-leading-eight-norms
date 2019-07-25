@@ -23,6 +23,21 @@ class RegularLattice(Network):
         self.modeDegree = None
         logging.warn("Ignoring density value in config object for regular lattice!")
 
+    def makeNwsSmallWorld(self, k, p=0):
+        """Using networkx algorithm, generate a Newmann-Watts-Strogratz Small World network where n agents are
+        connected in a ring topology to their k nearest neighbours with probability p."""
+        self.nxGraph = nx.newman_watts_strogatz_graph(self.config.size, k, p)
+        self.adjMatrix = nx.to_numpy_array(self.nxGraph)
+        self.name = "Newmann-Watts-Strogratz Small World"
+        logging.info(f"{self.name} network initialised with adjacency matrix.")
+
+    def makeRegular(self, degree):
+        """Using the networkx algorithms, get the adjacency matrix for a d-regular random graph."""
+        self.nxGraph = nx.random_regular_graph(degree, n=self.config.size)
+        self.adjMatrix = nx.to_numpy_array(self.nxGraph)
+        self.name = f"Regular {degree}-degree graph"
+        logging.info(f"{self.name} network initialised with adjacency matrix.")
+
     def makeCliqueLattice(self):
         """Agents are created in cliques of 4 where each agent here is connected with each other agent in the clique.
         Then each agent in the clique is connected to a single agent from another distinct clique. For diagram of
@@ -115,12 +130,10 @@ class RegularLattice(Network):
 
 
 if __name__ == "__main__":
-    C = Config(size=240, initialState=State(0, 1, 8), densities=None)
+    C = Config(size=10, initialState=State(0, 1, 8), densities=None)
     N = RegularLattice(C)
-    # N.makeLattice()
-    # N.makeCliqueLattice()
-    # N.make2DLattice()
-    N.makeHexLattice()
+    N.makeCliqueLattice()
     N.createNetwork()
     print(N.isRegular())
     N.plotGraph()
+    print(N.getDensity())
