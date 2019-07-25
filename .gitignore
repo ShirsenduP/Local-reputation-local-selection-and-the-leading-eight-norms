@@ -1,6 +1,5 @@
 .vscode/
 __pycache__/
-venv/
 env/
 *.log
 CodeEvolution/logs/
@@ -10,3 +9,6 @@ CodeEvolution/results/
 CodeEvolution/debug.log
 CodeEvolution/simonesCode/
 CodeEvolution/test.py
+CodeEvolution.egg-info/
+build/
+dist/

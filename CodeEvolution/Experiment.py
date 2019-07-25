@@ -24,7 +24,6 @@ class Experiment:
         self.values = values
         self.experiments = None
         self.repeats = repeats
-        self.cluster = cluster
         self.generateConfigs()
 
     def generateConfigs(self):

@@ -12,6 +12,22 @@ These are the setup instructions for Linux:
 2. `git clone https://github.com/ShirsenduP/CodeEvolution.git` to a (this will not currently work as it is a private repository)
 3. `pip install .` to install package and all dependencies
 
+## New Setup Instructions
+
+1. Clone the repo
+`git clone https://github.com/ShirsenduP/CodeEvolution.git`
+
+2. Move into the CodeEvolution directory
+`cd CodeEvolution`
+
+3. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything)
+`virtualenv --python=python3.6 env`
+and start the virtual environment
+`source env/bin/activate`
+
+4. Install package and all its dependencies
+`python setup.py install`
+
 
 ## Contributors
 Shirsendu Podder, UCL, _ucabpod@ucl.ac.uk_
