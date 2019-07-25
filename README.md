@@ -4,31 +4,35 @@
 
 This package provides the code to simulate social dilemna games on a large network through indirect repiprocity. It is used to study the evolution of cooperation and to test which of the "Leading Eight" strategies [citation] remain dominant against AllD or AllC and against each other. 
 
-## Setup Instructions
+## Setup Instructions (local)
 
-These are the setup instructions for Linux:
+1. Clone the repo with `git clone https://github.com/ShirsenduP/CodeEvolution.git`
 
-1. Create new folder to save source code, using terminal, navigate to your chosen directory and run `mkdir EvolutionOfCooperation && cd EvolutionOfCooperation`
-2. `git clone https://github.com/ShirsenduP/CodeEvolution.git` to a (this will not currently work as it is a private repository)
-3. `pip install .` to install package and all dependencies
+2. Move into the CodeEvolution directory using `cd CodeEvolution`
 
-## New Setup Instructions
+3. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything) with `virtualenv --python=python3.6 env` and start the virtual environment with `source env/bin/activate`
 
-1. Clone the repo
-`git clone https://github.com/ShirsenduP/CodeEvolution.git`
+4. Install package and all its dependencies with `python setup.py install`. 
 
-2. Move into the CodeEvolution directory
-`cd CodeEvolution`
+Uninstall with `pip uninstall CodeEvolution`.
 
-3. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything)
-`virtualenv --python=python3.6 env`
-and start the virtual environment
-`source env/bin/activate`
+## Setup Instructions (UCL clusters)
 
-4. Install package and all its dependencies
-`python setup.py install`
+1. Log into UCL Myriad and use `cd Scratch` to move into the Scratch directory.
+
+2. Load recommended python modules with `module load python3/recommended`.
+
+3. Clone the repo with `git clone https://github.com/ShirsenduP/CodeEvolution.git`.
+
+4. Move into the CodeEvolution directory using `cd CodeEvolution`.
+
+5. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything) with `virtualenv --python=python3.6 env` and initiate the environment with `source env/bin/activate`.
+
+6. Install package and all its dependencies with `python setup.py install`. If this fails, run `python setup.py install --user` (but shouldn't have to as long as you are within the virtual environment).
+
+Uninstall with `pip uninstall CodeEvolution`.
 
 
 ## Contributors
-Shirsendu Podder, UCL, _ucabpod@ucl.ac.uk_
+Shirsendu Podder, UCL, _ucabpod@ucl.ac.uk_ \\
 Simone Righi, UCL, _s.righi@ucl.ac.uk_ 
