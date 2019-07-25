@@ -24,6 +24,7 @@ class Experiment:
         self.values = values
         self.experiments = None
         self.repeats = repeats
+        self.cluster = cluster
         self.generateConfigs()
 
     def generateConfigs(self):
@@ -54,7 +55,7 @@ class Experiment:
         self.experiments = tuple(tests)
         # print(self.experiments)
 
-    def run(self, export=False, display=False, recordFull=False, displayFull=False):
+    def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
         so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
@@ -105,8 +106,10 @@ class Experiment:
                 print()
 
             if export:
-                Results.exportResultsToCSV(experimentName, self.experiments[exp], singleTest, exp)
-        print("OK!")
+                if cluster:
+                    Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
+                else:
+                    Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
 
     def showExperiments(self):
         """Print to the console a condensed list of all the config files in the object's experiment list."""

@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import json
 
+
 class Results:
 
     def __init__(self, config):
@@ -19,12 +20,12 @@ class Results:
          particular time period"""
 
         for key in actions:
-            proportionAction = actions[key]/sum(actions.values())
+            proportionAction = actions[key] / sum(actions.values())
             self.actions[key].append(proportionAction)
 
     def exportUtilities(self):
         # utils = self.removeZeros(self.utilities)
-        utils = pd.DataFrame(self.utilities) # .transpose()
+        utils = pd.DataFrame(self.utilities)  # .transpose()
         utils = utils.add_prefix('Average Util. Strategy #')
         return utils
 
@@ -75,11 +76,9 @@ class Results:
         means = byRowIndex.mean()
         return means
 
-    @classmethod
-    def exportResultsToCSV(cls, experimentName, experimentConfig, experimentResults, experimentNumber):
+    @staticmethod
+    def exportResultsToCsv(experimentName, experimentConfig, experimentResults, experimentNumber):
         """Export the results from a single data-frame averaged over many iterations as 'experimentName.csv' file"""
-
-        print('CURRENT DIR', os.getcwd())
 
         if 'results' not in os.listdir("CodeEvolution/"):
             os.mkdir(f"CodeEvolution/results/")
@@ -93,20 +92,19 @@ class Results:
             logging.warning(e)
             experimentResults.to_csv(f"{experimentName}_{experimentNumber}.csv")
 
-
-        def dumper(obj):
-            return obj.__dict__
-
-        # with open(f"CodeEvolution/results/{experimentName}/{experimentNumber}.json", 'w') as f:
-            # f.write(json.dumps(experimentConfig, default=dumper, indent=4))
-            # f.write(json.dumps(experimentConfig, indent=4))
+    @staticmethod
+    def exportResultsToCsvCluster(experimentName, experimentConfig, experimentResults, experimentNumber):
+        """Export data (.csv) into network storage"""
+        curDir = os.getcwd()
+        experimentResults.to_csv(f"{experimentName}/{experimentNumber}.csv")
 
     def __str__(self):
         s = str(self.strategyProportions)
-        s += 3*'\n'
+        s += 3 * '\n'
         s += str(self.utilities)
-        s += 3*'\n'
+        s += 3 * '\n'
         s += str(self.actions)
         return s
 
-    # TODO: Move the census from Strategy class to Results class, makes more sense to track everything from here
+    # TODO: Move the census from Strategy class to Results class, makes more sense to track everything from here - IF
+    #  IT AINT BROKE, DONT FIX IT!

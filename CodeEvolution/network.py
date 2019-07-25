@@ -10,7 +10,7 @@ from collections import deque
 from matplotlib import pyplot as plt
 
 from CodeEvolution.agent import Agent
-from CodeEvolution.config import Config, State
+from CodeEvolution.config import Config
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
@@ -118,7 +118,7 @@ class Network:
         return checkpoints
 
     def getMinDegree(self):
-        """Return the minimum degree of all agents within the network"""
+        """Return the minimum degree out of all agents within the network"""
         minDegree = np.inf
         for agent in self.agentList:
             if len(agent.neighbours) < minDegree:
@@ -345,7 +345,7 @@ class Network:
                 abs(history[0][mainID] - history[2][mainID]) < 2 * epsilon:
             self.hasConverged = True
             self.results.convergedAt = self.currentPeriod
-            logging.warn(f"CONVERGENCE CHECKPOINT {self.convergenceHistory}")
+            logging.info(f"CONVERGENCE CHECKPOINT {self.convergenceHistory}")
 
     def chooseTwoAgents(self):
         agent1 = random.choice(self.agentList)
