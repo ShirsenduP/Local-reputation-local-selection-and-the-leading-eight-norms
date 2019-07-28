@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 import copy
 
@@ -88,6 +89,8 @@ class Experiment:
             # del N
 
             return resultsFull.tail(1)
+
+        os.mkdir(experimentName)
 
         for exp in trange(len(self.experiments), leave=False):
             if display:

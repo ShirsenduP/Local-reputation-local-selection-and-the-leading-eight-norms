@@ -95,8 +95,8 @@ class Results:
     @staticmethod
     def exportResultsToCsvCluster(experimentName, experimentConfig, experimentResults, experimentNumber):
         """Export data (.csv) into network storage"""
-        curDir = os.getcwd()
-        experimentResults.to_csv(f"{experimentName}_{experimentNumber}.csv")
+
+        experimentResults.to_csv(f"/{experimentName}/{experimentNumber}.csv", mode='w+')
 
     def __str__(self):
         s = str(self.strategyProportions)

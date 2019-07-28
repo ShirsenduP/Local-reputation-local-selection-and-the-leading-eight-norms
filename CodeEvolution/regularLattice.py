@@ -141,9 +141,13 @@ class RegularLattice(Network):
 if __name__ == "__main__":
     C = Config(size=24, initialState=State(0, 1, 8), densities=None)
     N = RegularLattice(C)
-    N.makeNwsSmallWorld(k=4)
+    # N.makeRegular()
+    # N.makeNwsSmallWorld(k=4, p=1)
+    # N.make
+    # N.makeCliqueLattice()
+    N.makeHexLattice()
     N.createNetwork()
-    # print(N.isRegular())
+    print(N.isRegular())
     N.plotGraph()
     # print(N.getDegreeDistribution())
-    print(N)
+    print(N.getDensity())
