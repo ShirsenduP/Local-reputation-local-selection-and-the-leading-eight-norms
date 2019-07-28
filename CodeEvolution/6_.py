@@ -24,11 +24,11 @@ if __name__ == '__main__':
 
         """All-D versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
         ten time-steps on average."""
-        popsD = Experiment.generatePopulationList(strategies=(0,6,7), proportion=1, mutantID=8)
-        E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=10,
+        popsD = Experiment.generatePopulationList(strategies=(0,6), proportion=1, mutantID=8)
+        E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=3,
                        variable='population', values=popsD)
         E.showExperiments()
-        # E.run(export=True, cluster=True)
+        E.run(cluster=True)
 
         import os
 

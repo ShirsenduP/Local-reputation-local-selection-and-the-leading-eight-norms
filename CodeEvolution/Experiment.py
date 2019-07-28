@@ -101,16 +101,18 @@ class Experiment:
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
                 Strategy.reset()
 
-            if display:
-                print(singleTest)
-                print()
-
-            if export:
-                if cluster:
-                    Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
-                else:
-                    # Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
-                    Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
+            if cluster:
+                singleTest.to_csv(f"{exp}", mode='w')
+            #
+            # if display:
+            #     print(singleTest)
+            #     print()
+            #
+            # if cluster:
+            #     Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
+            #
+            # if export:
+            #     Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
 
     def showExperiments(self):
         """Print to the console a condensed list of all the config files in the object's experiment list."""
