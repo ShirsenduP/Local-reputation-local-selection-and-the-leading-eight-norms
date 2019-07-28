@@ -59,9 +59,11 @@ class Experiment:
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
         so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
-         when multiple of the same parameterised run have different lengths of simulations."""
+         when multiple of the same parameterised run have different lengths of simulations. Cluster takes precedence
+         over export."""
 
         experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
+
         print("\nRunning ", experimentName, 50 * "=")
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
@@ -101,18 +103,17 @@ class Experiment:
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
                 Strategy.reset()
 
-            if cluster:
-                singleTest.to_csv(f"{exp}", mode='w')
-            #
-            # if display:
-            #     print(singleTest)
-            #     print()
-            #
             # if cluster:
-            #     Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
-            #
-            # if export:
-            #     Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
+            #     singleTest.to_csv(f"{exp}", mode='w')
+
+            if display:
+                print(singleTest)
+                print()
+
+            if cluster:
+                Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
+            elif export:
+                Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
 
     def showExperiments(self):
         """Print to the console a condensed list of all the config files in the object's experiment list."""

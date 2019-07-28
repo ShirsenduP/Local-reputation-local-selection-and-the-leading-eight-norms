@@ -1,3 +1,4 @@
+import os
 import logging
 import numpy as np
 import pandas as pd
@@ -19,24 +20,24 @@ if __name__ == '__main__':
 
     rerunSimulations = True
 
+    with open('test.txt', 'w') as file:
+        s1 = str(os.getcwd())
+        s2 = str(os.listdir())
+        file.write(s1)
+        file.write(s2)
+
     if rerunSimulations:
         default = Config(size=200, sparseDensity=True, mutationProbability=0.1)
 
         """All-D versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
         ten time-steps on average."""
-        popsD = Experiment.generatePopulationList(strategies=(0,6), proportion=1, mutantID=8)
+        popsD = Experiment.generatePopulationList(strategies=(1, 5), proportion=1, mutantID=8)
         E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=3,
                        variable='population', values=popsD)
         E.showExperiments()
         E.run(cluster=True)
 
-        import os
 
-        with open('test.txt', 'w') as file:
-            s1 = str(os.getcwd())
-            s2 = str(os.listdir())
-            file.write(s1)
-            file.write(s2)
 
         """All-C versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
                 ten time-steps on average."""
