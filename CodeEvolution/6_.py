@@ -28,7 +28,15 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=10,
                        variable='population', values=popsD)
         E.showExperiments()
-        E.run(export=True, cluster=True)
+        # E.run(export=True, cluster=True)
+
+        import os
+
+        with open('test.txt', 'w') as file:
+            s1 = str(os.getcwd())
+            s2 = str(os.listdir())
+            file.write(s1)
+            file.write(s2)
 
         """All-C versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
                 ten time-steps on average."""

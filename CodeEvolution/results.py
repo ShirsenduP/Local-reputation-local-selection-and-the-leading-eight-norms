@@ -96,7 +96,7 @@ class Results:
     def exportResultsToCsvCluster(experimentName, experimentConfig, experimentResults, experimentNumber):
         """Export data (.csv) into network storage"""
 
-        with open("test.txt", mode='w+') as f:
+        with open("test.txt", mode='w') as f:
             f.write("hello world!\nloooooosers!")
 
         # experimentResults.to_csv(f"{experimentNumber}.csv", mode='w+')
