@@ -99,7 +99,7 @@ class Results:
         with open("test.txt", mode='w+') as f:
             f.write("hello world!\nloooooosers!")
 
-        experimentResults.to_csv(f"{experimentNumber}.csv", mode='w+')
+        # experimentResults.to_csv(f"{experimentNumber}.csv", mode='w+')
 
     def __str__(self):
         s = str(self.strategyProportions)
