@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.LrGe import LrGe_Network
+from CodeEvolution.network import LrGe_Network
 from CodeEvolution.config import Config
 from CodeEvolution.Experiment import Experiment
 

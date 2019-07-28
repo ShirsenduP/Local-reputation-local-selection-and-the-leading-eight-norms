@@ -4,9 +4,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.GrGe import GrGe_Network
-from CodeEvolution.LrGe import LrGe_Network
-from CodeEvolution.LrLe import LrLe_Network
+from CodeEvolution.network import GrGe_Network, LrGe_Network, LrLe_Network
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population

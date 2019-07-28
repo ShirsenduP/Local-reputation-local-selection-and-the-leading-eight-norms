@@ -1,5 +1,6 @@
 from math import inf
 
+
 class Validator():
     def __init__(self):
         pass
@@ -10,10 +11,10 @@ class Validator():
         for thing in listOfThings:
             if type(thing) != requiredType:
                 raise TypeError(str(listOfThings) + " contains objects that are not " + str(requiredType) + ".")
-        
+
     def checkRangeOfValuesInList(self, listOfThings, bounds, edges=True):
         """Raise an exception if the given 'listOfThings' contains values that are outside the range defined by the list 'bounds' where 'edges' is a boolean clarifying whether the bounds are inclusive or exclusive of the bound values themselves."""
-        
+
         if edges:
             for thing in listOfThings:
                 if thing < bounds[0] or thing > bounds[1]:
@@ -28,7 +29,7 @@ class Validator():
 
         if pdBenefit <= pdCost:
             raise ValueError("The payoff of the Prisoner's Dilemna game must be greater than the cost of cooperation.")
-        if pdBenefit<0 or pdCost<0:
+        if pdBenefit < 0 or pdCost < 0:
             raise ValueError("The payoff and cost must be positive values.")
 
     def checkValidDistribution(self, distribution):

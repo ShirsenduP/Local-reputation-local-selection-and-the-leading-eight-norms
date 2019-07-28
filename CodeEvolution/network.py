@@ -4,12 +4,11 @@ import logging
 
 import networkx as nx
 import numpy as np
-from tqdm import trange
 
 from collections import deque
 from matplotlib import pyplot as plt
 
-from CodeEvolution.agent import Agent
+from CodeEvolution.agent import Agent, GrGe_Agent, LrGe_Agent
 from CodeEvolution.config import Config
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
@@ -70,14 +69,14 @@ class Network:
         actualConnections /= 2
 
         n = self.config.size
-        potentialConnections = 0.5*n*(n-1)
+        potentialConnections = 0.5 * n * (n - 1)
 
-        return actualConnections/potentialConnections
+        return actualConnections / potentialConnections
 
     def getSparsityParameter(self):
         """Return the minimum probability p for the G(n,p) Erdos-Renyi Random Network model for the network to be
         connected."""
-        return 2*np.log(self.config.size)/self.config.size
+        return 2 * np.log(self.config.size) / self.config.size
 
     def generate(self, agentType):
         """Regenerate network until """
@@ -399,21 +398,189 @@ class Network:
         return s
 
 
-if __name__ == "__main__":
-    s = 2*np.log(500)/500
-    # print(s)
-    C = Config(densities=s)
-    # N = Network(C)
-    # N.generate(Agent)
-    # print(N.getMinDegree())
-    # print(N.hasMinTwoDegree())
+class GrGe_Network(Network):
+    """Global Reputation, Global Evolution - AKA the model originating from Ohtsuki and Isawa's seminal Leading Eight
+     paper on social norms. This model tries to verify the original results."""
 
-    d = 0
-    count = 1000
-    for _ in trange(count):
-        N = Network(C)
-        N.generate(Agent)
-        if not N.hasMinTwoDegree():
-            print(N.getMinDegree())
-            d += 1
-    print(d/count)
+    name = "GrGe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        if self.config.density != 1:
+            self.config.density = 1
+        self.createNetwork(agentType=GrGe_Agent)
+
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
+        is accessible to every other agent in the population."""
+        return agent1.currentReputation, agent2.currentReputation
+
+    def evolutionaryUpdate(self, alpha=10):
+        """Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the
+         utilities of all strategies."""
+
+        strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
+
+        # find strategy with highest utility
+        bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
+
+        # check for strategies with negative utility
+        for strategy, utility in strategyUtils.items():
+            if utility < 0:
+                strategyUtils[strategy] = 0
+
+        # if total utility is zero, no evolutionary update
+        totalUtil = sum(strategyUtils.values())
+        if totalUtil == 0:
+            # print(f"update skipped because at t = {self.currentPeriod} we have {strategyUtils.values()}")
+            return
+
+        # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
+        # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
+        for strategy, _ in strategyUtils.items():
+            strategyUtils[strategy] /= (totalUtil * alpha)
+            # TODO What is the purpose of \alpha?
+
+        # print(f"t = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
+
+        for agent in self.agentList:
+            r = random.random()
+            if r < strategyUtils[bestStrategy]:
+                agent.currentStrategy.changeStrategy(bestStrategy)
+
+
+class LrGe_Network(Network):
+    """Network with Local Reputation and Global Evolution (LrGe)"""
+
+    name = "LrGe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.name = "LrGe"
+        self.generate(agentType=LrGe_Agent)
+
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
+        accessible only to neighbours of that agent."""
+
+        # Choose neighbour of each agent (except the opponent of that agent)
+        agent2Neighbour = random.choice(agent2.neighbours)
+        agent1Neighbour = random.choice(agent1.neighbours)
+        while agent2Neighbour == agent1:
+            agent2Neighbour = random.choice(agent2.neighbours)
+        while agent1Neighbour == agent2:
+            agent1Neighbour = random.choice(agent1.neighbours)
+
+        # Calculate agents' reputations using social norm, if no history, assign random reputation
+        agent2Reputation = agent2Neighbour.history[agent2]
+        agent1Reputation = agent1Neighbour.history[agent1]
+
+        # If opponent has had no previous interaction, his neighbours will not have any relevant information,
+        # hence assign reputation randomly.
+        if agent2Reputation is None:
+            agent2Reputation = random.randint(0, 1)
+        if agent1Reputation is None:
+            agent1Reputation = random.randint(0, 1)
+
+        return agent1Reputation, agent2Reputation
+
+    def evolutionaryUpdate(self, alpha=10):
+        """Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the
+        utilities of all strategies. COPIED FROM GrGe -> MAKE SURE ITS UP TO DATE UNTIL BETTER SOLUTION FOUND"""
+
+        strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
+        logging.info(f"(Global) Average utility: {strategyUtils}")
+        # find strategy with highest utility
+        bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
+
+        # check for strategies with negative utility
+        for strategy, utility in strategyUtils.items():
+            if utility < 0:
+                strategyUtils[strategy] = 0
+
+        # if total utility is zero, no evolutionary update
+        totalUtil = sum(strategyUtils.values())
+        if totalUtil == 0:
+            # print(f"update skipped because at t = {self.currentPeriod} we have {strategyUtils.values()}")
+            return
+
+        # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
+        # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
+        for strategy, _ in strategyUtils.items():
+            strategyUtils[strategy] /= (totalUtil * alpha)
+            # TODO this alpha is being funny, what is its point? its arbitrary.
+
+        # print(f"t = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
+
+        for agent in self.agentList:
+            r = random.random()
+            if r < strategyUtils[bestStrategy]:
+                agent.currentStrategy.changeStrategy(bestStrategy)
+                # TODO This bit is weird, need to log this function so I can see what updates are happening and what
+                #  are not happening.
+
+
+class LrLe_Network(Network):
+    """Network with Local Reputation and Local Evolution (LrLe)"""
+
+    name = "LrLe"
+
+    def __init__(self, _config):
+        super().__init__(_config)
+        self.name = "LrLe"
+        self.generate(agentType=Agent)
+        self.evolutionaryUpdateSpeed = 0.5
+
+    def evolutionaryUpdate(self, alpha=10):
+        """Local Learning - Out of the subset of agents that are connected to the focal agent, adopt the strategy of the
+         best/better performing agent with some probability."""
+        for agent in self.agentList:
+            agent.updateStrategy(self.config.updateProbability, copyTheBest=True)
+
+    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        """Given the agents, their reputations, and their moves, update their personal reputations (the reputation they
+        use for themselves for all of their interactions)."""
+
+        agent1PersonalReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2Reputation,
+                                                                    agent1Move)
+        agent2PersonalReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1Reputation,
+                                                                    agent2Move)
+
+        agent1.updatePersonalReputation(agent1PersonalReputation)
+        agent2.updatePersonalReputation(agent2PersonalReputation)
+
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
+        accessible only to neighbours of that agent."""
+
+        maxChecks = self.config.size
+        check1 = 0
+        check2 = 0
+
+        # Choose neighbour of each agent (except the opponent of that agent)
+        agent2Neighbour = random.choice(agent2.neighbours)
+        agent1Neighbour = random.choice(agent1.neighbours)
+
+        while agent2Neighbour == agent1 and check1 < maxChecks:
+            agent2Neighbour = random.choice(agent2.neighbours)
+            check1 += 1
+        while agent1Neighbour == agent2 and check2 < maxChecks:
+            agent1Neighbour = random.choice(agent1.neighbours)
+            check2 += 1
+
+        if check1 == maxChecks or check2 == maxChecks:
+            logging.warning(f"{agent1.id} or {agent2.id} in this network cannot find a neighbour of his opponent that "
+                            f"is not himself.")
+
+        # Calculate agents' reputations using social norm, if no history, assign random reputation
+        agent2Reputation = agent2Neighbour.history[agent2]
+        agent1Reputation = agent1Neighbour.history[agent1]
+
+        # If opponent has had no previous interaction, his neighbours will not have any relevant information,
+        # hence assign reputation randomly.
+        if agent2Reputation is None:
+            agent2Reputation = random.randint(0, 1)
+        if agent1Reputation is None:
+            agent1Reputation = random.randint(0, 1)
+
+        return agent1Reputation, agent2Reputation

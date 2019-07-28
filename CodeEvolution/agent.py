@@ -89,10 +89,27 @@ class Agent:
         s += f" with neighbours {self.getNeighboursUtilities()}"
         return s
 
-    # def __repr__(self):
-    #     s = f"A(id:{self.id})"
-    #     return s
+
+class GrGe_Agent(Agent):
+
+    def __init__(self, _id, _strategy):
+        super().__init__(_id, _strategy)
+        self.history = None
+
+    def updateStrategy(self, updateProbability, copyTheBest=True):
+        """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
+         network.evolutionaryUpdate method."""
+        pass
 
 
-if __name__ == "__main__":
-    pass
+class LrGe_Agent(Agent):
+
+    def __init__(self, _id, _strategy):
+        super().__init__(_id, _strategy)
+        self.history = None
+
+    def updateStrategy(self, updateProbability, copyTheBest=True):
+        """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
+        network.evolutionaryUpdate method."""
+        pass
+
