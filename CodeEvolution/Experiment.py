@@ -109,8 +109,8 @@ class Experiment:
                 if cluster:
                     Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
                 else:
-                    Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
-                    # Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
+                    # Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
+                    Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
 
     def showExperiments(self):
         """Print to the console a condensed list of all the config files in the object's experiment list."""
