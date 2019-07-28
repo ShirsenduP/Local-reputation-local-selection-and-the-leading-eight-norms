@@ -90,8 +90,6 @@ class Experiment:
 
             return resultsFull.tail(1)
 
-        os.mkdir(experimentName)
-
         for exp in trange(len(self.experiments), leave=False):
             if display:
                 print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")

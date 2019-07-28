@@ -96,7 +96,10 @@ class Results:
     def exportResultsToCsvCluster(experimentName, experimentConfig, experimentResults, experimentNumber):
         """Export data (.csv) into network storage"""
 
-        experimentResults.to_csv(f"/{experimentName}/{experimentNumber}.csv", mode='w+')
+        with open("test.txt", mode='w+') as f:
+            f.write("hello world!\nloooooosers!")
+
+        experimentResults.to_csv(f"{experimentNumber}.csv", mode='w+')
 
     def __str__(self):
         s = str(self.strategyProportions)
