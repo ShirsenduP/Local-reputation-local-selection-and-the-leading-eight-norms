@@ -13,7 +13,7 @@ from CodeEvolution.config import Config
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
-
+from CodeEvolution.GlobalEvolution import GlobalEvolution
 
 class Network:
 
@@ -459,31 +459,6 @@ class LrGe_Network(Network):
         self.name = "LrGe"
         self.generate(agentType=LrGe_Agent)
 
-    def getOpponentsReputation(self, agent1, agent2):
-        """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
-        accessible only to neighbours of that agent."""
-
-        # Choose neighbour of each agent (except the opponent of that agent)
-        agent2Neighbour = random.choice(agent2.neighbours)
-        agent1Neighbour = random.choice(agent1.neighbours)
-        while agent2Neighbour == agent1:
-            agent2Neighbour = random.choice(agent2.neighbours)
-        while agent1Neighbour == agent2:
-            agent1Neighbour = random.choice(agent1.neighbours)
-
-        # Calculate agents' reputations using social norm, if no history, assign random reputation
-        agent2Reputation = agent2Neighbour.history[agent2]
-        agent1Reputation = agent1Neighbour.history[agent1]
-
-        # If opponent has had no previous interaction, his neighbours will not have any relevant information,
-        # hence assign reputation randomly.
-        if agent2Reputation is None:
-            agent2Reputation = random.randint(0, 1)
-        if agent1Reputation is None:
-            agent1Reputation = random.randint(0, 1)
-
-        return agent1Reputation, agent2Reputation
-
     def evolutionaryUpdate(self, alpha=10):
         """Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the
         utilities of all strategies. COPIED FROM GrGe -> MAKE SURE ITS UP TO DATE UNTIL BETTER SOLUTION FOUND"""
@@ -518,6 +493,31 @@ class LrGe_Network(Network):
                 agent.currentStrategy.changeStrategy(bestStrategy)
                 # TODO This bit is weird, need to log this function so I can see what updates are happening and what
                 #  are not happening.
+
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
+        accessible only to neighbours of that agent."""
+
+        # Choose neighbour of each agent (except the opponent of that agent)
+        agent2Neighbour = random.choice(agent2.neighbours)
+        agent1Neighbour = random.choice(agent1.neighbours)
+        while agent2Neighbour == agent1:
+            agent2Neighbour = random.choice(agent2.neighbours)
+        while agent1Neighbour == agent2:
+            agent1Neighbour = random.choice(agent1.neighbours)
+
+        # Calculate agents' reputations using social norm, if no history, assign random reputation
+        agent2Reputation = agent2Neighbour.history[agent2]
+        agent1Reputation = agent1Neighbour.history[agent1]
+
+        # If opponent has had no previous interaction, his neighbours will not have any relevant information,
+        # hence assign reputation randomly.
+        if agent2Reputation is None:
+            agent2Reputation = random.randint(0, 1)
+        if agent1Reputation is None:
+            agent1Reputation = random.randint(0, 1)
+
+        return agent1Reputation, agent2Reputation
 
 
 class LrLe_Network(Network):
@@ -584,3 +584,5 @@ class LrLe_Network(Network):
             agent1Reputation = random.randint(0, 1)
 
         return agent1Reputation, agent2Reputation
+
+# TODO Check difference between updateInteractions and updateReputations

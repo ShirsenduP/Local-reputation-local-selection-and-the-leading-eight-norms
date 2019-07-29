@@ -18,12 +18,6 @@ if __name__ == '__main__':
 
     rerunSimulations = True
 
-    with open('test.txt', 'w') as file:
-        s1 = str(os.getcwd())
-        s2 = str(os.listdir())
-        file.write(s1)
-        file.write(s2)
-
     if rerunSimulations:
         default = Config(size=200, sparseDensity=True, mutationProbability=0.1)
 
@@ -33,7 +27,7 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=3,
                        variable='population', values=popsD)
         E.showExperiments()
-        E.run(cluster=True)
+        E.run(display=True)
 
 
 
