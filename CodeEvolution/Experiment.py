@@ -3,6 +3,7 @@ import os
 import time
 import copy
 
+import numpy as np
 import pandas as pd
 from tqdm import trange
 
@@ -38,10 +39,10 @@ class Experiment:
             for i in range(len(self.values)):
                 newConfig = copy.deepcopy(self.default)
                 tests.append(newConfig)
-                setattr(tests[i], 'population', Population(ID=self.values[i][0].ID, proportion=self.values[i][
-                    0].proportion))
-                setattr(tests[i], 'mutant', Population(ID=self.values[i][1].ID, proportion=self.values[i][
-                    1].proportion))
+                setattr(tests[i], 'population',
+                        Population(ID=self.values[i][0].ID, proportion=self.values[i][0].proportion))
+                setattr(tests[i], 'mutant',
+                        Population(ID=self.values[i][1].ID, proportion=self.values[i][1].proportion))
                 setattr(tests[i], 'socialNormID', self.values[i][0].ID)
         else:
             # General Case
@@ -53,6 +54,25 @@ class Experiment:
 
         self.experiments = tuple(tests)
         # print(self.experiments)
+
+    @staticmethod
+    def generateParameterFile(defaultConfig, variable, values, repeats):
+        """Export a parameters file (.txt) for UCL clusters"""
+
+        if None in [variable, values]:
+            raise ValueError("Parameters 'variable' and 'values' must not be None.")
+
+        with open('params.txt', 'w') as f:
+            counter = 0
+            for exp in range(len(values)):
+                for rep in range(repeats):
+                    args = f"{counter:04d} "  # Simulation ID
+                    args += str(variable) + " "
+                    args += str(values[exp]) + "\n"
+                    f.write(args)
+                    counter += 1
+
+        logging.info(f"Parameter file generated in {os.getcwd()}.")
 
     def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
@@ -121,8 +141,8 @@ class Experiment:
 
     @classmethod
     def generatePopulationList(cls, strategies=tuple(range(8)), proportion=0.9, mutantID=8):
-        """Create a sequential list of Config objects running through each of the strategies defined, with a given
-        proportion and a mutantID."""
+        """Create a sequential list of tuples of population objects running through each of the strategies defined,
+        with a given proportion and a mutantID."""
         listOfStates = []
         mainProp = proportion
         mutantProp = round(1 - proportion, 3)
@@ -132,41 +152,20 @@ class Experiment:
         return listOfStates
 
 
-class ClusterExperiment:
-    """This class generates the parameter list for all the simulations to be sent to the UCL clusters."""
-
-    def __init__(self, networkType, variable=None, values=None, defaultConfig=Config(), repeats=100):
-        self.networkType = networkType
-        self.variable = variable
-        self.values = values
-        self.defaultConfig = defaultConfig
-        self.repeats = repeats
-        self.generateConfigs()
-
-
-    def generateConfigs(self):
-        """Export a parameters file (.txt) for UCL clusters"""
-
-        if None in [self.variable, self.values]:
-            raise ValueError("Parameters 'variable' and 'values' must not be None.")
-
-        with open('params.txt', 'w+') as f:
-            f.write("hi")
-
-        path = os.getcwd()
-        logging.info(f"Parameter file generated in {path}.")
-
-
 if __name__ == '__main__':
-    C = ClusterExperiment(GrGe_Network, variable='population', values=list(range(4)))
-
-
-
-
-
-
-
-
+    C = Config(initialState=State(0, 1, 8), size=500, sparseDensity=True)
+    pops = Experiment.generatePopulationList(strategies=(range(4),), proportion=1, mutantID=8)
+    E = Experiment(
+        networkType=GrGe_Network,
+        variable='population',
+        values=pops,
+        defaultConfig=C)
+    E.generateParameterFile(
+        defaultConfig=Config(),
+        variable='density',
+        values=list(np.linspace(0.01, 1, 10)),
+        repeats=10
+        )
 
 # TODO IF FILES ALREADY EXIST IN DIRECTORY, CREATE NEW FOLDER - DO NOT OVERWRITE THIS IS BLOODY ANNOYING
 
