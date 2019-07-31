@@ -10,7 +10,7 @@ This package provides the code to simulate social dilemna games on a large netwo
 
 2. Move into the CodeEvolution directory using `cd CodeEvolution`
 
-3. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything) with `virtualenv --python=python3.6 env` and start the virtual environment with `source env/bin/activate`
+3. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything) with `virtualenv --python=python3.6 env` and start the virtual environment with `source env/bin/activate`. (https://itnext.io/virtualenv-with-virtualenvwrapper-on-ubuntu-18-04-goran-aviani-d7b712d906d5 is a useful guide to set up virtual environments if needed.)
 
 4. Install package and all its dependencies with `python setup.py install`. 
 
