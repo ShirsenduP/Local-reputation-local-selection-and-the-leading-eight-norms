@@ -132,8 +132,41 @@ class Experiment:
         return listOfStates
 
 
+class ClusterExperiment:
+    """This class generates the parameter list for all the simulations to be sent to the UCL clusters."""
+
+    def __init__(self, networkType, variable=None, values=None, defaultConfig=Config(), repeats=100):
+        self.networkType = networkType
+        self.variable = variable
+        self.values = values
+        self.defaultConfig = defaultConfig
+        self.repeats = repeats
+        self.generateConfigs()
+
+
+    def generateConfigs(self):
+        """Export a parameters file (.txt) for UCL clusters"""
+
+        if None in [self.variable, self.values]:
+            raise ValueError("Parameters 'variable' and 'values' must not be None.")
+
+        with open('params.txt', 'w+') as f:
+            f.write("hi")
+
+        path = os.getcwd()
+        logging.info(f"Parameter file generated in {path}.")
+
+
 if __name__ == '__main__':
-    pass
+    C = ClusterExperiment(GrGe_Network, variable='population', values=list(range(4)))
+
+
+
+
+
+
+
+
 
 # TODO IF FILES ALREADY EXIST IN DIRECTORY, CREATE NEW FOLDER - DO NOT OVERWRITE THIS IS BLOODY ANNOYING
 
