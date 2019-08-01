@@ -74,6 +74,24 @@ class Experiment:
 
         logging.info(f"Parameter file generated in {os.getcwd()}.")
 
+    @staticmethod
+    def simulate(m_exp, networkType, displayFull):
+        N = networkType(m_exp)
+        # print(N)
+        N.runSimulation()
+        resultsActions = N.results.exportActions()
+        resultsCensus = N.results.exportCensus()
+        # print(resultsCensus)
+        # if (resultsCensus>1).any():
+        #     logging.critical("Census thinks there are more agents than there are.")
+        resultsUtils = N.results.exportUtilities()
+        resultsMutations = N.results.exportMutations()
+        resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils, resultsMutations], axis=1, sort=False)
+        # resultsFull = pd.concat([resultsCensus], axis=1, sort=False)
+        if displayFull:
+            print(resultsFull)
+        return resultsFull.tail(1)
+
     def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
         so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
@@ -92,25 +110,6 @@ class Experiment:
             print("Default Parameters:\t")
             print(self.default)
 
-        def simulate(m_exp):
-            N = self.networkType(m_exp)
-            # print(N)
-            N.runSimulation()
-            resultsActions = N.results.exportActions()
-            resultsCensus = N.results.exportCensus()
-            # print(resultsCensus)
-            # if (resultsCensus>1).any():
-            #     logging.critical("Census thinks there are more agents than there are.")
-            resultsUtils = N.results.exportUtilities()
-            # resultsMutations = N.results.exportMutations()
-            # resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
-            resultsFull = pd.concat([resultsCensus], axis=1, sort=False)
-            if displayFull:
-                print(resultsFull)
-            # del N
-
-            return resultsFull.tail(1)
-
         for exp in trange(len(self.experiments), leave=False):
             if display:
                 print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
@@ -118,7 +117,7 @@ class Experiment:
             singleTest = pd.DataFrame()
             for _ in trange(self.repeats, leave=False):
                 Strategy.reset()
-                singleRun = simulate(self.experiments[exp])
+                singleRun = self.simulate(self.experiments[exp], self.networkType, displayFull)
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
                 Strategy.reset()
 
