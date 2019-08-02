@@ -40,4 +40,4 @@ if __name__ == '__main__':
     output = Experiment.simulate(m_exp=defaultConfig, networkType=LrGe_Network, displayFull=False)
 
     with open(f'{args.index}.txt', 'w+') as results:
-        results.write(output)
+       results.write(output)
