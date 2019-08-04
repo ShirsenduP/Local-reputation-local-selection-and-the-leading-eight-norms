@@ -398,23 +398,7 @@ class Network:
         return s
 
 
-
-class GrGeNetwork(Network):
-    """Network with Global Reputation and Global Evolution"""
-
-    name = "GrGe"
-
-    def __init__(self, _config=None):
-        super().__init__(_config)
-        if self.config.density != 1:
-            self.config.density = 1
-        self.createNetwork(agentType=GrGe_Agent)
-
-    def getOpponentsReputation(self, agent1, agent2):
-        """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
-        is accessible to every other agent in the population."""
-        return agent1.currentReputation, agent2.currentReputation
-
+class GlobalEvolution:
     def evolutionaryUpdate(self, alpha=10):
         """Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the
          utilities of all strategies."""
@@ -449,7 +433,25 @@ class GrGeNetwork(Network):
                 agent.currentStrategy.changeStrategy(bestStrategy)
 
 
-class LrGeNetwork(Network):
+class GrGeNetwork(GlobalEvolution, Network):
+    """Network with Global Reputation and Global Evolution"""
+
+    name = "GrGe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        if self.config.density != 1:
+            self.config.density = 1
+        self.createNetwork(agentType=GrGe_Agent)
+
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
+        is accessible to every other agent in the population."""
+        return agent1.currentReputation, agent2.currentReputation
+
+
+
+class LrGeNetwork(GlobalEvolution, Network):
     """Network with Local Reputation and Global Evolution (LrGe)"""
 
     name = "LrGe"
@@ -458,41 +460,6 @@ class LrGeNetwork(Network):
         super().__init__(_config)
         self.name = "LrGe"
         self.generate(agentType=LrGe_Agent)
-
-    def evolutionaryUpdate(self, alpha=10):
-        """Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the
-        utilities of all strategies. COPIED FROM GrGe -> MAKE SURE ITS UP TO DATE UNTIL BETTER SOLUTION FOUND"""
-
-        strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
-        logging.info(f"(Global) Average utility: {strategyUtils}")
-        # find strategy with highest utility
-        bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
-
-        # check for strategies with negative utility
-        for strategy, utility in strategyUtils.items():
-            if utility < 0:
-                strategyUtils[strategy] = 0
-
-        # if total utility is zero, no evolutionary update
-        totalUtil = sum(strategyUtils.values())
-        if totalUtil == 0:
-            # print(f"update skipped because at t = {self.currentPeriod} we have {strategyUtils.values()}")
-            return
-
-        # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
-        # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
-        for strategy, _ in strategyUtils.items():
-            strategyUtils[strategy] /= (totalUtil * alpha)
-            # TODO this alpha is being funny, what is its point? its arbitrary.
-
-        # print(f"t = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
-
-        for agent in self.agentList:
-            r = random.random()
-            if r < strategyUtils[bestStrategy]:
-                agent.currentStrategy.changeStrategy(bestStrategy)
-                # TODO This bit is weird, need to log this function so I can see what updates are happening and what
-                #  are not happening.
 
     def getOpponentsReputation(self, agent1, agent2):
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
