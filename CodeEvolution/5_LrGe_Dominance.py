@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.network import LrGe_Network
+from CodeEvolution.network import LrGeNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.Experiment import Experiment
 
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         """All-D versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
         ten time-steps on average."""
         popsD = Experiment.generatePopulationList(proportion=1, mutantID=8)
-        E = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=100,
+        E = Experiment(networkType=LrGeNetwork, defaultConfig=default, repeats=100,
                        variable='population', values=popsD)
         E.showExperiments()
         E.run(export=True)
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         """All-C versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
                 ten time-steps on average."""
         popsC = Experiment.generatePopulationList(proportion=1, mutantID=9)
-        E2 = Experiment(networkType=LrGe_Network, defaultConfig=default, repeats=100,
+        E2 = Experiment(networkType=LrGeNetwork, defaultConfig=default, repeats=100,
                         variable='population', values=popsC)
         E2.showExperiments()
         E2.run(export=True)

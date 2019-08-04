@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.network import GrGe_Network, LrGe_Network, LrLe_Network
+from CodeEvolution.network import GrGeNetwork, LrGeNetwork, LrLeNetwork
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population
@@ -22,24 +22,24 @@ if __name__ == '__main__':
         default = Config(densities=1, size=10, maxPeriods=100)
         print(default)
         print()
-        E = Experiment(networkType=GrGe_Network, defaultConfig=default, variable='population', values=popsVsAllD,
+        E = Experiment(networkType=GrGeNetwork, defaultConfig=default, variable='population', values=popsVsAllD,
                        repeats=reps)
         # E.run(display=True)
 
         default2 = Config(densities=0.1)
-        E2 = Experiment(networkType=LrGe_Network, defaultConfig=default2, variable='population', values=popsVsAllD,
+        E2 = Experiment(networkType=LrGeNetwork, defaultConfig=default2, variable='population', values=popsVsAllD,
                         repeats=reps)
         E2.run(display=True)
 
         default3 = Config(densities=0.1)
-        E3 = Experiment(networkType=LrLe_Network, defaultConfig=default3, variable='population', values=popsVsAllD,
+        E3 = Experiment(networkType=LrLeNetwork, defaultConfig=default3, variable='population', values=popsVsAllD,
                         repeats=reps)
         E3.run(display=True)
 
     #     """All-C versus all the populations, initially weighted at 10/90."""
     #
     #     default4 = Config(densities=1, mutant=Population(ID=9, Proportion=0.1))
-    #     E4 = Experiment(networkType=GrGe_Network, defaultConfig=default4, variable='population', values=pops,
+    #     E4 = Experiment(networkType=GrGeNetwork, defaultConfig=default4, variable='population', values=pops,
     #                     repeats=reps)
     #     E4.run(display=True)
     #

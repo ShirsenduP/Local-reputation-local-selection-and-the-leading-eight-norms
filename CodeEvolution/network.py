@@ -13,9 +13,9 @@ from CodeEvolution.config import Config
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
-from CodeEvolution.GlobalEvolution import GlobalEvolution
 
 class Network:
+    """Base network class implementing all the ubiquitous simulation methods. """
 
     def __init__(self, config=Config(), agentType=Agent):
         self.config = config
@@ -398,9 +398,9 @@ class Network:
         return s
 
 
-class GrGe_Network(Network):
-    """Global Reputation, Global Evolution - AKA the model originating from Ohtsuki and Isawa's seminal Leading Eight
-     paper on social norms. This model tries to verify the original results."""
+
+class GrGeNetwork(Network):
+    """Network with Global Reputation and Global Evolution"""
 
     name = "GrGe"
 
@@ -449,7 +449,7 @@ class GrGe_Network(Network):
                 agent.currentStrategy.changeStrategy(bestStrategy)
 
 
-class LrGe_Network(Network):
+class LrGeNetwork(Network):
     """Network with Local Reputation and Global Evolution (LrGe)"""
 
     name = "LrGe"
@@ -520,7 +520,7 @@ class LrGe_Network(Network):
         return agent1Reputation, agent2Reputation
 
 
-class LrLe_Network(Network):
+class LrLeNetwork(Network):
     """Network with Local Reputation and Local Evolution (LrLe)"""
 
     name = "LrLe"

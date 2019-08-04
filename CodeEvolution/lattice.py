@@ -4,20 +4,20 @@ import logging
 from scipy import stats
 import numpy as np
 
-from CodeEvolution.network import Network
+from CodeEvolution.network import Network, LrGeNetwork
 from CodeEvolution.agent import Agent
 from CodeEvolution.config import Config, State
 
-from oct2py import Oct2Py
+# from oct2py import Oct2Py
 import networkx as nx
 from matplotlib import pyplot as plt
 
 
-class RegularLattice(Network):
+class Lattice(Network):
     """Create and run simulations with various types of regular lattices."""
 
     def __init__(self, _config=Config()):
-        super().__init__(_config)
+        super(Network).__init__(_config)
         self.name = None
         self.adjMatrix = None
         self.nxGraph = None
@@ -45,22 +45,6 @@ class RegularLattice(Network):
         self.nxGraph = nx.random_regular_graph(degree, n=self.config.size)
         self.adjMatrix = nx.to_numpy_array(self.nxGraph)
         self.name = f"Regular {degree}-degree graph"
-        logging.info(f"{self.name} network initialised with adjacency matrix.")
-
-    def makeCliqueLattice(self):
-        """Agents are created in cliques of 4 where each agent here is connected with each other agent in the clique.
-        Then each agent in the clique is connected to a single agent from another distinct clique. For diagram of
-        network, see S12 in supplementary documents from Righi S., Takacs K. (2018).
-
-            Righi S., Takacs K. (2018) "Social Closure and the Evolution of
-            Cooperation via Indirect Reciprocity", Scientific Reports
-            https://github.com/simonerighi/RighiTakacs_ScientificReports2018
-        """
-
-        oc = Oct2Py()
-        self.adjMatrix = oc.lattice_structure(self.config.size)
-        self.name = "Regular Clique Lattice"
-        self.nxGraph = nx.from_numpy_array(self.adjMatrix)
         logging.info(f"{self.name} network initialised with adjacency matrix.")
 
     def makeLattice(self, dimensions=[2, 3, 4]):
@@ -137,17 +121,42 @@ class RegularLattice(Network):
             return False
         return True
 
+    def getClusteringCoefficient(self):
+        """Return the average clustering coefficient of a network."""
+        return nx.average_clustering(self.nxGraph)
+
+
+class LrGe_Regular(Lattice, LrGeNetwork):
+    """Local Reputation and Global Evolution on a d-regular lattice."""
+
+    def __init__(self, config=Config(), degree=3):
+        super(Lattice).__init__(config)
+        super(LrGeNetwork).__init__(config)
+        self.degree = degree
+        self.makeRegular(degree=degree)
+        self.createNetwork(agentType=Agent)
+
 
 if __name__ == "__main__":
-    C = Config(size=24, initialState=State(0, 1, 8), densities=None)
-    N = RegularLattice(C)
-    # N.makeRegular()
-    # N.makeNwsSmallWorld(k=4, p=1)
-    # N.make
-    # N.makeCliqueLattice()
-    N.makeHexLattice()
-    N.createNetwork()
-    print(N.isRegular())
-    N.plotGraph()
-    # print(N.getDegreeDistribution())
-    print(N.getDensity())
+    C = Config(size=24, initialState=State(0, 1, 8))
+    N = LrGe_Regular(C, degree=3)
+    # N.plotGraph()
+    print(N)
+    N.runSimulation()
+    print(N.results)
+'''
+    def makeCliqueLattice(self):
+        """Agents are created in cliques of 4 where each agent here is connected with each other agent in the clique.
+        Then each agent in the clique is connected to a single agent from another distinct clique. For diagram of
+        network, see S12 in supplementary documents from Righi S., Takacs K. (2018).
+
+            Righi S., Takacs K. (2018) "Social Closure and the Evolution of
+            Cooperation via Indirect Reciprocity", Scientific Reports
+            https://github.com/simonerighi/RighiTakacs_ScientificReports2018
+        """
+
+        oc = Oct2Py()
+        self.adjMatrix = oc.lattice_structure(self.config.size)
+        self.name = "Regular Clique Lattice"
+        self.nxGraph = nx.from_numpy_array(self.adjMatrix)
+        logging.info(f"{self.name} network initialised with adjacency matrix.")'''

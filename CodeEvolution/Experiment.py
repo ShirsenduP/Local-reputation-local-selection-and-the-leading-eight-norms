@@ -8,7 +8,7 @@ import pandas as pd
 from tqdm import trange
 
 from CodeEvolution import Strategy
-from CodeEvolution.network import GrGe_Network, LrLe_Network, LrGe_Network
+from CodeEvolution.network import GrGeNetwork, LrLeNetwork, LrGeNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.config import Population, State
 from CodeEvolution.results import Results
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     C = Config(initialState=State(0, 1, 8), size=500, sparseDensity=True)
     pops = Experiment.generatePopulationList(strategies=(range(4),), proportion=1, mutantID=8)
     E = Experiment(
-        networkType=GrGe_Network,
+        networkType=GrGeNetwork,
         variable='population',
         values=pops,
         defaultConfig=C)
