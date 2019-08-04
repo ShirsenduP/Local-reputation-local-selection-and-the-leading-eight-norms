@@ -14,6 +14,7 @@ from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
 
+
 class Network:
     """Base network class implementing all the ubiquitous simulation methods. """
 
@@ -311,18 +312,6 @@ class Network:
         agent1.broadcastReputation(agent1NewRep, self.config.delta)
         agent2.broadcastReputation(agent2NewRep, self.config.delta)
 
-    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-        """Assign reputations following an interaction with each agent's globally known reputation and not the
-        calculated reputation as default."""
-
-        agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation,
-                                                               agent1Move)
-        agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation,
-                                                               agent2Move)
-
-        agent1.updatePersonalReputation(agent1NewReputation)
-        agent2.updatePersonalReputation(agent2NewReputation)
-
     def showHistory(self):
         for agent in self.agentList:
             s = f"History for agent {agent.id} \n"
@@ -433,89 +422,34 @@ class GlobalEvolution:
                 agent.currentStrategy.changeStrategy(bestStrategy)
 
 
-class GrGeNetwork(GlobalEvolution, Network):
-    """Network with Global Reputation and Global Evolution"""
-
-    name = "GrGe"
-
-    def __init__(self, _config=None):
-        super().__init__(_config)
-        if self.config.density != 1:
-            self.config.density = 1
-        self.createNetwork(agentType=GrGe_Agent)
-
-    def getOpponentsReputation(self, agent1, agent2):
-        """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
-        is accessible to every other agent in the population."""
-        return agent1.currentReputation, agent2.currentReputation
-
-
-
-class LrGeNetwork(GlobalEvolution, Network):
-    """Network with Local Reputation and Global Evolution (LrGe)"""
-
-    name = "LrGe"
-
-    def __init__(self, _config=None):
-        super().__init__(_config)
-        self.name = "LrGe"
-        self.generate(agentType=LrGe_Agent)
-
-    def getOpponentsReputation(self, agent1, agent2):
-        """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
-        accessible only to neighbours of that agent."""
-
-        # Choose neighbour of each agent (except the opponent of that agent)
-        agent2Neighbour = random.choice(agent2.neighbours)
-        agent1Neighbour = random.choice(agent1.neighbours)
-        while agent2Neighbour == agent1:
-            agent2Neighbour = random.choice(agent2.neighbours)
-        while agent1Neighbour == agent2:
-            agent1Neighbour = random.choice(agent1.neighbours)
-
-        # Calculate agents' reputations using social norm, if no history, assign random reputation
-        agent2Reputation = agent2Neighbour.history[agent2]
-        agent1Reputation = agent1Neighbour.history[agent1]
-
-        # If opponent has had no previous interaction, his neighbours will not have any relevant information,
-        # hence assign reputation randomly.
-        if agent2Reputation is None:
-            agent2Reputation = random.randint(0, 1)
-        if agent1Reputation is None:
-            agent1Reputation = random.randint(0, 1)
-
-        return agent1Reputation, agent2Reputation
-
-
-class LrLeNetwork(Network):
-    """Network with Local Reputation and Local Evolution (LrLe)"""
-
-    name = "LrLe"
-
-    def __init__(self, _config):
-        super().__init__(_config)
-        self.name = "LrLe"
-        self.generate(agentType=Agent)
-        self.evolutionaryUpdateSpeed = 0.5
-
+class LocalEvolution:
     def evolutionaryUpdate(self, alpha=10):
         """Local Learning - Out of the subset of agents that are connected to the focal agent, adopt the strategy of the
          best/better performing agent with some probability."""
         for agent in self.agentList:
             agent.updateStrategy(self.config.updateProbability, copyTheBest=True)
 
+
+class GlobalReputation:
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
+        is accessible to every other agent in the population."""
+        return agent1.currentReputation, agent2.currentReputation
+
     def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-        """Given the agents, their reputations, and their moves, update their personal reputations (the reputation they
-        use for themselves for all of their interactions)."""
+        """Assign reputations following an interaction with each agent's globally known reputation and not the
+        calculated reputation as default."""
 
-        agent1PersonalReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2Reputation,
-                                                                    agent1Move)
-        agent2PersonalReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1Reputation,
-                                                                    agent2Move)
+        agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation,
+                                                               agent1Move)
+        agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation,
+                                                               agent2Move)
 
-        agent1.updatePersonalReputation(agent1PersonalReputation)
-        agent2.updatePersonalReputation(agent2PersonalReputation)
+        agent1.updatePersonalReputation(agent1NewReputation)
+        agent2.updatePersonalReputation(agent2NewReputation)
 
+
+class LocalReputation:
     def getOpponentsReputation(self, agent1, agent2):
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
         accessible only to neighbours of that agent."""
@@ -552,4 +486,50 @@ class LrLeNetwork(Network):
 
         return agent1Reputation, agent2Reputation
 
-# TODO Check difference between updateInteractions and updateReputations
+    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        """Given the agents, their reputations, and their moves, update their personal reputations (the reputation they
+        use for themselves for all of their interactions)."""
+
+        agent1PersonalReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2Reputation,
+                                                                    agent1Move)
+        agent2PersonalReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1Reputation,
+                                                                    agent2Move)
+
+        agent1.updatePersonalReputation(agent1PersonalReputation)
+        agent2.updatePersonalReputation(agent2PersonalReputation)
+
+
+class GrGeNetwork(GlobalReputation, GlobalEvolution, Network):
+    """Network with Global Reputation and Global Evolution"""
+
+    name = "GrGe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        if self.config.density != 1:
+            self.config.density = 1
+        self.createNetwork(agentType=GrGe_Agent)
+
+
+class LrGeNetwork(LocalReputation, GlobalEvolution, Network):
+    """Network with Local Reputation and Global Evolution (LrGe)"""
+
+    name = "LrGe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.name = "LrGe"
+        self.generate(agentType=LrGe_Agent)
+
+
+class LrLeNetwork(LocalReputation, LocalEvolution, Network):
+    """Network with Local Reputation and Local Evolution (LrLe)"""
+
+    name = "LrLe"
+
+    def __init__(self, _config):
+        super().__init__(_config)
+        self.name = "LrLe"
+        self.generate(agentType=Agent)
+        self.evolutionaryUpdateSpeed = 0.5
+
