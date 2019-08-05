@@ -79,30 +79,40 @@ class Network:
         connected."""
         return 2 * np.log(self.config.size) / self.config.size
 
+    def createNetwork(self, agentType):
+        """Method (of some network structure) must be implemented in all sub-classes."""
+        raise NotImplementedError
+
     def generate(self, agentType):
         """Regenerate network until """
         if self.config.density < self.getSparsityParameter():
-            raise Exception("Density too low for network to be connected. Exiting.")
+            raise Exception(f"Density ({self.config.density} < {self.getSparsityParameter()}) too low for network to "
+                            f"be connected. Exiting.")
 
         Strategy.reset()
         self.createNetwork(agentType)
-
+        print(self)
         attempts = 0
         maxAttempts = 5
-        while not self.hasMinTwoDegree() and attempts < maxAttempts:
-            # TODO Recheck logic here, are we consistently getting network to satisfy minimum 2 neighbours constraints?
+        while self.getMinDegree() < 2:
+
+            attempts += 1
+            # logging.error(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+            print(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+
             # Reset network
             Strategy.reset()
             self.agentList = []
             self.createNetwork(agentType)
+            print(self)
 
-            attempts += 1
-            logging.error(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
-            numberOfUnconnectedAgents = 0
+            invalidAgentCount = 0
             for agent in self.agentList:
-                if len(agent.neighbours) == 0:
-                    numberOfUnconnectedAgents += 1
-            logging.error(f"{numberOfUnconnectedAgents} disconnected agents.")
+                if len(agent.neighbours) < 2:
+                    invalidAgentCount += 1
+            # logging.error(f"{numberOfUnconnectedAgents} disconnected agents.")
+            if invalidAgentCount > 0:
+                print(f"{invalidAgentCount} invalid agents.")
 
         if attempts == maxAttempts:
             logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
@@ -228,35 +238,6 @@ class Network:
             for key, _ in censusCopy.items():
                 censusCopy[key] /= size
             return censusCopy
-
-    def createNetwork(self, agentType):
-        """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
-
-        strategyDistribution = self.getStrategyCounts()
-
-        # Check for incorrect parameters
-        if len(strategyDistribution) != self.config.size:
-            agentCount = self.config.population.proportion * self.config.size
-            raise Exception(f"The initial proportion of agents given running the main strategy must be such that the"
-                            f" corresponding number of agents is a whole number (we cannot have {agentCount} agents!).")
-
-        for agentID in range(self.config.size):
-            randomIDIndex = random.randint(0, len(strategyDistribution) - 1)
-            self.agentList.append(agentType(_id=agentID, _strategy=strategyDistribution[randomIDIndex]))
-            strategyDistribution.pop(randomIDIndex)
-
-        for agentID1 in range(self.config.size):
-            for agentID2 in range(agentID1 + 1, self.config.size):
-                if agentID1 != agentID2:
-                    r = random.random()
-                    if r < self.config.density:
-                        if self.agentList[agentID2] not in self.agentList[agentID1].neighbours:
-                            self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
-                        if self.agentList[agentID1] not in self.agentList[agentID2].neighbours:
-                            self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
-
-        for agent in self.agentList:
-            agent.initialiseHistory()
 
     def getOpponentsReputation(self, agent1, agent2):
         """Must be implemented through the relevant network type. Can be Global or Local."""
@@ -499,7 +480,39 @@ class LocalReputation:
         agent2.updatePersonalReputation(agent2PersonalReputation)
 
 
-class GrGeNetwork(GlobalReputation, GlobalEvolution, Network):
+class ErdosRenyi:
+    """Generate an Erdos-Renyi Random Network with density lambda."""
+    def createNetwork(self, agentType):
+        """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
+
+        strategyDistribution = self.getStrategyCounts()
+
+        # Check for incorrect parameters
+        if len(strategyDistribution) != self.config.size:
+            agentCount = self.config.population.proportion * self.config.size
+            raise Exception(f"The initial proportion of agents given running the main strategy must be such that the"
+                            f" corresponding number of agents is a whole number (we cannot have {agentCount} agents!).")
+
+        for agentID in range(self.config.size):
+            randomIDIndex = random.randint(0, len(strategyDistribution) - 1)
+            self.agentList.append(agentType(_id=agentID, _strategy=strategyDistribution[randomIDIndex]))
+            strategyDistribution.pop(randomIDIndex)
+
+        for agentID1 in range(self.config.size):
+            for agentID2 in range(agentID1 + 1, self.config.size):
+                if agentID1 != agentID2:
+                    r = random.random()
+                    if r < self.config.density:
+                        if self.agentList[agentID2] not in self.agentList[agentID1].neighbours:
+                            self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
+                        if self.agentList[agentID1] not in self.agentList[agentID2].neighbours:
+                            self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
+
+        for agent in self.agentList:
+            agent.initialiseHistory()
+
+
+class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     """Network with Global Reputation and Global Evolution"""
 
     name = "GrGe"
@@ -508,10 +521,10 @@ class GrGeNetwork(GlobalReputation, GlobalEvolution, Network):
         super().__init__(_config)
         if self.config.density != 1:
             self.config.density = 1
-        self.createNetwork(agentType=GrGe_Agent)
+        self.generate(agentType=GrGe_Agent)
 
 
-class LrGeNetwork(LocalReputation, GlobalEvolution, Network):
+class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
     """Network with Local Reputation and Global Evolution (LrGe)"""
 
     name = "LrGe"
@@ -522,7 +535,7 @@ class LrGeNetwork(LocalReputation, GlobalEvolution, Network):
         self.generate(agentType=LrGe_Agent)
 
 
-class LrLeNetwork(LocalReputation, LocalEvolution, Network):
+class LrLeNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
     """Network with Local Reputation and Local Evolution (LrLe)"""
 
     name = "LrLe"
@@ -531,5 +544,6 @@ class LrLeNetwork(LocalReputation, LocalEvolution, Network):
         super().__init__(_config)
         self.name = "LrLe"
         self.generate(agentType=Agent)
-        self.evolutionaryUpdateSpeed = 0.5
+
+
 

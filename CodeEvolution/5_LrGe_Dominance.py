@@ -26,7 +26,7 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeNetwork, defaultConfig=default, repeats=repeats,
                        variable='population', values=popsD)
         E.showExperiments()
-        E.run(display=True)
+        E.run(export=True)
 
         """All-C versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
                 ten time-steps on average."""
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         E2 = Experiment(networkType=LrGeNetwork, defaultConfig=default, repeats=repeats,
                         variable='population', values=popsC)
         E2.showExperiments()
-        E2.run(display=True)
+        E2.run(export=True)
 
     # PLOTS
 
