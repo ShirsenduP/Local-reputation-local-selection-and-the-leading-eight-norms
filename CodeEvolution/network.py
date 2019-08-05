@@ -7,6 +7,7 @@ import numpy as np
 
 from collections import deque
 from matplotlib import pyplot as plt
+from scipy import stats
 
 from CodeEvolution.agent import Agent, GrGe_Agent, LrGe_Agent
 from CodeEvolution.config import Config
@@ -36,11 +37,16 @@ class Network:
         self.dilemma = config.socialDilemma
         logging.debug(f"Network Parameters: \t{self.__dict__}")
 
+        # Networkx Attributes
+        self.adjMatrix = None
+        self.nxGraph = None
+        self.modeDegree = None
+
     def plotGraph(self):
         arr = self.toNumpyArray()
         G = nx.from_numpy_array(arr)
         plt.subplot()
-        nx.draw(G)
+        nx.draw(G, with_labels=True)
         plt.show()
 
     def toNumpyArray(self):
@@ -522,13 +528,49 @@ class ErdosRenyi:
             agent.initialiseHistory()
 
 
+class RandomRegularLattice:
+    """Generate a random d-regular lattice where each node has exactly d neighbouring nodes."""
+    def createNetwork(self, agentType):
+
+        # Generate using networkx algorithms, the graph and adjacency matrix
+        degree = self.config.degree
+        size = self.config.size
+        self.nxGraph = nx.random_regular_graph(degree, n=size)
+        self.adjMatrix = nx.to_numpy_array(self.nxGraph)
+        self.name = f"Regular {degree}-degree graph"
+        logging.info(f"{self.name} network initialised with adjacency matrix.")
+
+        # Create agents
+        strategyDistribution = self.getStrategyCounts()
+        for i in range(size):
+            randomStrategyID = random.choice(strategyDistribution)
+            strategyDistribution.remove(randomStrategyID)
+            self.agentList.append(agentType(_id=i, _strategy=randomStrategyID))
+
+        # Assign neighbours
+        M = self.adjMatrix
+        for i in range(size):
+            for j in range(size):
+                if int(M[i][j]) is 0:
+                    continue
+                else:
+                    if self.agentList[j] not in self.agentList[i].neighbours:
+                        self.agentList[i].neighbours.append(self.agentList[j])
+                        self.agentList[j].neighbours.append(self.agentList[i])
+
+        for agent in self.agentList:
+            agent.initialiseHistory()
+
+        agentDegrees = self.adjMatrix.sum(axis=0)
+        self.modeDegree = stats.mode(agentDegrees)[0][0]
+
+
 class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     """Network with Global Reputation and Global Evolution"""
 
-    name = "GrGe"
-
     def __init__(self, _config=None):
         super().__init__(_config)
+        self.name = "GrGe"
         if self.config.density != 1:
             self.config.density = 1
         self.generate(agentType=GrGe_Agent)
@@ -536,8 +578,6 @@ class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
 
 class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
     """Network with Local Reputation and Global Evolution (LrGe)"""
-
-    name = "LrGe"
 
     def __init__(self, _config=None):
         super().__init__(_config)
@@ -548,12 +588,23 @@ class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
 class LrLeNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
     """Network with Local Reputation and Local Evolution (LrLe)"""
 
-    name = "LrLe"
-
-    def __init__(self, _config):
+    def __init__(self, _config=None):
         super().__init__(_config)
         self.name = "LrLe"
         self.generate(agentType=Agent)
 
 
+class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
+    """Random d-regular lattice with Global Reputation and Global Evolution."""
 
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.name = "LrGeRRL"
+        self.generate(agentType=LrGe_Agent)
+
+
+if __name__ == '__main__':
+    C = Config(sparseDensity=True, degree=4, size=20)
+    N = LrGeRRLNetwork(C)
+    print(N)
+    N.plotGraph()

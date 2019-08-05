@@ -22,7 +22,8 @@ class Config:
                  updateProbability: float = 0.1,
                  delta: float = 0.5,
                  mutationProbability : float = 1,
-                 sparseDensity : bool = False) -> None:
+                 sparseDensity : bool = False,
+                 degree : int = 3) -> None:
 
         # TODO Validation checks (check validator class, should be able to just copy over)
         self.size = size
@@ -39,6 +40,7 @@ class Config:
             self.density = 2*np.log(size)/size
         else:
             self.density = densities
+        self.degree = degree
 
         if self.population.proportion + self.mutant.proportion != 1:
             total = self.population.proportion + self.mutant.proportion

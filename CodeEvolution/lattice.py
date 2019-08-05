@@ -42,7 +42,7 @@ class Lattice(Network):
 
     def makeRegular(self, degree):
         """Using the networkx algorithms, get the adjacency matrix for a d-regular random graph."""
-        self.nxGraph = nx.random_regular_graph(degree, n=self.config.size)
+        self.nxGraph = nx.random_regular_graph(self.config.degree, n=self.config.size)
         self.adjMatrix = nx.to_numpy_array(self.nxGraph)
         self.name = f"Regular {degree}-degree graph"
         logging.info(f"{self.name} network initialised with adjacency matrix.")
