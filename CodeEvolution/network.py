@@ -361,6 +361,13 @@ class Network:
     def grabSnapshot(self):
         self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
 
+    def getAgentWithID(self, id):
+        """Return a reference to the agent object in the network with the same id # given."""
+        for agent in self.agentList:
+            if agent.id == id:
+                return agent
+
+
     def __str__(self):
         s = ""
         for agent in self.agentList:
@@ -435,24 +442,27 @@ class LocalReputation:
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
         accessible only to neighbours of that agent."""
 
-        maxChecks = self.config.size
-        check1 = 0
-        check2 = 0
-
         # Choose neighbour of each agent (except the opponent of that agent)
-        agent2Neighbour = random.choice(agent2.neighbours)
-        agent1Neighbour = random.choice(agent1.neighbours)
+        agent2Neighbours = [agent.id for agent in agent2.neighbours]
+        agent1Neighbours = [agent.id for agent in agent1.neighbours]
 
-        while agent2Neighbour == agent1 and check1 < maxChecks:
-            agent2Neighbour = random.choice(agent2.neighbours)
-            check1 += 1
-        while agent1Neighbour == agent2 and check2 < maxChecks:
-            agent1Neighbour = random.choice(agent1.neighbours)
-            check2 += 1
+        if agent2.id in agent1Neighbours:
+            logging.debug("before: {}".format(agent1Neighbours))
+            agent1Neighbours.remove(agent2.id)
+            logging.debug("after: {}".format(agent1Neighbours))
+        if agent1.id in agent2Neighbours:
+            logging.debug("before: {}".format(agent2Neighbours))
+            agent2Neighbours.remove(agent1.id)
+            logging.debug("after: {}".format(agent2Neighbours))
 
-        if check1 == maxChecks or check2 == maxChecks:
-            logging.warning(f"{agent1.id} or {agent2.id} in this network cannot find a neighbour of his opponent that "
-                            f"is not himself.")
+        agent2NeighbourID = random.choice(agent2Neighbours)
+        agent1NeighbourID = random.choice(agent1Neighbours)
+
+        agent2Neighbour = self.getAgentWithID(agent2NeighbourID)
+        agent1Neighbour = self.getAgentWithID(agent1NeighbourID)
+
+        if agent2Neighbour == agent1 or agent1Neighbour == agent2:
+            logging.critical(f"An agent is considering himself as a neighbour of his opponent. This is NOT ALLOWED!")
 
         # Calculate agents' reputations using social norm, if no history, assign random reputation
         agent2Reputation = agent2Neighbour.history[agent2]
