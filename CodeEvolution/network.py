@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from scipy import stats
 
 from CodeEvolution.agent import Agent, GrGe_Agent, LrGe_Agent
-from CodeEvolution.config import Config
+from CodeEvolution.config import Config, State
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
@@ -97,7 +97,7 @@ class Network:
 
         Strategy.reset()
         self.createNetwork(agentType)
-        print(self)
+        # print(self)
         attempts = 0
         maxAttempts = 5
         while self.getMinDegree() < 2:
@@ -604,7 +604,11 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
 
 
 if __name__ == '__main__':
-    C = Config(sparseDensity=True, degree=4, size=20)
-    N = LrGeRRLNetwork(C)
-    print(N)
-    N.plotGraph()
+    C = Config(degree=4, size=500, initialState=State(mainID=0, proportion=1, mutantID=8), maxPeriods=10000,
+               sparseDensity=True)
+    # N = LrGeRRLNetwork(C)
+    N = LrGeNetwork(C)
+    N.runSimulation()
+    cen = N.results.exportCensus()
+    print(cen)
+
