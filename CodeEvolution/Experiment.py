@@ -86,10 +86,12 @@ class Experiment:
         #     logging.critical("Census thinks there are more agents than there are.")
         resultsUtils = N.results.exportUtilities()
         resultsMutations = N.results.exportMutations()
-        resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils, resultsMutations], axis=1, sort=False)
-        # resultsFull = pd.concat([resultsCensus], axis=1, sort=False)
+        resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils, resultsMutations], axis=1, sort=False)
+        resultsFull['# of Mutants Added'].iloc[-1:] = resultsFull['# of Mutants Added'].sum()
         if displayFull:
             print(resultsFull)
+        # Rename index
+        resultsFull.index.names = ['Tmax']
         return resultsFull.tail(1)
 
     def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
@@ -104,11 +106,6 @@ class Experiment:
         print("\nRunning ", experimentName, 50 * "=")
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
-
-        if display:
-            # pass
-            print("Default Parameters:\t")
-            print(self.default)
 
         for exp in trange(len(self.experiments), leave=False):
             if display:
@@ -125,10 +122,13 @@ class Experiment:
             #     singleTest.to_csv(f"{exp}", mode='w')
 
             if display:
+                print()
                 print(singleTest)
                 print()
 
             if cluster:
+                # If multiple experiments run from the same script, the data files will overwrite previous files with
+                # same names
                 Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
             elif export:
                 Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)

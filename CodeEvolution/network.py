@@ -17,7 +17,8 @@ from CodeEvolution.strategy import Strategy
 
 
 class Network:
-    """Base network class implementing all the ubiquitous simulation methods. """
+    """Base network class containing all the general functionality used in all models. This class should not be
+    directly instantiated. """
 
     def __init__(self, config=Config(), agentType=Agent):
         self.config = config
@@ -103,14 +104,14 @@ class Network:
         while self.getMinDegree() < 2:
 
             attempts += 1
-            # logging.error(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
-            print(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+            logging.debug(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+            # print(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
 
             # Reset network
             Strategy.reset()
             self.agentList = []
             self.createNetwork(agentType)
-            print(self)
+            # print(self)
 
             invalidAgentCount = 0
             for agent in self.agentList:
@@ -118,7 +119,7 @@ class Network:
                     invalidAgentCount += 1
             # logging.error(f"{numberOfUnconnectedAgents} disconnected agents.")
             if invalidAgentCount > 0:
-                print(f"{invalidAgentCount} invalid agents.")
+                logging.info(f"{invalidAgentCount} invalid agents.")
 
         if attempts == maxAttempts:
             logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
@@ -373,7 +374,6 @@ class Network:
             if agent.id == id:
                 return agent
 
-
     def __str__(self):
         s = ""
         for agent in self.agentList:
@@ -382,6 +382,9 @@ class Network:
 
 
 class GlobalEvolution:
+    """This class supplies the global evolutionary update to any subclass that inherits from it. This class should
+    not be directly instantiated."""
+
     def evolutionaryUpdate(self, alpha=10):
         """Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the
          utilities of all strategies."""
@@ -498,6 +501,7 @@ class LocalReputation:
 
 class ErdosRenyi:
     """Generate an Erdos-Renyi Random Network with density lambda."""
+
     def createNetwork(self, agentType):
         """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
 
@@ -530,6 +534,7 @@ class ErdosRenyi:
 
 class RandomRegularLattice:
     """Generate a random d-regular lattice where each node has exactly d neighbouring nodes."""
+
     def createNetwork(self, agentType):
 
         # Generate using networkx algorithms, the graph and adjacency matrix
@@ -566,40 +571,44 @@ class RandomRegularLattice:
 
 
 class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
-    """Network with Global Reputation and Global Evolution"""
+    """Erdos Renyi Network with Global Reputation and Global Evolution"""
+
+    name = "GrGe"
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.name = "GrGe"
         if self.config.density != 1:
             self.config.density = 1
         self.generate(agentType=GrGe_Agent)
 
 
 class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
-    """Network with Local Reputation and Global Evolution (LrGe)"""
+    """Erdos Renyi Network with Local Reputation and Global Evolution (LrGe)"""
+
+    name = "LrGe"
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.name = "LrGe"
         self.generate(agentType=LrGe_Agent)
 
 
 class LrLeNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
-    """Network with Local Reputation and Local Evolution (LrLe)"""
+    """Erdos Renyi Network with Local Reputation and Local Evolution (LrLe)"""
+
+    name = "LrLe"
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.name = "LrLe"
         self.generate(agentType=Agent)
 
 
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
     """Random d-regular lattice with Global Reputation and Global Evolution."""
 
+    name = "LrGeRRL"
+
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.name = "LrGeRRL"
         self.generate(agentType=LrGe_Agent)
 
 
@@ -611,4 +620,3 @@ if __name__ == '__main__':
     N.runSimulation()
     cen = N.results.exportCensus()
     print(cen)
-

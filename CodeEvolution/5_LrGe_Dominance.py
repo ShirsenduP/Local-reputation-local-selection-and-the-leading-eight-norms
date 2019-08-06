@@ -13,7 +13,7 @@ if __name__ == '__main__':
     """Test 5 - MAIN RESULT -> Testing dominance of Leading 8 on sparse network with LrGe setup"""
 
     rerunSimulations = True
-    repeats = 100
+    repeats = 10
 
     if rerunSimulations:
 
@@ -26,7 +26,7 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeNetwork, defaultConfig=default, repeats=repeats,
                        variable='population', values=popsD)
         E.showExperiments()
-        E.run(export=True)
+        E.run(display=True)
 
         """All-C versus all the populations, initially weighted at 0/100 and mutations occurring randomly once every 
                 ten time-steps on average."""
@@ -34,19 +34,19 @@ if __name__ == '__main__':
         E2 = Experiment(networkType=LrGeNetwork, defaultConfig=default, repeats=repeats,
                         variable='population', values=popsC)
         E2.showExperiments()
-        E2.run(export=True)
+        E2.run(display=True)
 
     # PLOTS
 
-    Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-D',
-                                dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
-    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs '
-                                             'All-D_',
-                                       dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
-    Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-C',
-                                dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
-    Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs '
-                                             'All-C_',
-                                       dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
-
+    # Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-D',
+    #                             dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
+    # Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs '
+    #                                          'All-D_',
+    #                                    dataPath='LrGe_population_2019-07-18 21:35:02', mutantID=8, save=True)
+    # Evaluator.plotAllStrategies(title='Leading Eight Strategies with Local Reputation and Global Evolution vs All-C',
+    #                             dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
+    # Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Global Evolution vs '
+    #                                          'All-C_',
+    #                                    dataPath='LrGe_population_2019-07-18 23:24:50', mutantID=9, save=True)
+    #
 

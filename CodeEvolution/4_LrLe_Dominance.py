@@ -12,7 +12,7 @@ logging.basicConfig(filename='debug.log', filemode='w', level=logging.CRITICAL)
 if __name__ == '__main__':
     """Test 4 - MAIN RESULT -> Testing dominance of Leading 8 on sparse network with LrLe setup"""
 
-    rerunSimulations = False
+    rerunSimulations = True
 
     if rerunSimulations:
 
