@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.agent import LrGe_Agent
 from CodeEvolution.config import Config, State
-from CodeEvolution.network import LrGeNetwork
+from CodeEvolution.models import LrGeNetwork
 
 parser = ArgumentParser()
 parser.add_argument('index', type=int)

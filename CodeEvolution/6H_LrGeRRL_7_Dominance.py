@@ -1,4 +1,4 @@
-from CodeEvolution.network import LrGeRRLNetwork
+from CodeEvolution.models import LrGeRRLNetwork
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 

@@ -1,7 +1,7 @@
 import random
 import logging
 
-from CodeEvolution.network import LocalEvolution, GlobalEvolution
+from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.strategy import Strategy
 
 

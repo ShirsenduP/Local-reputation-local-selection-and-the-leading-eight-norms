@@ -4,7 +4,8 @@ import logging
 from scipy import stats
 import numpy as np
 
-from CodeEvolution.network import Network, LrGeNetwork
+from CodeEvolution.network import Network
+from CodeEvolution.models import LrGeNetwork
 from CodeEvolution.agent import Agent
 from CodeEvolution.config import Config, State
 

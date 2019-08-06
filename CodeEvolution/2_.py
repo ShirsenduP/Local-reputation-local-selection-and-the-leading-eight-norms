@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.network import GrGeNetwork, LrGeNetwork, LrLeNetwork
+from CodeEvolution.models import GrGeNetwork, LrGeNetwork, LrLeNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population

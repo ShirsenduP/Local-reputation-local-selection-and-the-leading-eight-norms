@@ -8,7 +8,7 @@ import pandas as pd
 from tqdm import trange
 
 from CodeEvolution import Strategy
-from CodeEvolution.network import GrGeNetwork, LrLeNetwork, LrGeNetwork
+from CodeEvolution.models import GrGeNetwork, LrGeNetwork, LrLeNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.config import Population, State
 from CodeEvolution.results import Results
