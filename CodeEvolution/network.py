@@ -4,19 +4,21 @@ import logging
 
 import networkx as nx
 import numpy as np
-from tqdm import trange
 
 from collections import deque
 from matplotlib import pyplot as plt
+from scipy import stats
 
-from CodeEvolution.agent import Agent
-from CodeEvolution.config import Config
+from CodeEvolution.agent import Agent, GrGe_Agent, LrGe_Agent
+from CodeEvolution.config import Config, State
 from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
 
 
 class Network:
+    """Base network class containing all the general functionality used in all models. This class should not be
+    directly instantiated. """
 
     def __init__(self, config=Config(), agentType=Agent):
         self.config = config
@@ -36,11 +38,16 @@ class Network:
         self.dilemma = config.socialDilemma
         logging.debug(f"Network Parameters: \t{self.__dict__}")
 
+        # Networkx Attributes
+        self.adjMatrix = None
+        self.nxGraph = None
+        self.modeDegree = None
+
     def plotGraph(self):
         arr = self.toNumpyArray()
         G = nx.from_numpy_array(arr)
         plt.subplot()
-        nx.draw(G)
+        nx.draw(G, with_labels=True)
         plt.show()
 
     def toNumpyArray(self):
@@ -70,39 +77,49 @@ class Network:
         actualConnections /= 2
 
         n = self.config.size
-        potentialConnections = 0.5*n*(n-1)
+        potentialConnections = 0.5 * n * (n - 1)
 
-        return actualConnections/potentialConnections
+        return actualConnections / potentialConnections
 
     def getSparsityParameter(self):
         """Return the minimum probability p for the G(n,p) Erdos-Renyi Random Network model for the network to be
         connected."""
-        return 2*np.log(self.config.size)/self.config.size
+        return 2 * np.log(self.config.size) / self.config.size
+
+    def createNetwork(self, agentType):
+        """Method (of some network structure) must be implemented in all sub-classes."""
+        raise NotImplementedError
 
     def generate(self, agentType):
         """Regenerate network until """
         if self.config.density < self.getSparsityParameter():
-            raise Exception("Density too low for network to be connected. Exiting.")
+            raise Exception(f"Density ({self.config.density} < {self.getSparsityParameter()}) too low for network to "
+                            f"be connected. Exiting.")
 
         Strategy.reset()
         self.createNetwork(agentType)
-
+        # print(self)
         attempts = 0
         maxAttempts = 5
-        while not self.hasMinTwoDegree() and attempts < maxAttempts:
-            # TODO Recheck logic here, are we consistently getting network to satisfy minimum 2 neighbours constraints?
+        while self.getMinDegree() < 2:
+
+            attempts += 1
+            logging.debug(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+            # print(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+
             # Reset network
             Strategy.reset()
             self.agentList = []
             self.createNetwork(agentType)
+            # print(self)
 
-            attempts += 1
-            logging.error(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
-            numberOfUnconnectedAgents = 0
+            invalidAgentCount = 0
             for agent in self.agentList:
-                if len(agent.neighbours) == 0:
-                    numberOfUnconnectedAgents += 1
-            logging.error(f"{numberOfUnconnectedAgents} disconnected agents.")
+                if len(agent.neighbours) < 2:
+                    invalidAgentCount += 1
+            # logging.error(f"{numberOfUnconnectedAgents} disconnected agents.")
+            if invalidAgentCount > 0:
+                logging.info(f"{invalidAgentCount} invalid agents.")
 
         if attempts == maxAttempts:
             logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
@@ -229,35 +246,6 @@ class Network:
                 censusCopy[key] /= size
             return censusCopy
 
-    def createNetwork(self, agentType):
-        """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
-
-        strategyDistribution = self.getStrategyCounts()
-
-        # Check for incorrect parameters
-        if len(strategyDistribution) != self.config.size:
-            agentCount = self.config.population.proportion * self.config.size
-            raise Exception(f"The initial proportion of agents given running the main strategy must be such that the"
-                            f" corresponding number of agents is a whole number (we cannot have {agentCount} agents!).")
-
-        for agentID in range(self.config.size):
-            randomIDIndex = random.randint(0, len(strategyDistribution) - 1)
-            self.agentList.append(agentType(_id=agentID, _strategy=strategyDistribution[randomIDIndex]))
-            strategyDistribution.pop(randomIDIndex)
-
-        for agentID1 in range(self.config.size):
-            for agentID2 in range(agentID1 + 1, self.config.size):
-                if agentID1 != agentID2:
-                    r = random.random()
-                    if r < self.config.density:
-                        if self.agentList[agentID2] not in self.agentList[agentID1].neighbours:
-                            self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
-                        if self.agentList[agentID1] not in self.agentList[agentID2].neighbours:
-                            self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
-
-        for agent in self.agentList:
-            agent.initialiseHistory()
-
     def getOpponentsReputation(self, agent1, agent2):
         """Must be implemented through the relevant network type. Can be Global or Local."""
         raise NotImplementedError
@@ -311,18 +299,6 @@ class Network:
 
         agent1.broadcastReputation(agent1NewRep, self.config.delta)
         agent2.broadcastReputation(agent2NewRep, self.config.delta)
-
-    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-        """Assign reputations following an interaction with each agent's globally known reputation and not the
-        calculated reputation as default."""
-
-        agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation,
-                                                               agent1Move)
-        agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation,
-                                                               agent2Move)
-
-        agent1.updatePersonalReputation(agent1NewReputation)
-        agent2.updatePersonalReputation(agent2NewReputation)
 
     def showHistory(self):
         for agent in self.agentList:
@@ -392,6 +368,12 @@ class Network:
     def grabSnapshot(self):
         self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
 
+    def getAgentWithID(self, id):
+        """Return a reference to the agent object in the network with the same id # given."""
+        for agent in self.agentList:
+            if agent.id == id:
+                return agent
+
     def __str__(self):
         s = ""
         for agent in self.agentList:
@@ -399,21 +381,242 @@ class Network:
         return s
 
 
-if __name__ == "__main__":
-    s = 2*np.log(500)/500
-    # print(s)
-    C = Config(densities=s)
-    # N = Network(C)
-    # N.generate(Agent)
-    # print(N.getMinDegree())
-    # print(N.hasMinTwoDegree())
+class GlobalEvolution:
+    """This class supplies the global evolutionary update to any subclass that inherits from it. This class should
+    not be directly instantiated."""
 
-    d = 0
-    count = 1000
-    for _ in trange(count):
-        N = Network(C)
-        N.generate(Agent)
-        if not N.hasMinTwoDegree():
-            print(N.getMinDegree())
-            d += 1
-    print(d/count)
+    def evolutionaryUpdate(self, alpha=10):
+        """Global Evolution - Find the strategy with the highest utility and the proportion of the utility over the
+         utilities of all strategies."""
+
+        strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
+
+        # find strategy with highest utility
+        bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
+
+        # check for strategies with negative utility
+        for strategy, utility in strategyUtils.items():
+            if utility < 0:
+                strategyUtils[strategy] = 0
+
+        # if total utility is zero, no evolutionary update
+        totalUtil = sum(strategyUtils.values())
+        if totalUtil == 0:
+            # print(f"update skipped because at t = {self.currentPeriod} we have {strategyUtils.values()}")
+            return
+
+        # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
+        # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
+        for strategy, _ in strategyUtils.items():
+            strategyUtils[strategy] /= (totalUtil * alpha)
+            # TODO What is the purpose of \alpha?
+
+        # print(f"t = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
+
+        for agent in self.agentList:
+            r = random.random()
+            if r < strategyUtils[bestStrategy]:
+                agent.currentStrategy.changeStrategy(bestStrategy)
+
+
+class LocalEvolution:
+    def evolutionaryUpdate(self, alpha=10):
+        """Local Learning - Out of the subset of agents that are connected to the focal agent, adopt the strategy of the
+         best/better performing agent with some probability."""
+        for agent in self.agentList:
+            agent.updateStrategy(self.config.updateProbability, copyTheBest=True)
+
+
+class GlobalReputation:
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
+        is accessible to every other agent in the population."""
+        return agent1.currentReputation, agent2.currentReputation
+
+    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        """Assign reputations following an interaction with each agent's globally known reputation and not the
+        calculated reputation as default."""
+
+        agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation,
+                                                               agent1Move)
+        agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation,
+                                                               agent2Move)
+
+        agent1.updatePersonalReputation(agent1NewReputation)
+        agent2.updatePersonalReputation(agent2NewReputation)
+
+
+class LocalReputation:
+    def getOpponentsReputation(self, agent1, agent2):
+        """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
+        accessible only to neighbours of that agent."""
+
+        # Choose neighbour of each agent (except the opponent of that agent)
+        agent2Neighbours = [agent.id for agent in agent2.neighbours]
+        agent1Neighbours = [agent.id for agent in agent1.neighbours]
+
+        if agent2.id in agent1Neighbours:
+            logging.debug("before: {}".format(agent1Neighbours))
+            agent1Neighbours.remove(agent2.id)
+            logging.debug("after: {}".format(agent1Neighbours))
+        if agent1.id in agent2Neighbours:
+            logging.debug("before: {}".format(agent2Neighbours))
+            agent2Neighbours.remove(agent1.id)
+            logging.debug("after: {}".format(agent2Neighbours))
+
+        agent2NeighbourID = random.choice(agent2Neighbours)
+        agent1NeighbourID = random.choice(agent1Neighbours)
+
+        agent2Neighbour = self.getAgentWithID(agent2NeighbourID)
+        agent1Neighbour = self.getAgentWithID(agent1NeighbourID)
+
+        if agent2Neighbour == agent1 or agent1Neighbour == agent2:
+            logging.critical(f"An agent is considering himself as a neighbour of his opponent. This is NOT ALLOWED!")
+
+        # Calculate agents' reputations using social norm, if no history, assign random reputation
+        agent2Reputation = agent2Neighbour.history[agent2]
+        agent1Reputation = agent1Neighbour.history[agent1]
+
+        # If opponent has had no previous interaction, his neighbours will not have any relevant information,
+        # hence assign reputation randomly.
+        if agent2Reputation is None:
+            agent2Reputation = random.randint(0, 1)
+        if agent1Reputation is None:
+            agent1Reputation = random.randint(0, 1)
+
+        return agent1Reputation, agent2Reputation
+
+    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        """Given the agents, their reputations, and their moves, update their personal reputations (the reputation they
+        use for themselves for all of their interactions)."""
+
+        agent1PersonalReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2Reputation,
+                                                                    agent1Move)
+        agent2PersonalReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1Reputation,
+                                                                    agent2Move)
+
+        agent1.updatePersonalReputation(agent1PersonalReputation)
+        agent2.updatePersonalReputation(agent2PersonalReputation)
+
+
+class ErdosRenyi:
+    """Generate an Erdos-Renyi Random Network with density lambda."""
+
+    def createNetwork(self, agentType):
+        """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
+
+        strategyDistribution = self.getStrategyCounts()
+
+        # Check for incorrect parameters
+        if len(strategyDistribution) != self.config.size:
+            agentCount = self.config.population.proportion * self.config.size
+            raise Exception(f"The initial proportion of agents given running the main strategy must be such that the"
+                            f" corresponding number of agents is a whole number (we cannot have {agentCount} agents!).")
+
+        for agentID in range(self.config.size):
+            randomIDIndex = random.randint(0, len(strategyDistribution) - 1)
+            self.agentList.append(agentType(_id=agentID, _strategy=strategyDistribution[randomIDIndex]))
+            strategyDistribution.pop(randomIDIndex)
+
+        for agentID1 in range(self.config.size):
+            for agentID2 in range(agentID1 + 1, self.config.size):
+                if agentID1 != agentID2:
+                    r = random.random()
+                    if r < self.config.density:
+                        if self.agentList[agentID2] not in self.agentList[agentID1].neighbours:
+                            self.agentList[agentID1].neighbours.append(self.agentList[agentID2])
+                        if self.agentList[agentID1] not in self.agentList[agentID2].neighbours:
+                            self.agentList[agentID2].neighbours.append(self.agentList[agentID1])
+
+        for agent in self.agentList:
+            agent.initialiseHistory()
+
+
+class RandomRegularLattice:
+    """Generate a random d-regular lattice where each node has exactly d neighbouring nodes."""
+
+    def createNetwork(self, agentType):
+
+        # Generate using networkx algorithms, the graph and adjacency matrix
+        degree = self.config.degree
+        size = self.config.size
+        self.nxGraph = nx.random_regular_graph(degree, n=size)
+        self.adjMatrix = nx.to_numpy_array(self.nxGraph)
+        self.name = f"Regular {degree}-degree graph"
+        logging.info(f"{self.name} network initialised with adjacency matrix.")
+
+        # Create agents
+        strategyDistribution = self.getStrategyCounts()
+        for i in range(size):
+            randomStrategyID = random.choice(strategyDistribution)
+            strategyDistribution.remove(randomStrategyID)
+            self.agentList.append(agentType(_id=i, _strategy=randomStrategyID))
+
+        # Assign neighbours
+        M = self.adjMatrix
+        for i in range(size):
+            for j in range(size):
+                if int(M[i][j]) is 0:
+                    continue
+                else:
+                    if self.agentList[j] not in self.agentList[i].neighbours:
+                        self.agentList[i].neighbours.append(self.agentList[j])
+                        self.agentList[j].neighbours.append(self.agentList[i])
+
+        for agent in self.agentList:
+            agent.initialiseHistory()
+
+        agentDegrees = self.adjMatrix.sum(axis=0)
+        self.modeDegree = stats.mode(agentDegrees)[0][0]
+
+
+class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
+    """Erdos Renyi Network with Global Reputation and Global Evolution"""
+
+    name = "GrGe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        if self.config.density != 1:
+            self.config.density = 1
+        self.generate(agentType=GrGe_Agent)
+
+
+class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
+    """Erdos Renyi Network with Local Reputation and Global Evolution (LrGe)"""
+
+    name = "LrGe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.generate(agentType=LrGe_Agent)
+
+
+class LrLeNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
+    """Erdos Renyi Network with Local Reputation and Local Evolution (LrLe)"""
+
+    name = "LrLe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.generate(agentType=Agent)
+
+
+class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
+    """Random d-regular lattice with Global Reputation and Global Evolution."""
+
+    name = "LrGeRRL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.generate(agentType=LrGe_Agent)
+
+
+if __name__ == '__main__':
+    C = Config(degree=4, size=500, initialState=State(mainID=0, proportion=1, mutantID=8), maxPeriods=10000,
+               sparseDensity=True)
+    # N = LrGeRRLNetwork(C)
+    N = LrGeNetwork(C)
+    N.runSimulation()
+    cen = N.results.exportCensus()
+    print(cen)

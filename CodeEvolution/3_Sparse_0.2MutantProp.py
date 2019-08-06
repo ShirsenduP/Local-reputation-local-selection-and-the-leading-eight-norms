@@ -2,9 +2,8 @@ import logging
 import numpy as np
 from matplotlib import pyplot as plt
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.GrGe import GrGe_Network
-from CodeEvolution.LrGe import LrGe_Network
-from CodeEvolution.LrLe import LrLe_Network
+from CodeEvolution.network import GrGeNetwork, LrGeNetwork, LrLeNetwork
+
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population
@@ -26,7 +25,7 @@ if __name__ == '__main__':
         """All-D versus all the populations, initially weighted at 20/80."""
 
         default = Config(size=size, mutationProbability=0.1, densities=sparse)
-        E = Experiment(networkType=LrGe_Network, defaultConfig=default, variable='population', values=pops, repeats=1)
+        E = Experiment(networkType=LrGeNetwork, defaultConfig=default, variable='population', values=pops, repeats=1)
         E.showExperiments()
         E.run(display=True)
         # E.run()
@@ -47,7 +46,7 @@ if __name__ == '__main__':
         # """All-C versus all the populations, initially weighted at 10/90."""
         # #
         # default4 = Config(size=size, densities=sparseNetworkDensity, mutant=Population(ID=9, Proportion=0.2))
-        # E4 = Experiment(name='GrGe_All-C_Sparse_20:80_', networkType=GrGe_Network, defaultConfig=default4,
+        # E4 = Experiment(name='GrGe_All-C_Sparse_20:80_', networkType=GrGeNetwork, defaultConfig=default4,
         #                 variable='population', values=pops,
         #                 repeats=reps)
         # E4.run(export=True)

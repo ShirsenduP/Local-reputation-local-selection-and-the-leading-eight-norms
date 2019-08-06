@@ -3,12 +3,12 @@ import os
 import time
 import copy
 
+import numpy as np
 import pandas as pd
 from tqdm import trange
 
 from CodeEvolution import Strategy
-from CodeEvolution.GrGe import GrGe_Network
-from CodeEvolution.LrLe import LrLe_Network
+from CodeEvolution.network import GrGeNetwork, LrLeNetwork, LrGeNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.config import Population, State
 from CodeEvolution.results import Results
@@ -39,10 +39,10 @@ class Experiment:
             for i in range(len(self.values)):
                 newConfig = copy.deepcopy(self.default)
                 tests.append(newConfig)
-                setattr(tests[i], 'population', Population(ID=self.values[i][0].ID, proportion=self.values[i][
-                    0].proportion))
-                setattr(tests[i], 'mutant', Population(ID=self.values[i][1].ID, proportion=self.values[i][
-                    1].proportion))
+                setattr(tests[i], 'population',
+                        Population(ID=self.values[i][0].ID, proportion=self.values[i][0].proportion))
+                setattr(tests[i], 'mutant',
+                        Population(ID=self.values[i][1].ID, proportion=self.values[i][1].proportion))
                 setattr(tests[i], 'socialNormID', self.values[i][0].ID)
         else:
             # General Case
@@ -54,6 +54,45 @@ class Experiment:
 
         self.experiments = tuple(tests)
         # print(self.experiments)
+
+    @staticmethod
+    def generateParameterFile(defaultConfig, variable, values, repeats):
+        """Export a parameters file (.txt) for UCL clusters"""
+
+        if None in [variable, values]:
+            raise ValueError("Parameters 'variable' and 'values' must not be None.")
+
+        with open('params.txt', 'w') as f:
+            counter = 0
+            for exp in range(len(values)):
+                for rep in range(repeats):
+                    args = f"{counter:04d} "  # Simulation ID
+                    args += str(variable) + " "
+                    args += str(values[exp]) + "\n"
+                    f.write(args)
+                    counter += 1
+
+        logging.info(f"Parameter file generated in {os.getcwd()}.")
+
+    @staticmethod
+    def simulate(m_exp, networkType, displayFull):
+        N = networkType(m_exp)
+        # print(N)
+        N.runSimulation()
+        resultsActions = N.results.exportActions()
+        resultsCensus = N.results.exportCensus()
+        # print(resultsCensus)
+        # if (resultsCensus>1).any():
+        #     logging.critical("Census thinks there are more agents than there are.")
+        resultsUtils = N.results.exportUtilities()
+        resultsMutations = N.results.exportMutations()
+        resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils, resultsMutations], axis=1, sort=False)
+        resultsFull['# of Mutants Added'].iloc[-1:] = resultsFull['# of Mutants Added'].sum()
+        if displayFull:
+            print(resultsFull)
+        # Rename index
+        resultsFull.index.names = ['Tmax']
+        return resultsFull.tail(1)
 
     def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
@@ -68,30 +107,6 @@ class Experiment:
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
 
-        if display:
-            # pass
-            print("Default Parameters:\t")
-            print(self.default)
-
-        def simulate(m_exp):
-            N = self.networkType(m_exp)
-            # print(N)
-            N.runSimulation()
-            resultsActions = N.results.exportActions()
-            resultsCensus = N.results.exportCensus()
-            # print(resultsCensus)
-            # if (resultsCensus>1).any():
-            #     logging.critical("Census thinks there are more agents than there are.")
-            resultsUtils = N.results.exportUtilities()
-            # resultsMutations = N.results.exportMutations()
-            # resultsFull = pd.concat([resultsActions, resultsCensus, resultsUtils], axis=1, sort=False)
-            resultsFull = pd.concat([resultsCensus], axis=1, sort=False)
-            if displayFull:
-                print(resultsFull)
-            # del N
-
-            return resultsFull.tail(1)
-
         for exp in trange(len(self.experiments), leave=False):
             if display:
                 print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
@@ -99,7 +114,7 @@ class Experiment:
             singleTest = pd.DataFrame()
             for _ in trange(self.repeats, leave=False):
                 Strategy.reset()
-                singleRun = simulate(self.experiments[exp])
+                singleRun = self.simulate(self.experiments[exp], self.networkType, displayFull)
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
                 Strategy.reset()
 
@@ -107,10 +122,13 @@ class Experiment:
             #     singleTest.to_csv(f"{exp}", mode='w')
 
             if display:
+                print()
                 print(singleTest)
                 print()
 
             if cluster:
+                # If multiple experiments run from the same script, the data files will overwrite previous files with
+                # same names
                 Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
             elif export:
                 Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
@@ -122,8 +140,8 @@ class Experiment:
 
     @classmethod
     def generatePopulationList(cls, strategies=tuple(range(8)), proportion=0.9, mutantID=8):
-        """Create a sequential list of Config objects running through each of the strategies defined, with a given
-        proportion and a mutantID."""
+        """Create a sequential list of tuples of population objects running through each of the strategies defined,
+        with a given proportion and a mutantID."""
         listOfStates = []
         mainProp = proportion
         mutantProp = round(1 - proportion, 3)
@@ -134,7 +152,19 @@ class Experiment:
 
 
 if __name__ == '__main__':
-    pass
+    C = Config(initialState=State(0, 1, 8), size=500, sparseDensity=True)
+    pops = Experiment.generatePopulationList(strategies=(range(4),), proportion=1, mutantID=8)
+    E = Experiment(
+        networkType=GrGeNetwork,
+        variable='population',
+        values=pops,
+        defaultConfig=C)
+    E.generateParameterFile(
+        defaultConfig=Config(),
+        variable='density',
+        values=list(np.linspace(0.01, 1, 10)),
+        repeats=10
+        )
 
 # TODO IF FILES ALREADY EXIST IN DIRECTORY, CREATE NEW FOLDER - DO NOT OVERWRITE THIS IS BLOODY ANNOYING
 

@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.LrLe import LrLe_Network
+from CodeEvolution.network import LrLeNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.Experiment import Experiment
 
@@ -12,7 +12,7 @@ logging.basicConfig(filename='debug.log', filemode='w', level=logging.CRITICAL)
 if __name__ == '__main__':
     """Test 4 - MAIN RESULT -> Testing dominance of Leading 8 on sparse network with LrLe setup"""
 
-    rerunSimulations = False
+    rerunSimulations = True
 
     if rerunSimulations:
 
@@ -21,14 +21,14 @@ if __name__ == '__main__':
 
         """All-D versus all strategies, 100/0 initial proportion, expected mutant every 10 time-steps."""
         popsD = Experiment.generatePopulationList(proportion=1, mutantID=8)
-        E = Experiment(networkType=LrLe_Network, defaultConfig=default, repeats=100,
+        E = Experiment(networkType=LrLeNetwork, defaultConfig=default, repeats=100,
                        variable='population', values=popsD)
         E.showExperiments()
         E.run(export=True)
 
         """All-C versus all strategies, 100/0 initial proportion, expected mutant every 10 time-steps."""
         popsC = Experiment.generatePopulationList(proportion=1, mutantID=9)
-        E2 = Experiment(networkType=LrLe_Network, defaultConfig=default, repeats=100,
+        E2 = Experiment(networkType=LrLeNetwork, defaultConfig=default, repeats=100,
                         variable='population', values=popsC)
         E2.showExperiments()
         E2.run(export=True)
