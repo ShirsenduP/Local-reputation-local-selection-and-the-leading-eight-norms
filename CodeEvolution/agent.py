@@ -44,7 +44,8 @@ class Agent:
 
     def summary(self):
         # s = "Summary of Network\n"
-        s = f"Agent {self.id} is currently running strategy {self.currentStrategy} with current reputation {self.currentReputation}"
+        s = f"Agent {self.id} is currently running strategy {self.currentStrategy} with current reputation " \
+            f"{self.currentReputation}"
         return s
 
     def initialiseHistory(self):
@@ -102,6 +103,7 @@ class LrLe_Agent(LocalEvolution, Agent):
 
     def __int__(self, _id, _strategy):
         super().__init__(_id, _strategy)
+
 
 class GrLe_Agent(LocalEvolution, Agent):
 

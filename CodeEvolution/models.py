@@ -1,7 +1,8 @@
 from CodeEvolution import Network
 from CodeEvolution.agent import GrGe_Agent, LrGe_Agent, LrLe_Agent
 from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice
-from CodeEvolution.evolution import GlobalEvolution, LocalEvolution, GlobalReputation, LocalReputation
+from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
+from CodeEvolution.reputation import GlobalReputation, LocalReputation
 
 
 class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
