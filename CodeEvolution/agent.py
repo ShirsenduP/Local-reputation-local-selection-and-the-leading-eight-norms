@@ -1,10 +1,14 @@
 import random
 import logging
 
+from CodeEvolution.network import LocalEvolution, GlobalEvolution
 from CodeEvolution.strategy import Strategy
 
 
 class Agent:
+    """Base agent class containing all the general functionality used in all models. This class should not be
+    directly instantiated. """
+
     reputation = (0, 1)
 
     def __init__(self, _id, _strategy):
@@ -32,17 +36,6 @@ class Agent:
         bestLocalStrategyID = random.choice(indices)
 
         return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
-
-    def updateStrategy(self, updateProbability, copyTheBest=True):
-        """Local Evolution - (COPY THE BEST) Switch strategies to the strategy used by the best performing neighbour of
-        the agent with some probability."""
-        # TODO Implement copyTheBetter strategyUpdate
-        r = random.random()
-        if r < updateProbability:
-            newStrategyID = self.findBestLocalStrategy(copyTheBest)
-            if newStrategyID == self.currentStrategy.currentStrategyID:
-                return
-            self.currentStrategy.changeStrategy(newStrategyID)
 
     def updatePersonalReputation(self, newRep):
         """Update own reputation, only to be used for an agent's own reputation from their point of view in an
@@ -83,6 +76,9 @@ class Agent:
         """Return a list of the utilities of every neighbour of the focal agent."""
         return [(agent.id, agent.currentStrategy.currentStrategyID, agent.currentUtility) for agent in self.neighbours]
 
+    def updateStrategy(self, updateProbability, copyTheBest=True):
+        raise NotImplementedError
+
     def __str__(self):
         s = "("
         s += f"Agent {self.id}, id={self.currentStrategy.currentStrategyID},"
@@ -90,26 +86,24 @@ class Agent:
         return s
 
 
-class GrGe_Agent(Agent):
+class GrGe_Agent(GlobalEvolution, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
-        self.history = None
-
-    def updateStrategy(self, updateProbability, copyTheBest=True):
-        """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
-         network.evolutionaryUpdate method."""
-        pass
 
 
-class LrGe_Agent(Agent):
+class LrGe_Agent(GlobalEvolution, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
-        self.history = None
 
-    def updateStrategy(self, updateProbability, copyTheBest=True):
-        """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
-        network.evolutionaryUpdate method."""
-        pass
 
+class LrLe_Agent(LocalEvolution, Agent):
+
+    def __int__(self, _id, _strategy):
+        super().__init__(_id, _strategy)
+
+class GrLe_Agent(LocalEvolution, Agent):
+
+    def __int__(self, _id, _strategy):
+        super().__init__(_id, _strategy)

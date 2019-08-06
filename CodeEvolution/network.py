@@ -418,6 +418,11 @@ class GlobalEvolution:
             if r < strategyUtils[bestStrategy]:
                 agent.currentStrategy.changeStrategy(bestStrategy)
 
+    def updateStrategy(self, updateProbability, copyTheBest=True):
+        """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
+         network.evolutionaryUpdate method."""
+        pass
+
 
 class LocalEvolution:
     def evolutionaryUpdate(self, alpha=10):
@@ -425,6 +430,17 @@ class LocalEvolution:
          best/better performing agent with some probability."""
         for agent in self.agentList:
             agent.updateStrategy(self.config.updateProbability, copyTheBest=True)
+
+    def updateStrategy(self, updateProbability, copyTheBest=True):
+        """Local Evolution - Switch strategies to the strategy used by the best performing neighbour of
+        the agent with some probability."""
+        # TODO Implement copyTheBetter strategyUpdate
+        r = random.random()
+        if r < updateProbability:
+            newStrategyID = self.findBestLocalStrategy(copyTheBest)
+            if newStrategyID == self.currentStrategy.currentStrategyID:
+                return
+            self.currentStrategy.changeStrategy(newStrategyID)
 
 
 class GlobalReputation:
