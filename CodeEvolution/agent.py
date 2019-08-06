@@ -28,11 +28,15 @@ class Agent:
          strategies with maximum utility."""
         neighbourUtilities = list(map(lambda x: x.currentUtility, self.neighbours))
         if copyTheBest:
+            # Find the strategy locally that is performing the best
             maxLocalUtility = max(neighbourUtilities)
             indices = [i for i, x in enumerate(neighbourUtilities) if x == maxLocalUtility]
         else:
+            # Find all the strategies from the neighbouring agent's who are fairing better than the focal agent
             betterLocalUtilities = [util for util in neighbourUtilities if util > self.currentUtility]
             indices = [i for i, x in enumerate(neighbourUtilities) if x == random.choice(betterLocalUtilities)]
+
+        # Choose randomly from shortlisted agents
         bestLocalStrategyID = random.choice(indices)
 
         return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
@@ -88,24 +92,32 @@ class Agent:
 
 
 class GrGeAgent(GlobalEvolution, Agent):
+    """Agent class implementing Global Evolution mechanisms for the Global Reputation & Global Evolution Model. This
+    class should not be directly instantiated."""
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
 
 class LrGeAgent(GlobalEvolution, Agent):
+    """Agent class implementing Global Evolution mechanisms for the Local Reputation & Global Evolution Model. This
+    class should not be directly instantiated."""
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
 
 class LrLeAgent(LocalEvolution, Agent):
+    """Agent class implementing Local Evolution mechanisms for the Local Reputation & Local Evolution Model. This
+        class should not be directly instantiated."""
 
     def __int__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
 
 class GrLeAgent(LocalEvolution, Agent):
+    """Agent class implementing Local Evolution mechanisms for the Global Reputation & Local Evolution Model. This
+        class should not be directly instantiated."""
 
     def __int__(self, _id, _strategy):
         super().__init__(_id, _strategy)

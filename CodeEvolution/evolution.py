@@ -42,7 +42,10 @@ class GlobalEvolution:
 
     def updateStrategy(self, updateProbability, copyTheBest=True):
         """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
-         network.evolutionaryUpdate method."""
+         network.evolutionaryUpdate method.
+
+         NOTE: This is a placeholder function to allow the main code to function identically irregardless of the
+         mechanism used for evolution. """
         pass
 
 
@@ -59,12 +62,9 @@ class LocalEvolution:
     def updateStrategy(self, updateProbability, copyTheBest=True):
         """Local Evolution - Switch strategies to the strategy used by the best performing neighbour of
         the agent with some probability."""
-        # TODO Implement copyTheBetter strategyUpdate
         r = random.random()
         if r < updateProbability:
             newStrategyID = self.findBestLocalStrategy(copyTheBest)
             if newStrategyID == self.currentStrategy.currentStrategyID:
                 return
             self.currentStrategy.changeStrategy(newStrategyID)
-
-
