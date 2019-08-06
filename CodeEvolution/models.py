@@ -1,5 +1,5 @@
 from CodeEvolution import Network
-from CodeEvolution.agent import GrGe_Agent, LrGe_Agent, LrLe_Agent
+from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent
 from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.reputation import GlobalReputation, LocalReputation
@@ -14,7 +14,7 @@ class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
         super().__init__(_config)
         if self.config.density != 1:
             self.config.density = 1
-        self.generate(agentType=GrGe_Agent)
+        self.generate(agentType=GrGeAgent)
 
 
 class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
@@ -24,7 +24,7 @@ class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrGe_Agent)
+        self.generate(agentType=LrGeAgent)
 
 
 class LrLeNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
@@ -34,7 +34,7 @@ class LrLeNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrLe_Agent)
+        self.generate(agentType=LrLeAgent)
 
 
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
@@ -44,4 +44,4 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrGe_Agent)
+        self.generate(agentType=LrGeAgent)

@@ -87,25 +87,25 @@ class Agent:
         return s
 
 
-class GrGe_Agent(GlobalEvolution, Agent):
+class GrGeAgent(GlobalEvolution, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
 
-class LrGe_Agent(GlobalEvolution, Agent):
+class LrGeAgent(GlobalEvolution, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
 
-class LrLe_Agent(LocalEvolution, Agent):
+class LrLeAgent(LocalEvolution, Agent):
 
     def __int__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
 
-class GrLe_Agent(LocalEvolution, Agent):
+class GrLeAgent(LocalEvolution, Agent):
 
     def __int__(self, _id, _strategy):
         super().__init__(_id, _strategy)

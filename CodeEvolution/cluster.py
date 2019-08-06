@@ -5,7 +5,7 @@ This script is a wrapper for a single parameterisation for a simulation on the U
 from argparse import ArgumentParser
 
 from CodeEvolution.Experiment import Experiment
-from CodeEvolution.agent import LrGe_Agent
+from CodeEvolution.agent import LrGeAgent
 from CodeEvolution.config import Config, State
 from CodeEvolution.models import LrGeNetwork
 
