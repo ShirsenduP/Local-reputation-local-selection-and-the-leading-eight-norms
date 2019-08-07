@@ -133,11 +133,11 @@ class Experiment:
         # Only prepare results area if working locally
         if not cluster:
             Results.initialiseOutputDirectory(experimentName)
+            _, columnWidth = os.popen('stty size', 'r').read().split()
+            nameLength = len(experimentName)
+            columnWidth = int(columnWidth)
+            print("\nRunning  ", experimentName, (columnWidth - nameLength - 11) * "=")
 
-        _, columnWidth = os.popen('stty size', 'r').read().split()
-        nameLength = len(experimentName)
-        columnWidth = int(columnWidth)
-        print("\nRunning  ", experimentName, (columnWidth - nameLength - 11) * "=")
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
 
@@ -169,7 +169,8 @@ class Experiment:
         configs = self.showExperiments(asString=True)
         Results.exportExperimentConfigs(configs, experimentName)
 
-        print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
+        if not cluster:
+            print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
 
     def showExperiments(self, asString=False):
         """Print to the console a condensed list of all the config files in the object's experiment list."""
