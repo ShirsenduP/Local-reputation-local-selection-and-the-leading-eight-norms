@@ -23,4 +23,4 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeRRLNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()
-        E.run(cluster=True)
+        E.run(export=True)

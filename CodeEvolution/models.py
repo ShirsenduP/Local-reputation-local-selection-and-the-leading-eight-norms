@@ -45,3 +45,4 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
     def __init__(self, _config=None):
         super().__init__(_config)
         self.generate(agentType=LrGeAgent)
+
