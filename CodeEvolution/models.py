@@ -1,6 +1,6 @@
 from CodeEvolution import Network
 from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent
-from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice
+from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.reputation import GlobalReputation, LocalReputation
 
@@ -46,3 +46,22 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
         super().__init__(_config)
         self.generate(agentType=LrGeAgent)
 
+
+class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
+    """Scale-free network generated using a power law distribution."""
+
+    name = "LrGePL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.generate(agentType=LrGeAgent)
+
+
+class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
+    """Watts-Strogatz Small World model with Local Reputation and Global Evolution."""
+
+    name = "LrGeWSSW"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.generate(agentType=LrGeAgent)

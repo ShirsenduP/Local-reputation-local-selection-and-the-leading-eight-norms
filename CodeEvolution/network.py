@@ -232,6 +232,10 @@ class Network:
         mainProp = int(self.config.population.proportion * populationSize)
         mutantProp = int(self.config.mutant.proportion * populationSize)
 
+        if mainProp + mutantProp != populationSize:
+            raise Exception("Initial State is unbalanced wrt to the size of the network giving non-integer numbers of "
+                            "agents running a strategy.")
+
         mainPop = [mainID] * mainProp
         mutantPop = [mutantID] * mutantProp
         return mainPop + mutantPop
@@ -376,6 +380,30 @@ class Network:
         for agent in self.agentList:
             if agent.id == id:
                 return agent
+
+    def getClusteringCoefficient(self):
+        """Return the average clustering coefficient of a network."""
+        try:
+            coeff = nx.average_clustering(self.nxGraph)
+            raise coeff
+        except AttributeError:
+            raise NotImplementedError("Average clustering coefficient only available for graphs generated from "
+                                      "networkx with a nx.Graph object attribute.")
+
+    def isRegular(self):
+        if self.adjMatrix is None:
+            raise Exception("Lattice has not yet been initialised.")
+
+        agentDegrees = self.adjMatrix.sum(axis=0)
+        if np.any(agentDegrees != self.modeDegree):
+            return False
+        return True
+
+    def plotGraph(self):
+        """Using the networkx package, plot the network"""
+        plt.subplot()
+        nx.draw(self.nxGraph)
+        plt.show()
 
     def __str__(self):
         s = ""

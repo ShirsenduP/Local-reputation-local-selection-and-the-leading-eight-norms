@@ -23,9 +23,10 @@ class Config:
                  delta: float = 0.5,
                  mutationProbability: float = 0.1,
                  sparseDensity: bool = False,
-                 degree: int = None) -> None:
+                 degree: int = None,
+                 attachment: int = None,
+                 smallWorld: tuple = None) -> None:
 
-        # TODO Validation checks (check validator class, should be able to just copy over)
         self.size = size
         self.population = Population(ID=initialState.mainID, proportion=initialState.proportion)
         self.mutant = Population(ID=initialState.mutantID, proportion=round(1 - initialState.proportion, 4))
@@ -41,6 +42,8 @@ class Config:
         else:
             self.density = densities
         self.degree = degree
+        self.attachment = attachment
+        self.smallWorld = smallWorld
 
         if self.population.proportion + self.mutant.proportion != 1:
             total = self.population.proportion + self.mutant.proportion
@@ -60,3 +63,7 @@ if __name__ == "__main__":
 
     C = Config(initialState=State(mainID=7, proportion=1, mutantID=9))
     print(C)
+
+# TODO: Add specific config files with parameters for all the extra structures! So extract the size, degree, density,
+#  gamma, etc! or maybe just named tuples?
+#

@@ -41,13 +41,6 @@ class Lattice(Network):
         self.name = "Newmann-Watts-Strogratz Small World"
         logging.info(f"{self.name} network initialised with adjacency matrix.")
 
-    def makeRegular(self, degree):
-        """Using the networkx algorithms, get the adjacency matrix for a d-regular random graph."""
-        self.nxGraph = nx.random_regular_graph(self.config.degree, n=self.config.size)
-        self.adjMatrix = nx.to_numpy_array(self.nxGraph)
-        self.name = f"Regular {degree}-degree graph"
-        logging.info(f"{self.name} network initialised with adjacency matrix.")
-
     def makeLattice(self, dimensions=[2, 3, 4]):
         """Using the networkx algorithms, get the adjacency matrix for a grid network found at:
         https://networkx.github.io/documentation/latest/reference/generated/networkx.generators.lattice.grid_graph.html
@@ -77,74 +70,14 @@ class Lattice(Network):
         self.name = "Regular Hexagonal Grid Lattice"
         logging.info(f"{self.name} network initialised with adjacency matrix.")
 
-    def createNetwork(self, agentType=Agent):
-        """Using a generated adjacency matrix, generate the custom network with custom agents."""
-
-        if self.adjMatrix is None:
-            raise Exception("Adjacency Matrix has not yet been created.")
-        if self.config.population.proportion is not 1:
-            raise NotImplementedError("Cannot alter the starting proportion yet! Consider only an initial population "
-                                      "running a single strategy only!")
-        M = self.adjMatrix
-        index1, index2 = M.shape
-
-        # Create all the agents
-        for i in range(index1):
-            self.agentList.append(agentType(_id=i, _strategy=self.config.population.ID))
-
-        for i in range(index1):
-            for j in range(index2):
-                if int(M[i][j]) is 0:
-                    continue
-                else:
-                    if self.agentList[j] not in self.agentList[i].neighbours:
-                        self.agentList[i].neighbours.append(self.agentList[j])
-                        self.agentList[j].neighbours.append(self.agentList[i])
-
-        for agent in self.agentList:
-            agent.initialiseHistory()
-
-        agentDegrees = self.adjMatrix.sum(axis=0)
-        self.modeDegree = stats.mode(agentDegrees)[0][0]
-
-    def plotGraph(self):
-        """Using the networkx package, plot the network"""
-        plt.subplot()
-        nx.draw(self.nxGraph)
-        plt.show()
-
-    def isRegular(self):
-        if self.adjMatrix is None:
-            raise Exception("Lattice has not yet been initialised.")
-
-        agentDegrees = self.adjMatrix.sum(axis=0)
-        if np.any(agentDegrees != self.modeDegree):
-            return False
-        return True
-
-    def getClusteringCoefficient(self):
-        """Return the average clustering coefficient of a network."""
-        return nx.average_clustering(self.nxGraph)
 
 
-class LrGe_Regular(Lattice, LrGeNetwork):
-    """Local Reputation and Global Evolution on a d-regular lattice."""
-
-    def __init__(self, config=Config(), degree=3):
-        super(Lattice).__init__(config)
-        super(LrGeNetwork).__init__(config)
-        self.degree = degree
-        self.makeRegular(degree=degree)
-        self.createNetwork(agentType=Agent)
 
 
-if __name__ == "__main__":
-    C = Config(size=24, initialState=State(0, 1, 8))
-    N = LrGe_Regular(C, degree=3)
-    # N.plotGraph()
-    print(N)
-    N.runSimulation()
-    print(N.results)
+
+
+
+
 '''
     def makeCliqueLattice(self):
         """Agents are created in cliques of 4 where each agent here is connected with each other agent in the clique.
