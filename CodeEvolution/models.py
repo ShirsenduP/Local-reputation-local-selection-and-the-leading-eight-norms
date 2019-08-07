@@ -11,9 +11,9 @@ class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     name = "GrGe"
 
     def __init__(self, _config=None):
-        super().__init__(_config)
-        if self.config.density != 1:
-            self.config.density = 1
+        config = _config
+        config.density = 1  # Overwrite the density of any network run on GrGe to be fully connected
+        super().__init__(config)
         self.generate(agentType=GrGeAgent)
 
 
