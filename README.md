@@ -10,7 +10,7 @@ This package provides the code to simulate social dilemna games on a large netwo
 
 2. Move into the CodeEvolution directory using `cd CodeEvolution`
 
-3. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything) with `virtualenv --python=python3.6 env` and start the virtual environment with `source env/bin/activate`. (https://itnext.io/virtualenv-with-virtualenvwrapper-on-ubuntu-18-04-goran-aviani-d7b712d906d5 is a useful guide to set up virtual environments if needed.)
+3. Create a virtual environment running python 3.6 (here we call it "env" but you can call it anything) with `virtualenv --python=python3.6 env` and start the virtual environment with `source env/bin/activate`. [Here](https://itnext.io/virtualenv-with-virtualenvwrapper-on-ubuntu-18-04-goran-aviani-d7b712d906d5) is a useful guide to set up virtual environments if needed.
 
 4. Install package and all its dependencies with `python setup.py install`. 
 
@@ -33,6 +33,10 @@ Uninstall with `pip uninstall CodeEvolution`.
 Uninstall with `pip uninstall CodeEvolution`.
 
 
+## Tutorial
+
+Jupyter Notebook tutorial is found in package file `tutorial.ipynb`. This is currently partially complete.
+
 ## Contributors
-Shirsendu Podder, UCL, _ucabpod@ucl.ac.uk_ \\
+Shirsendu Podder, UCL, _ucabpod@ucl.ac.uk_ \
 Simone Righi, UCL, _s.righi@ucl.ac.uk_ 
