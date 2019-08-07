@@ -64,7 +64,7 @@ class Network:
 
         return adjacencyArray
 
-    def getDensity(self):
+    def getActualDensity(self):
         """Return the actual density of the generated network."""
         # Number of actual connections / number of potential connections
 
@@ -90,10 +90,14 @@ class Network:
         raise NotImplementedError
 
     def generate(self, agentType):
-        """Regenerate network until """
-        if self.config.density < self.getSparsityParameter():
-            raise Exception(f"Density ({self.config.density} < {self.getSparsityParameter()}) too low for network to "
-                            f"be connected. Exiting.")
+        """Generate a valid network."""
+        # try:
+        #     if self.config.density < self.getSparsityParameter():
+        #         raise Exception(
+        #             f"Density ({self.config.density} < {self.getSparsityParameter()}) too low for network to "
+        #             f"be connected. Exiting.")
+        # except TypeError as e:
+        #     logging.debug("Density is set as 'None'. {}".format(e))
 
         Strategy.reset()
         self.createNetwork(agentType)

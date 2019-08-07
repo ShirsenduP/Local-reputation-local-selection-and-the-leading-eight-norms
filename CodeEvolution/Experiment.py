@@ -8,10 +8,11 @@ import pandas as pd
 from tqdm import trange
 
 from CodeEvolution import Strategy
-from CodeEvolution.models import GrGeNetwork, LrGeNetwork, LrLeNetwork
+from CodeEvolution.models import GrGeNetwork, LrGeNetwork, LrLeNetwork, LrGeRRLNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.config import Population, State
 from CodeEvolution.results import Results
+from CodeEvolution.structures import RandomRegularLattice
 
 
 class Experiment:
@@ -25,6 +26,9 @@ class Experiment:
         self.values = values
         self.experiments = None
         self.repeats = repeats
+        if defaultConfig.degree is not None:
+            defaultConfig.density = None
+
         self.generateConfigs()
 
     def generateConfigs(self):
@@ -44,6 +48,7 @@ class Experiment:
                 setattr(tests[i], 'mutant',
                         Population(ID=self.values[i][1].ID, proportion=self.values[i][1].proportion))
                 setattr(tests[i], 'socialNormID', self.values[i][0].ID)
+
         else:
             # General Case
             tests = []
@@ -52,8 +57,22 @@ class Experiment:
                 tests.append(newConfig)
                 setattr(tests[i], self.variable, self.values[i])
 
+        # If degree is something that is being tests, assign the new density
+        if self.default.degree is not None or self.variable is 'degree':
+            self.assignNewDensitiesFromDegree(tests)
+
         self.experiments = tuple(tests)
         # print(self.experiments)
+
+    @staticmethod
+    def assignNewDensitiesFromDegree(testsList):
+        """Given a list of config objects, overwrite densities of networks given the degree for a d-regular graph."""
+        for exp in testsList:
+            actualDensity = RandomRegularLattice.getTheoreticalDensity(exp)
+            s = f"Density of {exp.density} overwritten by "
+            exp.density = actualDensity
+            s += f"{actualDensity}"
+            logging.debug(s)
 
     @staticmethod
     def generateParameterFile(defaultConfig, variable, values, repeats):
@@ -76,23 +95,31 @@ class Experiment:
 
     @staticmethod
     def simulate(m_exp, networkType, displayFull):
+        """Perform a single run of any given test and export results as a dataframe with one row with the final
+        results of the run."""
+
+        # Run simulation
         N = networkType(m_exp)
-        # print(N)
         N.runSimulation()
+
+        # Export results in pandas DataFrames
         resultsActions = N.results.exportActions()
         resultsCensus = N.results.exportCensus()
-        # print(resultsCensus)
-        # if (resultsCensus>1).any():
-        #     logging.critical("Census thinks there are more agents than there are.")
         resultsUtils = N.results.exportUtilities()
         resultsMutations = N.results.exportMutations()
+
+        # Combine results
         resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils, resultsMutations], axis=1, sort=False)
-        resultsFull['# of Mutants Added'].iloc[-1:] = resultsFull['# of Mutants Added'].sum()
+
         if displayFull:
             print(resultsFull)
-        # Rename index
+
+        # Housekeeping: rename index, change final #mutants added to total #mutants added
         resultsFull.index.names = ['Tmax']
-        return resultsFull.tail(1)
+        totalMutantsAdded = resultsFull['# of Mutants Added'].sum()
+        resultsAtTmax = resultsFull.tail(1).copy()
+        resultsAtTmax.loc['# of Mutants Added'] = totalMutantsAdded
+        return resultsAtTmax
 
     def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
@@ -103,14 +130,23 @@ class Experiment:
 
         experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
 
-        print("\nRunning ", experimentName, 50 * "=")
+        # Only prepare results area if working locally
+        if not cluster:
+            Results.initialiseOutputDirectory(experimentName)
+
+        _, columnWidth = os.popen('stty size', 'r').read().split()
+        nameLength = len(experimentName)
+        columnWidth = int(columnWidth)
+        print("\nRunning  ", experimentName, (columnWidth - nameLength - 11) * "=")
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
 
-        for exp in trange(len(self.experiments), leave=False):
+        # run all tests in the experiment
+        for exp in trange(len(self.experiments), leave=True):
             if display:
                 print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
 
+            # Run a single test with [1,inf) repeats
             singleTest = pd.DataFrame()
             for _ in trange(self.repeats, leave=False):
                 Strategy.reset()
@@ -118,25 +154,33 @@ class Experiment:
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
                 Strategy.reset()
 
-            # if cluster:
-            #     singleTest.to_csv(f"{exp}", mode='w')
-
             if display:
                 print()
                 print(singleTest)
                 print()
 
+            # Export to different places if running locally/on a cluster
             if cluster:
-                # If multiple experiments run from the same script, the data files will overwrite previous files with
-                # same names
                 Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
             elif export:
                 Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
 
-    def showExperiments(self):
+        # Export config text file
+        configs = self.showExperiments(asString=True)
+        Results.exportExperimentConfigs(configs, experimentName)
+
+        print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
+
+    def showExperiments(self, asString=False):
         """Print to the console a condensed list of all the config files in the object's experiment list."""
+        s = str()
         for thing in self.experiments:
-            print(thing.__dict__)
+            s += str(thing.__dict__) + 2 * "\n"
+
+        if asString:
+            return s
+        else:
+            print(s)
 
     @classmethod
     def generatePopulationList(cls, strategies=tuple(range(8)), proportion=0.9, mutantID=8):
@@ -152,37 +196,16 @@ class Experiment:
 
 
 if __name__ == '__main__':
-    C = Config(initialState=State(0, 1, 8), size=500, sparseDensity=True)
-    pops = Experiment.generatePopulationList(strategies=(range(4),), proportion=1, mutantID=8)
+    C = Config(initialState=State(0, 1, 8), degree=5)
+    # pops = Experiment.generatePopulationList(proportion=1, mutantID=8)
+    # degs = [2, 3, 4, 5, 6]
     E = Experiment(
-        networkType=GrGeNetwork,
-        variable='population',
-        values=pops,
-        defaultConfig=C)
-    E.generateParameterFile(
-        defaultConfig=Config(),
-        variable='density',
-        values=list(np.linspace(0.01, 1, 10)),
-        repeats=10
-        )
-
-# TODO IF FILES ALREADY EXIST IN DIRECTORY, CREATE NEW FOLDER - DO NOT OVERWRITE THIS IS BLOODY ANNOYING
-
-# TODO LOGGING NEEDED URGENTLY for each interaction
-
-# TODO FIRST TEST final graphs get rid of the threshold, just average convergence point at the end of the simulation ->
-#  increase
-#  the timesteps
+        networkType=LrGeRRLNetwork,
+        variable='size',
+        values=[100, 200],
+        defaultConfig=C,
+        repeats=2)
+    E.showExperiments()
+    E.run(export=True)
 
 # TODO plot the variation of convergence as we vary Tmax to see if it moves towards convergence - DO THIS FIRST
-
-# TODO Let Prisoners dilemma class be serializable
-
-# TODO Find a way to let programs run through the night and then switch off when the script has finished running
-
-
-# TODO TESTS
-"""	1. starting 50/50 mutants and some Strategy
-    2. Initially a strategy and no mutants - at the end of each timestep, each agent has some 'probabilityOfMutants'
-     of turning into a mutant (<< .1 )
-    3. test the number of mutants needed to kill the system"""

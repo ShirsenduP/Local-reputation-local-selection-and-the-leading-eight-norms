@@ -74,3 +74,19 @@ class RandomRegularLattice:
 
         agentDegrees = self.adjMatrix.sum(axis=0)
         self.modeDegree = stats.mode(agentDegrees)[0][0]
+
+    @classmethod
+    def getTheoreticalDensity(cls, config):
+        """Return the calculated density of a d-regular random lattice."""
+        size = config.size
+        d = config.degree
+
+        # Each agent is connected to d other agents, the sum is double the total number of links
+        linksInNetwork = size*d*0.5
+
+        # Total links possible
+        linksMax = size*(size-1)*0.5
+
+        return linksInNetwork/linksMax
+
+

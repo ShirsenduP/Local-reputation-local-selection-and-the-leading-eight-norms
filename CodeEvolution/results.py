@@ -38,8 +38,6 @@ class Results:
         # census = self.removeZeros(self.strategyProportions)
         census = pd.DataFrame(self.strategyProportions).transpose()
         census = census.add_prefix('Prop. Strategy #')
-        # if (census > 1.0).any():
-        #     logging.critical("Census thinks there are more agents than there are.")
         return census
 
     def exportMutations(self):
@@ -77,20 +75,31 @@ class Results:
         return means
 
     @staticmethod
+    def initialiseOutputDirectory(experimentName):
+        modulePath = os.path.dirname(os.path.realpath(__file__))
+        resultsPath = os.path.join(modulePath, 'results')
+        os.mkdir(os.path.join(resultsPath, f'{experimentName}'))
+
+    @staticmethod
     def exportResultsToCsv(experimentName, experimentConfig, experimentResults, experimentNumber):
         """Export the results from a single data-frame averaged over many iterations as 'experimentName.csv' file"""
 
-        if 'results' not in os.listdir("CodeEvolution/"):
-            os.mkdir(f"CodeEvolution/results/")
+        modulePath = os.path.dirname(os.path.realpath(__file__))
+        resultsPath = os.path.join(modulePath, 'results')
+        experimentPath = os.path.join(resultsPath, experimentName)
+        fileName = f"{experimentNumber}.csv"
+        experimentResults.to_csv(os.path.join(experimentPath, fileName))
 
-        if experimentName not in os.listdir("CodeEvolution/results"):
-            os.mkdir(f"CodeEvolution/results/{experimentName}")
-
-        try:
-            experimentResults.to_csv(f"CodeEvolution/results/{experimentName}/{experimentNumber}.csv")
-        except FileNotFoundError as e:
-            logging.warning(e)
-            experimentResults.to_csv(f"{experimentName}_{experimentNumber}.csv")
+    @staticmethod
+    def exportExperimentConfigs(configsAsString, experimentName):
+        """Export a text file containing all the configurations run into the same location as the results."""
+        modulePath = os.path.dirname(os.path.realpath(__file__))
+        resultsPath = os.path.join(modulePath, 'results')
+        experimentPath = os.path.join(resultsPath, experimentName)
+        fileName = "configs.txt"
+        configPath = os.path.join(experimentPath, fileName)
+        with open(configPath, 'w') as c:
+            c.write(configsAsString)
 
     @staticmethod
     def exportResultsToCsvCluster(experimentName, experimentConfig, experimentResults, experimentNumber):

@@ -21,14 +21,14 @@ class Config:
                  maxPeriods: int = 2000,
                  updateProbability: float = 0.1,
                  delta: float = 0.5,
-                 mutationProbability : float = 1,
-                 sparseDensity : bool = False,
-                 degree : int = 3) -> None:
+                 mutationProbability: float = 0.1,
+                 sparseDensity: bool = False,
+                 degree: int = None) -> None:
 
         # TODO Validation checks (check validator class, should be able to just copy over)
         self.size = size
         self.population = Population(ID=initialState.mainID, proportion=initialState.proportion)
-        self.mutant = Population(ID=initialState.mutantID, proportion=round(1-initialState.proportion, 4))
+        self.mutant = Population(ID=initialState.mutantID, proportion=round(1 - initialState.proportion, 4))
         self.socialNormID = initialState.mainID  # Use the same social norm ID as the main strategy
         self.socialDilemma = PrisonersDilemma(socialDilemma.benefit, socialDilemma.cost)
         self.omega = omegas
@@ -37,7 +37,7 @@ class Config:
         self.delta = delta
         self.mutationProbability = mutationProbability
         if sparseDensity:
-            self.density = 2*np.log(size)/size
+            self.density = 2 * np.log(size) / size
         else:
             self.density = densities
         self.degree = degree
