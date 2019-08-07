@@ -1,17 +1,9 @@
-import collections
 import logging
 
-from scipy import stats
-import numpy as np
-
 from CodeEvolution.network import Network
-from CodeEvolution.models import LrGeNetwork
-from CodeEvolution.agent import Agent
 from CodeEvolution.config import Config, State
 
-# from oct2py import Oct2Py
 import networkx as nx
-from matplotlib import pyplot as plt
 
 
 class Lattice(Network):
@@ -24,22 +16,6 @@ class Lattice(Network):
         self.nxGraph = None
         self.modeDegree = None
         logging.warn("Ignoring density value in config object for regular lattice!")
-
-    def getDegreeDistribution(self):
-        """Return a degree distribution of the graph as a dictionary where the keys are the range of possible
-        degrees, and the values are the number of agents with that many neighbours."""
-
-        degreeSequence = sorted([d for n, d in self.nxGraph.degree()], reverse=True)
-        degreeCount = collections.Counter(degreeSequence)
-        return degreeCount
-
-    def makeNwsSmallWorld(self, k, p=0):
-        """Using networkx algorithm, generate a Newmann-Watts-Strogratz Small World network where n agents are
-        connected in a ring topology to their k nearest neighbours with probability p."""
-        self.nxGraph = nx.newman_watts_strogatz_graph(self.config.size, k, p)
-        self.adjMatrix = nx.to_numpy_array(self.nxGraph)
-        self.name = "Newmann-Watts-Strogratz Small World"
-        logging.info(f"{self.name} network initialised with adjacency matrix.")
 
     def makeLattice(self, dimensions=[2, 3, 4]):
         """Using the networkx algorithms, get the adjacency matrix for a grid network found at:
@@ -69,13 +45,6 @@ class Lattice(Network):
         self.adjMatrix = nx.to_numpy_array(self.nxGraph)
         self.name = "Regular Hexagonal Grid Lattice"
         logging.info(f"{self.name} network initialised with adjacency matrix.")
-
-
-
-
-
-
-
 
 
 '''

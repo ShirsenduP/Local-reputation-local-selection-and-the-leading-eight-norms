@@ -32,7 +32,7 @@ class Structure:
         self.modeDegree = stats.mode(agentDegrees)[0][0]
 
 
-class ErdosRenyi:
+class ErdosRenyi(Structure):
     """Generate an Erdos-Renyi Random Network with density lambda."""
 
     def createNetwork(self, agentType):

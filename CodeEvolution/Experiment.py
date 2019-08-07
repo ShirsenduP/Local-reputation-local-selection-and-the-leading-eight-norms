@@ -64,62 +64,16 @@ class Experiment:
         self.experiments = tuple(tests)
         # print(self.experiments)
 
-    @staticmethod
-    def assignNewDensitiesFromDegree(testsList):
-        """Given a list of config objects, overwrite densities of networks given the degree for a d-regular graph."""
-        for exp in testsList:
-            actualDensity = RandomRegularLattice.getTheoreticalDensity(exp)
-            s = f"Density of {exp.density} overwritten by "
-            exp.density = actualDensity
-            s += f"{actualDensity}"
-            logging.debug(s)
+    def showExperiments(self, asString=False):
+        """Print to the console a condensed list of all the config files in the object's experiment list."""
+        s = str()
+        for thing in self.experiments:
+            s += str(thing.__dict__) + 2 * "\n"
 
-    @staticmethod
-    def generateParameterFile(defaultConfig, variable, values, repeats):
-        """Export a parameters file (.txt) for UCL clusters"""
-
-        if None in [variable, values]:
-            raise ValueError("Parameters 'variable' and 'values' must not be None.")
-
-        with open('params.txt', 'w') as f:
-            counter = 0
-            for exp in range(len(values)):
-                for rep in range(repeats):
-                    args = f"{counter:04d} "  # Simulation ID
-                    args += str(variable) + " "
-                    args += str(values[exp]) + "\n"
-                    f.write(args)
-                    counter += 1
-
-        logging.info(f"Parameter file generated in {os.getcwd()}.")
-
-    @staticmethod
-    def simulate(m_exp, networkType, displayFull):
-        """Perform a single run of any given test and export results as a dataframe with one row with the final
-        results of the run."""
-
-        # Run simulation
-        N = networkType(m_exp)
-        N.runSimulation()
-
-        # Export results in pandas DataFrames
-        resultsActions = N.results.exportActions()
-        resultsCensus = N.results.exportCensus()
-        resultsUtils = N.results.exportUtilities()
-        resultsMutations = N.results.exportMutations()
-
-        # Combine results
-        resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils, resultsMutations], axis=1, sort=False)
-
-        if displayFull:
-            print(resultsFull)
-
-        # Housekeeping: rename index, change final #mutants added to total #mutants added
-        resultsFull.index.names = ['Tmax']
-        totalMutantsAdded = resultsFull['# of Mutants Added'].sum()
-        resultsAtTmax = resultsFull.tail(1).copy()
-        resultsAtTmax.loc['# of Mutants Added'] = totalMutantsAdded
-        return resultsAtTmax
+        if asString:
+            return s
+        else:
+            print(s)
 
     def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
         """Run and export results for an experiment. This by default exports only the final state of the simulation,
@@ -172,19 +126,65 @@ class Experiment:
         if not cluster:
             print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
 
-    def showExperiments(self, asString=False):
-        """Print to the console a condensed list of all the config files in the object's experiment list."""
-        s = str()
-        for thing in self.experiments:
-            s += str(thing.__dict__) + 2 * "\n"
+    @staticmethod
+    def assignNewDensitiesFromDegree(testsList):
+        """Given a list of config objects, overwrite densities of networks given the degree for a d-regular graph."""
+        for exp in testsList:
+            actualDensity = RandomRegularLattice.getTheoreticalDensity(exp)
+            s = f"Density of {exp.density} overwritten by "
+            exp.density = actualDensity
+            s += f"{actualDensity}"
+            logging.debug(s)
 
-        if asString:
-            return s
-        else:
-            print(s)
+    @staticmethod
+    def generateParameterFile(defaultConfig, variable, values, repeats):
+        """(BETA) Export a parameters file (.txt) for UCL clusters"""
 
-    @classmethod
-    def generatePopulationList(cls, strategies=tuple(range(8)), proportion=0.9, mutantID=8):
+        if None in [variable, values]:
+            raise ValueError("Parameters 'variable' and 'values' must not be None.")
+
+        with open('params.txt', 'w') as f:
+            counter = 0
+            for exp in range(len(values)):
+                for rep in range(repeats):
+                    args = f"{counter:04d} "  # Simulation ID
+                    args += str(variable) + " "
+                    args += str(values[exp]) + "\n"
+                    f.write(args)
+                    counter += 1
+
+        logging.info(f"Parameter file generated in {os.getcwd()}.")
+
+    @staticmethod
+    def simulate(m_exp, networkType, displayFull):
+        """Perform a single run of any given test and export results as a dataframe with one row with the final
+        results of the run."""
+
+        # Run simulation
+        N = networkType(m_exp)
+        N.runSimulation()
+
+        # Export results in pandas DataFrames
+        resultsActions = N.results.exportActions()
+        resultsCensus = N.results.exportCensus()
+        resultsUtils = N.results.exportUtilities()
+        resultsMutations = N.results.exportMutations()
+
+        # Combine results
+        resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils, resultsMutations], axis=1, sort=False)
+
+        if displayFull:
+            print(resultsFull)
+
+        # Housekeeping: rename index, change final #mutants added to total #mutants added
+        resultsFull.index.names = ['Tmax']
+        totalMutantsAdded = resultsFull['# of Mutants Added'].sum()
+        resultsAtTmax = resultsFull.tail(1).copy()
+        resultsAtTmax.loc['# of Mutants Added'] = totalMutantsAdded
+        return resultsAtTmax
+
+    @staticmethod
+    def generatePopulationList(strategies=tuple(range(8)), proportion=0.9, mutantID=8):
         """Create a sequential list of tuples of population objects running through each of the strategies defined,
         with a given proportion and a mutantID."""
         listOfStates = []

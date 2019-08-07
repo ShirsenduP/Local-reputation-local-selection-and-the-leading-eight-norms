@@ -1,3 +1,4 @@
+import collections
 import copy
 import random
 import logging
@@ -389,6 +390,14 @@ class Network:
         except AttributeError:
             raise NotImplementedError("Average clustering coefficient only available for graphs generated from "
                                       "networkx with a nx.Graph object attribute.")
+
+    def getDegreeDistribution(self):
+        """Return a degree distribution of the graph as a dictionary where the keys are the range of possible
+        degrees, and the values are the number of agents with that many neighbours."""
+
+        degreeSequence = sorted([d for n, d in self.nxGraph.degree()], reverse=True)
+        degreeCount = collections.Counter(degreeSequence)
+        return degreeCount
 
     def isRegular(self):
         if self.adjMatrix is None:
