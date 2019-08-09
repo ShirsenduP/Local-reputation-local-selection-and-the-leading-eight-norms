@@ -6,6 +6,8 @@ from scipy import stats
 
 
 class Structure:
+    """Organisational class to house the variety of network structures that can be constructed."""
+
     def networkFromAdjacencyMatrix(self, agentType):
         # Create agents
         strategyDistribution = self.getStrategyCounts()
@@ -147,3 +149,4 @@ class WattsStrogatz(Structure):
         self.name = "Newman-Watts-Strogratz Small World"
         logging.info(f"{self.name} network initialised with adjacency matrix.")
         self.networkFromAdjacencyMatrix(agentType)
+

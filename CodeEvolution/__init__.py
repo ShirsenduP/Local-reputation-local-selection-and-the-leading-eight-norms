@@ -1,2 +1,3 @@
-from CodeEvolution.network import Network
-from CodeEvolution.strategy import Strategy
+from CodeEvolution.models import *
+from CodeEvolution.config import Config
+from CodeEvolution.Experiment import Experiment

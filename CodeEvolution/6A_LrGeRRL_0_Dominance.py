@@ -1,12 +1,13 @@
 from CodeEvolution.models import LrGeRRLNetwork
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
+from CodeEvolution.Evaluator import Evaluator as E
 
 if __name__ == '__main__':
 
     """Test 6 - Strategy 0 vs All-D. Testing d-Regular Random Lattices with d = [3, 4, ..., 10]."""
 
-    rerunSimulations = True
+    rerunSimulations = False
     repeats = 100
 
     # Testing degree(density)
@@ -24,3 +25,10 @@ if __name__ == '__main__':
                        variable=var, values=values)
         E.showExperiments()
         E.run(export=True)
+
+    strategy0 = E.open_results("LrGeRRL_degree_2019-08-07 13:26:23")
+    # strategy0 = E.plotAllStrategiesSummary(title="", dataPath="LrGeRRL_degree_2019-08-07 13:26:23", mutantID=8)
+    print(strategy0[0])
+
+# TODO Rename script name from dominance to degree
+
