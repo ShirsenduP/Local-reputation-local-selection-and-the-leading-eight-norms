@@ -84,13 +84,17 @@ class Experiment:
 
         experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
 
-        # Only prepare results area if working locally
-        if not cluster:
-            Results.initialiseOutputDirectory(experimentName)
-            _, columnWidth = os.popen('stty size', 'r').read().split()
-            nameLength = len(experimentName)
-            columnWidth = int(columnWidth)
-            print("\nRunning  ", experimentName, (columnWidth - nameLength - 11) * "=")
+        # Only prepare results area if working locally, if running on Pycharm console, it will throw an error but its
+        # purely aesthetic so just ignore it
+        try:
+            if not cluster:
+                Results.initialiseOutputDirectory(experimentName)
+                _, columnWidth = os.popen('stty size', 'r').read().split()
+                nameLength = len(experimentName)
+                columnWidth = int(columnWidth)
+                print("\nRunning  ", experimentName, (columnWidth - nameLength - 11) * "=")
+        except ValueError:
+            pass
 
         if recordFull:
             raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
@@ -123,8 +127,11 @@ class Experiment:
         configs = self.showExperiments(asString=True)
         Results.exportExperimentConfigs(configs, experimentName)
 
-        if not cluster:
-            print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
+        try:
+            if not cluster:
+                print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
+        except Exception:
+            pass
 
     @staticmethod
     def assignNewDensitiesFromDegree(testsList):
