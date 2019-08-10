@@ -18,9 +18,9 @@ if __name__ == '__main__':
     if rerunSimulations:
 
         # Default Parameters for simulations
-        C = Config(size=500, mutationProbability=0.1, maxPeriods=5000)
+        C = Config(size=500, mutationProbability=0.1, maxPeriods=5000, sparseDensity=True)
         E = Experiment(networkType=LrGeERNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
 
         E.showExperiments()
-        E.run(cluster=True)
+        E.run(display=True)
