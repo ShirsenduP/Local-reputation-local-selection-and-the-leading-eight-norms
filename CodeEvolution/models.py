@@ -1,5 +1,5 @@
 from CodeEvolution.network import Network
-from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent
+from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
 from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.reputation import GlobalReputation, LocalReputation
@@ -36,6 +36,15 @@ class LrLeERNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
         super().__init__(_config)
         self.generate(agentType=LrLeAgent)
 
+
+class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
+    """Erdos Renyi Network with Local Reputation and Global Evolution (GrLe)"""
+
+    name = "GrLe"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self.generate(agentType=GrLeAgent)
 
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
     """Random d-regular lattice with Global Reputation and Global Evolution."""
