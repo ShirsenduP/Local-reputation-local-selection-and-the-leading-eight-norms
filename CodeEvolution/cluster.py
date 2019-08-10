@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.agent import LrGeAgent
 from CodeEvolution.config import Config, State
-from CodeEvolution.models import LrGeNetwork
+from CodeEvolution.models import LrGeERNetwork
 
 parser = ArgumentParser()
 parser.add_argument('index', type=int)
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     defaultConfig = Config(initialState=State(mainID=0, proportion=1, mutantID=8))
     setattr(defaultConfig, args.variable, args.value)
 
-    output = Experiment.simulate(m_exp=defaultConfig, networkType=LrGeNetwork, displayFull=False)
+    output = Experiment.simulate(m_exp=defaultConfig, networkType=LrGeERNetwork, displayFull=False)
 
     with open(f'{args.index}.txt', 'w+') as results:
        results.write(output)

@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from CodeEvolution.Evaluator import Evaluator
-from CodeEvolution.models import GrGeNetwork, LrGeNetwork, LrLeNetwork
+from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork, LrLeERNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.Experiment import Population
@@ -24,19 +24,19 @@ if __name__ == '__main__':
         """All-D versus all the populations, initially weighted at 10/90."""
 
         default = Config(densities=1, mutant=Population(ID=8, Proportion=0.1))
-        E = Experiment(name='GrGe_All-D_Sparse', networkType=GrGeNetwork, defaultConfig=default,
+        E = Experiment(name='GrGe_All-D_Sparse', networkType=GrGeERNetwork, defaultConfig=default,
                        variable='population', values=pops,
                        repeats=reps)
         E.run(export=True)
 
         default2 = Config(size=500, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.1))
-        E2 = Experiment(name='LrGe_All-D_Sparse', networkType=LrGeNetwork, defaultConfig=default2,
+        E2 = Experiment(name='LrGe_All-D_Sparse', networkType=LrGeERNetwork, defaultConfig=default2,
                         variable='population', values=pops,
                         repeats=reps)
         E2.run(export=True)
 
         default3 = Config(size=500, densities=sparseNetworkDensity, mutant=Population(ID=8, Proportion=0.1))
-        E3 = Experiment(name='LrLe_All-D_Sparse', networkType=LrLeNetwork, defaultConfig=default3,
+        E3 = Experiment(name='LrLe_All-D_Sparse', networkType=LrLeERNetwork, defaultConfig=default3,
                         variable='population', values=pops,
                         repeats=reps)
         E3.run(export=True)
@@ -44,19 +44,19 @@ if __name__ == '__main__':
         """All-C versus all the populations, initially weighted at 10/90."""
 
         default4 = Config(size=500, densities=sparseNetworkDensity, mutant=Population(ID=9, Proportion=0.1))
-        E4 = Experiment(name='GrGe_All-C_Sparse', networkType=GrGeNetwork, defaultConfig=default4,
+        E4 = Experiment(name='GrGe_All-C_Sparse', networkType=GrGeERNetwork, defaultConfig=default4,
                         variable='population', values=pops,
                         repeats=reps)
         E4.run(export=True)
 
         default5 = Config(size=500, densities=sparseNetworkDensity, mutant=Population(ID=9, Proportion=0.1))
-        E5 = Experiment(name='LrGe_All-C_Sparse', networkType=LrGeNetwork, defaultConfig=default5,
+        E5 = Experiment(name='LrGe_All-C_Sparse', networkType=LrGeERNetwork, defaultConfig=default5,
                         variable='population', values=pops,
                         repeats=reps)
         E5.run(export=True)
 
         default6 = Config(size=500, densities=sparseNetworkDensity, mutant=Population(ID=9, Proportion=0.1))
-        E6 = Experiment(name='LrLe_All-C_Sparse', networkType=LrLeNetwork, defaultConfig=default6,
+        E6 = Experiment(name='LrLe_All-C_Sparse', networkType=LrLeERNetwork, defaultConfig=default6,
                         variable='population', values=pops,
                         repeats=reps)
         E6.run(export=True)

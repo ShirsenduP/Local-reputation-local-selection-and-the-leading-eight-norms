@@ -5,7 +5,7 @@ from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.reputation import GlobalReputation, LocalReputation
 
 
-class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
+class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     """Erdos Renyi Network with Global Reputation and Global Evolution"""
 
     name = "GrGe"
@@ -17,7 +17,7 @@ class GrGeNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
         self.generate(agentType=GrGeAgent)
 
 
-class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
+class LrGeERNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
     """Erdos Renyi Network with Local Reputation and Global Evolution (LrGe)"""
 
     name = "LrGe"
@@ -27,7 +27,7 @@ class LrGeNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
         self.generate(agentType=LrGeAgent)
 
 
-class LrLeNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
+class LrLeERNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
     """Erdos Renyi Network with Local Reputation and Local Evolution (LrLe)"""
 
     name = "LrLe"
