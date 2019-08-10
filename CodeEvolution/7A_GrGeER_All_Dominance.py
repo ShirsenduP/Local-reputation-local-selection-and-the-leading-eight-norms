@@ -15,8 +15,6 @@ if __name__ == '__main__':
     var = 'population'
     values = Experiment.generatePopulationList(proportion=1, mutantID=8)
 
-    mainID = 7
-
     if rerunSimulations:
 
         # Default Parameters for simulations
