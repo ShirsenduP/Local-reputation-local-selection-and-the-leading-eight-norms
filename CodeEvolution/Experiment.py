@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from tqdm import trange
 
-from CodeEvolution import Strategy
+from CodeEvolution.strategy import Strategy
 from CodeEvolution.models import GrGeNetwork, LrGeNetwork, LrLeNetwork, LrGeRRLNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.config import Population, State
@@ -168,19 +168,21 @@ class Experiment:
         resultsActions = N.results.exportActions()
         resultsCensus = N.results.exportCensus()
         resultsUtils = N.results.exportUtilities()
-        resultsMutations = N.results.exportMutations()
+        resultsMutations = N.results.exportMutations().sum()
+        # print(resultsMutations)
 
         # Combine results
-        resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils, resultsMutations], axis=1, sort=False)
+        resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils], axis=1, sort=False)
 
         if displayFull:
             print(resultsFull)
 
-        # Housekeeping: rename index, change final #mutants added to total #mutants added
+        # Housekeeping: rename index
         resultsFull.index.names = ['Tmax']
-        totalMutantsAdded = resultsFull['# of Mutants Added'].sum()
+
+        # Get only final time-step information and total number of mutants added
         resultsAtTmax = resultsFull.tail(1).copy()
-        resultsAtTmax.loc['# of Mutants Added'] = totalMutantsAdded
+        resultsAtTmax['# of Mutants Added'] = resultsMutations
         return resultsAtTmax
 
     @staticmethod
