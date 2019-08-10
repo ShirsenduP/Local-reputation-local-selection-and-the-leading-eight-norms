@@ -20,6 +20,11 @@ class GlobalReputation:
         agent1.updatePersonalReputation(agent1NewReputation)
         agent2.updatePersonalReputation(agent2NewReputation)
 
+    def broadcastReputation(self, newReputation, delta):
+        """(Global reputation) - no need to broadcast reputations to neighbours since any agent can access any other
+        agent's most recent reputation directly. """
+        pass
+
 
 class LocalReputation:
     def getOpponentsReputation(self, agent1, agent2):
@@ -72,3 +77,12 @@ class LocalReputation:
 
         agent1.updatePersonalReputation(agent1PersonalReputation)
         agent2.updatePersonalReputation(agent2PersonalReputation)
+
+    def broadcastReputation(self, newReputation, delta):
+        """Broadcast an agent's reputation following an interaction to all of his neighbours. Delta is the
+        probability that a neighbour views the the agent's new reputation."""
+        for agent in self.neighbours:
+            r = random.random()
+            if r < delta:
+                agent.history[self] = newReputation
+                logging.debug(f"A({self.id}) broadcast to {self.history}")

@@ -1,4 +1,4 @@
-from CodeEvolution import Network
+from CodeEvolution.network import Network
 from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent
 from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution

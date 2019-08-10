@@ -1,13 +1,14 @@
 import random
 import logging
 
+from CodeEvolution.reputation import GlobalReputation, LocalReputation
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.strategy import Strategy
 
 
 class Agent:
     """Base agent class containing all the general functionality used in all models. This class should not be
-    directly instantiated. """
+    directly instantiated."""
 
     reputation = (0, 1)
 
@@ -61,15 +62,6 @@ class Agent:
         if interaction['Opponent'] in self.neighbours:
             self.history[interaction['Opponent']] = interaction
 
-    def broadcastReputation(self, newReputation, delta):
-        """Broadcast an agent's reputation following an interaction to all of his neighbours. Delta is the
-        probability that a neighbour views the the agent's new reputation."""
-        for agent in self.neighbours:
-            r = random.random()
-            if r < delta:
-                agent.history[self] = newReputation
-                logging.debug(f"A({self.id}) broadcast to {self.history}")
-
     def getHistory(self):
         """Print to the console the reputations of his neighbours from his point of view."""
         s = ""
@@ -91,7 +83,7 @@ class Agent:
         return s
 
 
-class GrGeAgent(GlobalEvolution, Agent):
+class GrGeAgent(GlobalEvolution, GlobalReputation, Agent):
     """Agent class implementing Global Evolution mechanisms for the Global Reputation & Global Evolution Model. This
     class should not be directly instantiated."""
 
@@ -99,7 +91,7 @@ class GrGeAgent(GlobalEvolution, Agent):
         super().__init__(_id, _strategy)
 
 
-class LrGeAgent(GlobalEvolution, Agent):
+class LrGeAgent(GlobalEvolution, LocalReputation, Agent):
     """Agent class implementing Global Evolution mechanisms for the Local Reputation & Global Evolution Model. This
     class should not be directly instantiated."""
 
@@ -107,7 +99,7 @@ class LrGeAgent(GlobalEvolution, Agent):
         super().__init__(_id, _strategy)
 
 
-class LrLeAgent(LocalEvolution, Agent):
+class LrLeAgent(LocalEvolution, LocalReputation, Agent):
     """Agent class implementing Local Evolution mechanisms for the Local Reputation & Local Evolution Model. This
         class should not be directly instantiated."""
 
@@ -115,7 +107,7 @@ class LrLeAgent(LocalEvolution, Agent):
         super().__init__(_id, _strategy)
 
 
-class GrLeAgent(LocalEvolution, Agent):
+class GrLeAgent(LocalEvolution, GlobalReputation, Agent):
     """Agent class implementing Local Evolution mechanisms for the Global Reputation & Local Evolution Model. This
         class should not be directly instantiated."""
 
