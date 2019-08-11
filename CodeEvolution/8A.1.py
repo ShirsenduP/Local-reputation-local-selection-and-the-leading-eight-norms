@@ -5,25 +5,24 @@ from CodeEvolution.Experiment import Experiment
 if __name__ == '__main__':
 
     """
-    Test 7
-    Reconfirming all preliminary results. GrGe dominance of leading eight strategies on ER random network 
-    against All-D.
+    Test 8A - 1
+    Effect of parameter of attachment on the a scale-free network (Barabasi Albert model), 
     """
 
     rerunSimulations = True
-    repeats = 10
+    repeats = 100
     var = 'attachment'
     values = list(range(2, 11, 1))
+    mainID = 1
 
     if rerunSimulations:
 
         # Default Parameters for simulations
-        C = Config(size=500, initialState=State(0, 1, 8), mutationProbability=0.1, maxPeriods=5000)
+        C = Config(size=300, initialState=State(mainID, 1, 8), mutationProbability=0.1, maxPeriods=5000)
         E = Experiment(networkType=LrGePLNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
 
         E.showExperiments()
-        E.run(display=True)
+        E.run(cluster=True)
 
 
-    # TODO redo the tests, they're all failing because at n=500 they break down

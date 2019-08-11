@@ -13,7 +13,7 @@ if __name__ == '__main__':
     repeats = 100
     var = 'attachment'
     values = list(range(2, 11, 1))
-    mainID = 1
+    mainID = 7
 
     if rerunSimulations:
 
