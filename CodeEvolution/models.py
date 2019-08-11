@@ -46,6 +46,7 @@ class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
         super().__init__(_config)
         self.generate(agentType=GrLeAgent)
 
+
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
     """Random d-regular lattice with Global Reputation and Global Evolution."""
 
