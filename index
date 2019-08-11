@@ -1,5 +1,5 @@
 ====================================================================================
-Experiment 1
+Experiment 7
 
 Testing the dominance of the leading 8 on these setups of networks
 
@@ -30,7 +30,7 @@ Testing the dominance of the leading 8 on these setups of networks
 
 ====================================================================================
 
-Experiment 2
+Experiment 6
 
 Effect of degree of regular random lattice on proportions of cooperation
 
@@ -46,7 +46,7 @@ Effect of degree of regular random lattice on proportions of cooperation
 ====================================================================================
 
 
-Experiment 3
+Experiment 8B
 
 Effect of size on the number of leading strategies for Local Reputation, Global
 Evolution and an Erdos Renyi network. Only tested on the leading four.
@@ -58,7 +58,7 @@ Evolution and an Erdos Renyi network. Only tested on the leading four.
 
 ====================================================================================
 
-Experiment 4
+Experiment 8A
 
 Effect of the preferential attachment parameter on l8 on scale-free network
 

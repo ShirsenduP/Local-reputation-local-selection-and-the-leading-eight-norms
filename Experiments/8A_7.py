@@ -5,7 +5,7 @@ from CodeEvolution.Experiment import Experiment
 if __name__ == '__main__':
 
     """
-    Test 8A - 1
+    Test 8A - 7
     Effect of parameter of attachment on the a scale-free network (Barabasi Albert model), 
     """
 
@@ -13,7 +13,7 @@ if __name__ == '__main__':
     repeats = 100
     var = 'attachment'
     values = list(range(2, 11, 1))
-    mainID = 6
+    mainID = 7
 
     if rerunSimulations:
 
