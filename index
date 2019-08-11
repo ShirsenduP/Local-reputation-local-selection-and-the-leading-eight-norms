@@ -3,29 +3,11 @@ Experiment 7
 
 Testing the dominance of the leading 8 on these setups of networks
 
-	7A GrGe 
-		ER 1535404
-		RRL 
-		PL
-		WSSW
-
-	7B LrGe 
-		ER 1535608
-		RRL 
-		PL
-		WSSW
-
-	7C LrLe 
-		ER 1535609
-		RRL 
-		PL
-		WSSW
-
-	7D GrLe 
-		ER 1535610
-		RRL 
-		PL
-		WSSW
+    ER:
+        7A_a
+        7A_b
+        7A_c
+        7A_d
 
 
 ====================================================================================
@@ -33,15 +15,16 @@ Testing the dominance of the leading 8 on these setups of networks
 Experiment 6
 
 Effect of degree of regular random lattice on proportions of cooperation
+Strategy i = [0,7] vs degree d [3, 22]
 
-	6A 
-	6B 
-	6C 
-	6D
-	6E
-	6F
-	6G
-	6H
+	6A_0
+	6A_1
+	6A_2
+	6A_3
+	6A_4
+	6A_5
+	6A_6
+	6A_7
 
 ====================================================================================
 
