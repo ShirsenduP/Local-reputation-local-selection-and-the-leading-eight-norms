@@ -18,7 +18,7 @@ if __name__ == '__main__':
     if rerunSimulations:
 
         # Default Parameters for simulations
-        C = Config(size=500, mutationProbability=0.1, maxPeriods=5000)
+        C = Config(size=300, mutationProbability=0.1, maxPeriods=5000)
         E = Experiment(networkType=GrGeERNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
 

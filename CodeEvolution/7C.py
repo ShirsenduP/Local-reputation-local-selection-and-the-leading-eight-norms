@@ -18,7 +18,7 @@ if __name__ == '__main__':
     if rerunSimulations:
 
         # Default Parameters for simulations
-        C = Config(size=500, mutationProbability=0.1, maxPeriods=5000, sparseDensity=True)
+        C = Config(size=300, mutationProbability=0.1, maxPeriods=5000, sparseDensity=True)
         E = Experiment(networkType=LrLeERNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
 
