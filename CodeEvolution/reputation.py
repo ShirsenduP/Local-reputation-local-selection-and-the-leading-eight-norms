@@ -12,9 +12,9 @@ class GlobalReputation:
         """Assign reputations following an interaction with each agent's globally known reputation and not the
         calculated reputation as default."""
 
-        agent1NewReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2.currentReputation,
+        agent1NewReputation = self.socialNorm.assignReputation(agent1Reputation, agent2Reputation,
                                                                agent1Move)
-        agent2NewReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1.currentReputation,
+        agent2NewReputation = self.socialNorm.assignReputation(agent2Reputation, agent1Reputation,
                                                                agent2Move)
 
         agent1.updatePersonalReputation(agent1NewReputation)

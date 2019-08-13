@@ -205,7 +205,7 @@ class Network:
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
             # debugNetwork = str(self)
-            # logging.debug(f"T = {self.currentPeriod} - \ncensus: {debugNetwork}")
+            logging.info(f"T = {self.currentPeriod} - census: {self.getCensus()}")
             self.resetUtility()
             self.resetTempActions()
             self.runSingleTimestep()
