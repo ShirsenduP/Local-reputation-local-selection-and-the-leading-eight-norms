@@ -12,10 +12,10 @@ class Evaluator:
 
     @staticmethod
     def open_results(name):
-        """Given the name of the experiment run (the name of the directory within the results subdirectory where the
-        results are saved.) this class will plot all results automatically."""
+        """Given the name of the experiment run (the name of the directory within the LocalData subdirectory where the
+        LocalData are saved.) this class will plot all LocalData automatically."""
 
-        resultsDir = os.getcwd() + "/results/" + str(name)
+        resultsDir = os.getcwd() + "/LocalData/" + str(name)
         dataFiles = [filepath for filepath in os.listdir(resultsDir) if ".csv" in filepath]
         configFiles = [filepath for filepath in os.listdir(resultsDir) if ".json" in filepath]
 
@@ -33,8 +33,8 @@ class Evaluator:
 
     @staticmethod
     def show_result_dir():
-        """Print a list of the results directory where the outputs of each experiment are saved."""
-        resultsDir = os.getcwd() + "/results/"
+        """Print a list of the LocalData directory where the outputs of each experiment are saved."""
+        resultsDir = os.getcwd() + "/LocalData/"
         resultsPath = os.listdir(resultsDir)
         resultsPath.sort()
         print("Results Directory\n".upper())
@@ -74,7 +74,7 @@ class Evaluator:
 
     @staticmethod
     def plotAllStrategies(title, dataPath, mutantID, save=False):
-        """Given the name of an experiment in the results directory, plot the data in a scatterplot where each point
+        """Given the name of an experiment in the LocalData directory, plot the data in a scatterplot where each point
         represents a single simulation with the (x,y) coordinate representing (timestep at convergence,
         final proportion of mutants)."""
 
@@ -92,14 +92,14 @@ class Evaluator:
         plt.ylabel('Final proportion of Mutants')
         plt.legend(loc='center left')
         if save:
-            resultsDir = os.getcwd() + '/results/' + dataPath + '/' + title
+            resultsDir = os.getcwd() + '/LocalData/' + dataPath + '/' + title
             plt.savefig(resultsDir)
         else:
             plt.show()
 
     @staticmethod
     def plotAllStrategiesSummary(title, dataPath, mutantID, save=False):
-        """Given the name of an experiment in the results directory, plot the means of the proportions of mutants
+        """Given the name of an experiment in the LocalData directory, plot the means of the proportions of mutants
         amongst each strategy along with error bars. Optionally save plot as .png in dataPath directory."""
 
         data = Evaluator.open_results(dataPath)
@@ -122,7 +122,7 @@ class Evaluator:
         plt.ylabel(f"Final proportion of Mutants {mutantID}")
 
         if save:
-            resultsDir = os.getcwd() + '/results/' + dataPath + '/' + dataPath
+            resultsDir = os.getcwd() + '/LocalData/' + dataPath + '/' + dataPath
             plt.savefig(resultsDir)
         else:
             plt.show()

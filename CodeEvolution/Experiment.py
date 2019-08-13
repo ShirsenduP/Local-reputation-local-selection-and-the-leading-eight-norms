@@ -76,7 +76,7 @@ class Experiment:
             print(s)
 
     def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
-        """Run and export results for an experiment. This by default exports only the final state of the simulation,
+        """Run and export LocalData for an experiment. This by default exports only the final state of the simulation,
         so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
          when multiple of the same parameterised run have different lengths of simulations. Cluster takes precedence
@@ -84,7 +84,7 @@ class Experiment:
 
         experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
 
-        # Only prepare results area if working locally, if running on Pycharm console, it will throw an error but its
+        # Only prepare LocalData area if working locally, if running on Pycharm console, it will throw an error but its
         # purely aesthetic so just ignore it
         try:
             if not cluster:
@@ -164,21 +164,21 @@ class Experiment:
 
     @staticmethod
     def simulate(m_exp, networkType, displayFull):
-        """Perform a single run of any given test and export results as a dataframe with one row with the final
-        results of the run."""
+        """Perform a single run of any given test and export LocalData as a dataframe with one row with the final
+        LocalData of the run."""
 
         # Run simulation
         N = networkType(m_exp)
         N.runSimulation()
 
-        # Export results in pandas DataFrames
+        # Export LocalData in pandas DataFrames
         resultsActions = N.results.exportActions()
         resultsCensus = N.results.exportCensus()
         resultsUtils = N.results.exportUtilities()
         resultsMutations = N.results.exportMutations().sum()
         # print(resultsMutations)
 
-        # Combine results
+        # Combine LocalData
         resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils], axis=1, sort=False)
 
         if displayFull:

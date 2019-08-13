@@ -6,12 +6,12 @@ if __name__ == '__main__':
 
     """
     Test 7
-    Reconfirming all preliminary results. LrLe dominance of leading eight strategies on ER random network 
+    Reconfirming all preliminary LocalData. LrLe dominance of leading eight strategies on ER random network 
     against All-D.
     """
 
     rerunSimulations = True
-    repeats = 100
+    repeats = 10
     var = 'population'
     values = Experiment.generatePopulationList(proportion=1, mutantID=8)
 
@@ -23,4 +23,4 @@ if __name__ == '__main__':
                        variable=var, values=values)
 
         E.showExperiments()
-        E.run(cluster=True)
+        E.run(display=True)

@@ -12,6 +12,7 @@ class GlobalEvolution:
          utilities of all strategies."""
 
         strategyUtils = copy.deepcopy(self.results.utilities[self.currentPeriod])
+        logging.debug(f"\tStrategyUtils: {strategyUtils}")
 
         # find strategy with highest utility
         bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
@@ -24,7 +25,7 @@ class GlobalEvolution:
         # if total utility is zero, no evolutionary update
         totalUtil = sum(strategyUtils.values())
         if totalUtil == 0:
-            logging.debug(f"update skipped because at t = {self.currentPeriod} we have {strategyUtils.values()}")
+            logging.debug(f"\tupdate skipped because we have {strategyUtils.values()}")
             return
 
         # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
@@ -33,11 +34,12 @@ class GlobalEvolution:
             strategyUtils[strategy] /= (totalUtil * alpha)
             # TODO What is the purpose of \alpha?
 
-        logging.debug(f"t = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
+        logging.debug(f"\tt = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
 
         for agent in self.agentList:
             r = random.random()
             if r < strategyUtils[bestStrategy]:
+                logging.debug(f"Agent {agent.id} switched from {agent.currentStrategy.currentStrategyID} to {bestStrategy}")
                 agent.currentStrategy.changeStrategy(bestStrategy)
 
     def updateStrategy(self, updateProbability, copyTheBest=True):

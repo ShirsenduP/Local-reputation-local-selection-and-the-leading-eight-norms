@@ -184,9 +184,9 @@ class Network:
             self.tempActions[action] = 0
 
     def scanStrategies(self):
-        """Update the results with the proportions of all strategies at any given time."""
+        """Update the LocalData with the proportions of all strategies at any given time."""
 
-        # Update results with census
+        # Update LocalData with census
         census = self.getCensus(proportions=True)
         self.results.strategyProportions[self.currentPeriod] = census
 

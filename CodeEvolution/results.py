@@ -16,7 +16,7 @@ class Results:
         self.mutantTracker = {}
 
     def updateActions(self, actions):
-        """Given a dictionary of counts of cooperators and defectors, append to network results the proportions for that
+        """Given a dictionary of counts of cooperators and defectors, append to network LocalData the proportions for that
          particular time period"""
 
         for key in actions:
@@ -67,7 +67,7 @@ class Results:
     @classmethod
     def averageOverIterations(cls, iterations):
         """Take a dictionary where the key is the iteration number and each value is the corresponding pandas data-frame
-         of results. Return a single dataframe with averaged results."""
+         of LocalData. Return a single dataframe with averaged LocalData."""
         iterationsAsList = list(iterations.values())
         concatenatedResults = pd.concat(iterationsAsList, sort=False)
         byRowIndex = concatenatedResults.groupby(concatenatedResults.index)
@@ -77,24 +77,24 @@ class Results:
     @staticmethod
     def initialiseOutputDirectory(experimentName):
         modulePath = os.path.dirname(os.path.realpath(__file__))
-        resultsPath = os.path.join(modulePath, 'results')
+        resultsPath = os.path.join(modulePath, 'LocalData')
         os.mkdir(os.path.join(resultsPath, f'{experimentName}'))
 
     @staticmethod
     def exportResultsToCsv(experimentName, experimentConfig, experimentResults, experimentNumber):
-        """Export the results from a single data-frame averaged over many iterations as 'experimentName.csv' file"""
+        """Export the LocalData from a single data-frame averaged over many iterations as 'experimentName.csv' file"""
 
         modulePath = os.path.dirname(os.path.realpath(__file__))
-        resultsPath = os.path.join(modulePath, 'results')
+        resultsPath = os.path.join(modulePath, 'LocalData')
         experimentPath = os.path.join(resultsPath, experimentName)
         fileName = f"{experimentNumber}.csv"
         experimentResults.to_csv(os.path.join(experimentPath, fileName))
 
     @staticmethod
     def exportExperimentConfigs(configsAsString, experimentName):
-        """Export a text file containing all the configurations run into the same location as the results."""
+        """Export a text file containing all the configurations run into the same location as the LocalData."""
         modulePath = os.path.dirname(os.path.realpath(__file__))
-        resultsPath = os.path.join(modulePath, 'results')
+        resultsPath = os.path.join(modulePath, 'LocalData')
         experimentPath = os.path.join(resultsPath, experimentName)
         fileName = "configs.txt"
         configPath = os.path.join(experimentPath, fileName)
