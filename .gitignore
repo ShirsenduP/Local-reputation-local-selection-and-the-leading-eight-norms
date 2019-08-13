@@ -5,6 +5,7 @@ env/
 CodeEvolution/logs/
 CodeEvolution/configurations/draft2.json
 CodeEvolution/LocalData/
+CodeEvolution/RemoteData/
 .idea
 CodeEvolution/debug.log
 CodeEvolution/simonesCode/
