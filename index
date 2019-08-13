@@ -9,6 +9,53 @@ Testing the dominance of the leading 8 on these setups of networks
         7A_c
         7A_d
 
+[ucabpod@login12 Experiments]$ qsub 7A_a.sh 
+Your job 1536567 ("E_7Aa") has been submitted
+[ucabpod@login12 Experiments]$ qsub 7A_b.sh 
+Your job 1536568 ("E_7Ab") has been submitted
+[ucabpod@login12 Experiments]$ qsub 7A_c.sh 
+Your job 1536569 ("E_7Ac") has been submitted
+[ucabpod@login12 Experiments]$ qsub 7A_d.sh 
+Your job 1536570 ("E_7Ad") has been submitted
+
+
+job-ID  prior   name       user         state submit/start at     queue                          slots ja-task-ID 
+-----------------------------------------------------------------------------------------------------------------
+1536567 2.25000 E_7Aa      ucabpod      r     08/11/2019 22:05:51 Bagpuss@node-h00a-030              1        
+1536568 2.25000 E_7Ab      ucabpod      r     08/11/2019 22:06:14 Bagpuss@node-h00a-039              1        
+1536569 2.25000 E_7Ac      ucabpod      r     08/11/2019 22:08:09 Bagpuss@node-h00a-038              1        
+1536570 2.25000 E_7Ad      ucabpod      r     08/11/2019 22:08:17 Bagpuss@node-h00a-024              1        
+1536572 2.25000 E_6A0      ucabpod      r     08/11/2019 22:48:29 Bagpuss@node-h00a-042              1        
+1536573 2.25000 E_6A1      ucabpod      r     08/11/2019 22:48:49 Bagpuss@node-h00a-045              1        
+1536574 2.11903 E_6A2      ucabpod      qw    08/11/2019 22:48:25                                    1        
+1536575 2.10416 E_6A3      ucabpod      qw    08/11/2019 22:48:27                                    1        
+1536576 2.09258 E_6A4      ucabpod      qw    08/11/2019 22:48:28                                    1        
+1536577 2.08332 E_6A5      ucabpod      qw    08/11/2019 22:48:30                                    1        
+1536578 2.07575 E_6A6      ucabpod      qw    08/11/2019 22:48:32                                    1        
+1536579 2.06944 E_6A7      ucabpod      qw    08/11/2019 22:48:35                                    1        
+1536580 2.06410 E_8A0      ucabpod      qw    08/11/2019 22:48:46                                    1        
+1536581 2.05952 E_8A1      ucabpod      qw    08/11/2019 22:48:48                                    1        
+1536582 2.05555 E_8A6      ucabpod      qw    08/11/2019 22:48:50                                    1        
+1536583 2.05208 E_8A7      ucabpod      qw    08/11/2019 22:48:52                                    1        
+1536584 2.04901 E_8B7      ucabpod      qw    08/11/2019 22:48:56                                    1        
+1536585 2.04629 E_8B6      ucabpod      qw    08/11/2019 22:48:58                                    1        
+1536586 2.04385 E_8B1      ucabpod      qw    08/11/2019 22:49:01                                    1        
+1536587 0.00000 E_8B0      ucabpod      qw    08/11/2019 22:49:03                                    1  
+
+
+not gonna finish 
+job-ID  prior   name       user         state submit/start at     queue                          slots ja-task-ID 
+-----------------------------------------------------------------------------------------------------------------
+1536572 2.16662 E_6A0      ucabpod      r     08/11/2019 22:48:29 Bagpuss@node-h00a-042              1        
+1536573 2.16662 E_6A1      ucabpod      r     08/11/2019 22:48:49 Bagpuss@node-h00a-045              1        
+1536578 2.16662 E_6A6      ucabpod      r     08/11/2019 22:51:59 Bagpuss@node-h00a-013              1        
+1536579 2.16662 E_6A7      ucabpod      r     08/11/2019 22:52:33 Bagpuss@node-h00a-029              1        
+1536583 2.16662 E_8A7      ucabpod      r     08/11/2019 22:57:19 Bagpuss@node-h00a-024              1        
+1536584 2.16662 E_8B7      ucabpod      r     08/11/2019 22:57:28 Bagpuss@node-h00a-026              1        
+1536585 2.16662 E_8B6      ucabpod      r     08/11/2019 22:59:08 Bagpuss@node-h00a-042              1        
+1536586 2.16662 E_8B1      ucabpod      r     08/11/2019 23:00:25 Bagpuss@node-h00a-044              1        
+1536587 2.16662 E_8B0      ucabpod      r     08/11/2019 23:00:42 Bagpuss@node-h00a-040              1  
+
 
 ====================================================================================
 
