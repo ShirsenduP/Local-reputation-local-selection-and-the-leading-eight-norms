@@ -24,6 +24,11 @@ class GlobalReputation:
         """(Global reputation) - no need to broadcast reputations to neighbours since any agent can access any other
         agent's most recent reputation directly. """
         pass
+        # for agent in self.neighbours:
+        #     r = random.random()
+        #     if r < delta:
+        #         agent.history[self] = newReputation
+        #         logging.debug(f"A({self.id}) broadcast to {self.history}")
 
 
 class LocalReputation:
