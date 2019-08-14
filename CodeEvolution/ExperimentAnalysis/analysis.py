@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 def getDataFromID(ID):
     """When given a jobID, return the data in all the .csv files corresponding to that job. For cluster jobs
     only."""
-    dir, _ = os.path.split(os.getcwd())
+    dir, _ = os.path.split(os.getcwd()) # TODO this when running outside of the ExperimentAnalysis dir breaks!
+    print(dir)
     remoteData = os.path.join(dir, 'RemoteData')
 
     # Search for directory with the .csv files
@@ -14,6 +15,7 @@ def getDataFromID(ID):
     for root, dirs, files in os.walk(remoteData):
         for name in dirs:
             if ID in name:
+                print(name)
                 path = os.path.join(root, name)
 
     if path is None:
@@ -44,7 +46,7 @@ def getStrategyLabels():
 
 
 def plotAllStrategiesSummary(data, filename=None):
-    """Given the job ID of an experiment in the LocalData directory, plot the means of the proportions of mutants
+    """Given the job ID of an experiment in the RemoteData directory, plot the means of the proportions of mutants
     amongst each strategy along with error bars. Optionally save plot as .png in dataPath directory."""
 
     # Get the average proportion of the main strategy in the population
@@ -62,5 +64,30 @@ def plotAllStrategiesSummary(data, filename=None):
                 markeredgewidth=2)
 
     plt.rcParams.update({'font.size': 40})
+
+    return fig, ax
+
+
+def plotCooperationProportion(data, filename=None):
+    """Given the job ID of an experiment in the RemoteData directory, plot the average final proportions of
+    cooperation. Optionally save plot as .png in dataPath directory."""
+
+    # Get the average proportion of the main strategy in the population
+    means = [round(table['Prop. of Cooperators'].mean(), 5) for ID, table in data.items()]
+    stds = [round(table['Prop. of Cooperators'].std(), 5) for ID, table in data.items()]
+    print(means)
+    print()
+    print(stds)
+    fig, ax = plt.subplots()
+    strategies = list(range(9))
+    ax.errorbar(strategies, means,
+                yerr=stds,
+                ecolor='grey',
+                solid_capstyle='projecting',
+                capsize=5,
+                elinewidth=2,
+                markeredgewidth=2)
+
+    # plt.rcParams.update({'font.size': 20})
 
     return fig, ax
