@@ -3,6 +3,7 @@ import random
 
 
 class GlobalReputation:
+
     def getOpponentsReputation(self, agent1, agent2):
         """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
         is accessible to every other agent in the population."""
@@ -20,15 +21,29 @@ class GlobalReputation:
         agent1.updatePersonalReputation(agent1NewReputation)
         agent2.updatePersonalReputation(agent2NewReputation)
 
-    def broadcastReputation(self, newReputation, delta):
-        """(Global reputation) - no need to broadcast reputations to neighbours since any agent can access any other
-        agent's most recent reputation directly. """
-        pass
-        # for agent in self.neighbours:
-        #     r = random.random()
-        #     if r < delta:
-        #         agent.history[self] = newReputation
-        #         logging.debug(f"A({self.id}) broadcast to {self.history}")
+    def updateAfterSocialDilemma(self, agent1, agent2, agent1OldRep, agent2OldRep, agent1Move, agent2Move):
+        """(Global Reputation) This method calculates and updates the respective personal reputations of each agent
+        given their previous reputations and their moves.
+
+        NOTE:
+        The reputations here 'agent1OldRep' and 'agent2OldRep are given within Network.playSocialDilemma: the
+        Network.getOpponentsReputations line defined in the Global Reputation class. These two reputations are directly
+        the
+        reputations
+        seen by the
+        agents
+        themselves and everyone in the population."""
+
+
+
+        agent1NewRep = self.socialNorm.assignReputation(agent1OldRep, agent2OldRep, agent1Move)
+        agent2NewRep = self.socialNorm.assignReputation(agent2OldRep, agent1OldRep, agent2Move)
+
+        # TODO Fix BROADCAST REPUTATION -> why does it break everything :( :( :'(
+        agent1.updatePersonalReputation(agent1NewRep)
+        agent2.updatePersonalReputation(agent2NewRep)
+        agent1.broadcastReputation(agent1NewRep, self.config.delta)
+        agent2.broadcastReputation(agent2NewRep, self.config.delta)
 
 
 class LocalReputation:
@@ -83,11 +98,24 @@ class LocalReputation:
         agent1.updatePersonalReputation(agent1PersonalReputation)
         agent2.updatePersonalReputation(agent2PersonalReputation)
 
-    def broadcastReputation(self, newReputation, delta):
-        """Broadcast an agent's reputation following an interaction to all of his neighbours. Delta is the
-        probability that a neighbour views the the agent's new reputation."""
-        for agent in self.neighbours:
-            r = random.random()
-            if r < delta:
-                agent.history[self] = newReputation
-                logging.debug(f"A({self.id}) broadcast to {self.history}")
+    def updateAfterSocialDilemma(self, agent1, agent2, agent1OldRep, agent2OldRep, agent1Move, agent2Move):
+        """(Local Reputation) This method calculates and updates the neighbours of an agent with his new reputation.
+
+        NOTE:
+        The reputations here 'agent1OldRep' and 'agent2OldRep are given within Network.playSocialDilemma: the
+        Network.getOpponentsReputations line assigned by the Local Reputation class.
+
+        From agent1's POV, he knows his personal reputation (agent1.currentReputation), and his opponent's reputation
+        through his neighbour (agent2OldRep), therefore his new reputation for himself and all of his neighbours is
+        calculated with these values.
+history
+        From agent2's POV, he knows his personal rep(agent2.currentReputation) and his neighbours (agent1OldRep).
+        This is what his new reputation will be based on, saved for his own knowledge and sent to his neighbours."""
+
+        agent1NewRep = self.socialNorm.assignReputation(agent1.currentReputation, agent2OldRep, agent1Move)
+        agent2NewRep = self.socialNorm.assignReputation(agent2.currentReputation, agent1OldRep, agent2Move)
+
+        agent1.updatePersonalReputation(agent1NewRep)
+        agent2.updatePersonalReputation(agent2NewRep)
+        agent1.broadcastReputation(agent1NewRep, self.config.delta)
+        agent2.broadcastReputation(agent2NewRep, self.config.delta)

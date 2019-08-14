@@ -10,10 +10,14 @@ def getDataFromID(ID):
     remoteData = os.path.join(dir, 'RemoteData')
 
     # Search for directory with the .csv files
+    path = None
     for root, dirs, files in os.walk(remoteData):
         for name in dirs:
             if ID in name:
                 path = os.path.join(root, name)
+
+    if path is None:
+        raise FileNotFoundError(f"Experiment results with id {ID} not found.")
 
     # Get only the csv files
     files = sorted(os.listdir(path))

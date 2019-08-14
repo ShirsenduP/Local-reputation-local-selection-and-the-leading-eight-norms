@@ -18,7 +18,19 @@ class Agent:
         self.currentReputation = random.choice(Agent.reputation)
         self.currentUtility = 0
         self.neighbours = []
-        self.history = {}  # get LAST partner
+
+    def broadcastReputation(self, newReputation, delta):
+        """(Global reputation) - no need to broadcast reputations to neighbours since any agent can access any other
+        agent's most recent reputation directly. """
+        for agent in self.neighbours:
+            r = random.random()
+            if r < delta:
+                # logging.info("======================================")
+                logging.debug(f"Agent({agent.id}) has history {agent.history}")
+                agent.history[self] = newReputation
+                logging.debug(f"Agent({agent.id}) has history {agent.history}")
+                # logging.info(f"A({self.id}) broadcast to {self.history}")
+                # logging.info("======================================")
 
     def updateUtility(self, payoff):
         """Update the utility or cumulative payoff of an agent."""
@@ -57,10 +69,10 @@ class Agent:
         """Only keep track of interactions with your neighbours."""
         self.history = {}.fromkeys(self.neighbours)
 
-    def recordInteraction(self, interaction):
-        """Remember the previous interaction with your neighbours (and no one else)."""
-        if interaction['Opponent'] in self.neighbours:
-            self.history[interaction['Opponent']] = interaction
+    # def recordInteraction(self, interaction):
+    #     """Remember the previous interaction with your neighbours (and no one else)."""
+    #     if interaction['Opponent'] in self.neighbours:
+    #         self.history[interaction['Opponent']] = interaction
 
     def getHistory(self):
         """Print to the console the reputations of his neighbours from his point of view."""
@@ -89,7 +101,7 @@ class GrGeAgent(GlobalEvolution, GlobalReputation, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
-
+        self.history = {}
 
 class LrGeAgent(GlobalEvolution, LocalReputation, Agent):
     """Agent class implementing Global Evolution mechanisms for the Local Reputation & Global Evolution Model. This
@@ -97,6 +109,7 @@ class LrGeAgent(GlobalEvolution, LocalReputation, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
+        self.history = {}  # get LAST partner
 
 
 class LrLeAgent(LocalEvolution, LocalReputation, Agent):
@@ -105,6 +118,7 @@ class LrLeAgent(LocalEvolution, LocalReputation, Agent):
 
     def __int__(self, _id, _strategy):
         super().__init__(_id, _strategy)
+        self.history = {}  # get LAST partner
 
 
 class GrLeAgent(LocalEvolution, GlobalReputation, Agent):

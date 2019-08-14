@@ -272,6 +272,8 @@ class Network:
 
         # Two agents chosen randomly from the population
         agent1, agent2 = self.chooseTwoAgents()
+
+        # Get their reputations, two methods, globally available rep, or locally available rep
         agent1Reputation, agent2Reputation = self.getOpponentsReputation(agent1, agent2)
 
         # Each agent calculates their move according to their behavioural strategy
@@ -288,8 +290,13 @@ class Network:
         agent1.updateUtility(payoff1)
         agent2.updateUtility(payoff2)
 
-        self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        # self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        self.updateAfterSocialDilemma(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+
+    def updateAfterSocialDilemma(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        """Defined in GlobalReputation/LocalReputation classes."""
+        raise NotImplementedError
 
     def resetUtility(self):
         """Reset the utility of each agent in the population. To be used at the end of every timestep."""
