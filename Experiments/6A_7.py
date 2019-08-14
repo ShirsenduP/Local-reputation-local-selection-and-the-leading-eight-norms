@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     # Testing degree(density)
     var = 'degree'
-    values = list(range(3, 22, 1))
+    values = list(range(13, 3, -1))
     mainID = 7
 
     if rerunSimulations:
@@ -23,4 +23,4 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeRRLNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()
-        E.run(cluster=True)
+        E.run(display=True)

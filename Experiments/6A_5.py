@@ -1,3 +1,5 @@
+import logging
+
 from CodeEvolution.models import LrGeRRLNetwork
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
@@ -5,13 +7,14 @@ from CodeEvolution.Experiment import Experiment
 if __name__ == '__main__':
 
     """Test 6 - Strategy 0 vs All-D. Testing d-Regular Random Lattices with d = [3, 4, ..., 22]."""
-
+    logging.basicConfig(level=logging.INFO)
     rerunSimulations = True
     repeats = 100
 
     # Testing degree(density)
     var = 'degree'
-    values = list(range(3, 22, 1))
+    # values = list(range(3, 22, 1))
+    values = [10]
     mainID = 5
 
     if rerunSimulations:
@@ -23,4 +26,4 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeRRLNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()
-        E.run(cluster=True)
+        E.run(display=True)

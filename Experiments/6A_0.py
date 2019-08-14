@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     # Testing degree(density)
     var = 'degree'
-    values = list(range(3, 22, 1))
+    values = list(range(13, 3, -1))
     mainID = 0
 
     if rerunSimulations:

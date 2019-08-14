@@ -5,14 +5,14 @@ Experiment 6
 Effect of degree of regular random lattice on proportions of cooperation
 Strategy i = [0,7] vs degree d [3, 22]
 
-	6A_0    1536572
-	6A_1    1536573
-	6A_2
-	6A_3
-	6A_4
-	6A_5
-	6A_6    1536578
-	6A_7    1536579
+	6A_0
+	6A_1
+	6A_2    1536574
+	6A_3    1536575
+	6A_4    1536576
+	6A_5    1536577
+	6A_6
+	6A_7
 
 need to rerun after estimating more accurately how long they will take >24 hours
 
