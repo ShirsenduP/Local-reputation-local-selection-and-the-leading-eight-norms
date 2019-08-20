@@ -93,12 +93,9 @@ class Results:
     @staticmethod
     def exportExperimentConfigs(configsAsString, experimentName):
         """Export a text file containing all the configurations run into the same location as the LocalData."""
-        modulePath = os.path.dirname(os.path.realpath(__file__))
-        resultsPath = os.path.join(modulePath, 'LocalData')
-        experimentPath = os.path.join(resultsPath, experimentName)
-        fileName = "configs.txt"
-        configPath = os.path.join(experimentPath, fileName)
-        with open(configPath, 'w') as c:
+        fileName = str(os.getcwd())+'/'
+        fileName += "configs.txt"
+        with open(fileName, 'w') as c:
             c.write(configsAsString)
 
     @staticmethod
