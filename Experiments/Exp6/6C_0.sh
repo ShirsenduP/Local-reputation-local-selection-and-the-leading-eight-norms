@@ -4,7 +4,7 @@
 #$ -S /bin/bash
 
 # Request x  minutes (h:m:s)
-#$ -l h_rt=168:00:0
+#$ -l h_rt=72:00:0
 
 # Request xGB memory (x = int)
 #$ -l mem=1G
