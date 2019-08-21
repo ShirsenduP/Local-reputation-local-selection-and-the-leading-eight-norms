@@ -2,17 +2,22 @@ from CodeEvolution.models import LrGeRRLNetwork
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 
+
 if __name__ == '__main__':
 
-    """Test 6 - Strategy 0 vs All-D. Testing d-Regular Random Lattices with d = [3, 4, ..., 22]."""
+    """
+    Effect of degree on regular random lattice on proportions of cooperation
+    Strategy i = [0,1,6,7] vs degree d = [3, 10, 25, 50, 100, 200, 299], LrGe, ONLY TEN REPEATS
+    """
 
     rerunSimulations = True
-    repeats = 100
+    repeats = 10
+
 
     # Testing degree(density)
     var = 'degree'
-    values = list(range(13, 2, -1))
-    mainID = 7
+    values = [3, 10, 25, 50, 100, 200, 299]
+    mainID = 6
 
     if rerunSimulations:
 
@@ -23,4 +28,4 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeRRLNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()
-        E.run(display=True)
+        E.run(cluster=True)

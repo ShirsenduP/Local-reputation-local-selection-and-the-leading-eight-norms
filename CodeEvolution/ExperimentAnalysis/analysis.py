@@ -1,13 +1,17 @@
+import logging
 import os
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+from collections import OrderedDict
 
 
 def getDataFromID(ID):
     """When given a jobID, return the data in all the .csv files corresponding to that job. For cluster jobs
     only."""
-    dir, _ = os.path.split(os.getcwd()) # TODO this when running outside of the ExperimentAnalysis dir breaks!
-    print(dir)
+    dir, _ = os.path.split(os.getcwd())  # TODO this when running outside of the ExperimentAnalysis dir breaks!
+    # print(dir)
     remoteData = os.path.join(dir, 'RemoteData')
 
     # Search for directory with the .csv files
@@ -15,7 +19,7 @@ def getDataFromID(ID):
     for root, dirs, files in os.walk(remoteData):
         for name in dirs:
             if ID in name:
-                print(name)
+                # print(name)
                 path = os.path.join(root, name)
 
     if path is None:
@@ -26,6 +30,7 @@ def getDataFromID(ID):
     for file in files:
         if '.csv' not in file:
             files.remove(file)
+    logging.warning(f'files are in {files}')
 
     # Load panda dataframe results
     dataDict = {}
@@ -35,7 +40,13 @@ def getDataFromID(ID):
             name2 = os.path.splitext(name)
             dataDict[int(name2[0])] = pd.read_csv(f)
 
-    return dataDict
+    # Sort the data so it is plotted in the correct order
+    fileNames = sorted(dataDict.keys())
+    orderedDataDict = OrderedDict()
+    for name in fileNames:
+        orderedDataDict[name] = dataDict[name]
+
+    return orderedDataDict
 
 
 def getStrategyLabels():
@@ -73,21 +84,19 @@ def plotCooperationProportion(data, filename=None):
     cooperation. Optionally save plot as .png in dataPath directory."""
 
     # Get the average proportion of the main strategy in the population
+    length = data[0].shape[0]
     means = [round(table['Prop. of Cooperators'].mean(), 5) for ID, table in data.items()]
-    stds = [round(table['Prop. of Cooperators'].std(), 5) for ID, table in data.items()]
-    print(means)
-    print()
-    print(stds)
+    [print(key) for key, value in data.items()]
+    standardErrors = [round(table['Prop. of Cooperators'].std()/np.sqrt(length), 5) for ID, table in
+            data.items()]
     fig, ax = plt.subplots()
-    strategies = list(range(9))
+    strategies = list(range(len(means)))
     ax.errorbar(strategies, means,
-                yerr=stds,
+                yerr=standardErrors,
                 ecolor='grey',
                 solid_capstyle='projecting',
                 capsize=5,
                 elinewidth=2,
                 markeredgewidth=2)
-
-    # plt.rcParams.update({'font.size': 20})
 
     return fig, ax

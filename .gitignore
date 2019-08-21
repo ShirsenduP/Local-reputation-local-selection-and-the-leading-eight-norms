@@ -1,6 +1,7 @@
 .vscode/
 __pycache__/
 env/
+*.png
 *.log
 CodeEvolution/logs/
 CodeEvolution/configurations/draft2.json
