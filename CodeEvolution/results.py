@@ -94,8 +94,11 @@ class Results:
     def exportExperimentConfigs(configsAsString, experimentName):
         """Export a text file containing all the configurations run into the same location as the LocalData."""
         fileName = "configs.txt"
-        with open(fileName, 'w+') as c:
-            c.write(configsAsString)
+        try:
+            with open(fileName, 'w+') as c:
+                c.write(configsAsString)
+        except FileNotFoundError:
+            print(configsAsString)
 
     @staticmethod
     def exportResultsToCsvCluster(experimentName, experimentConfig, experimentResults, experimentNumber):
