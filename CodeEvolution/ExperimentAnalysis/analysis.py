@@ -62,8 +62,9 @@ def plotAllStrategiesSummary(data):
     amongst each strategy along with error bars. Optionally save plot as .png in dataPath directory."""
 
     # Get the average proportion of the main strategy in the population
+    length = data[0].shape[0]
     means = [round(table[f'Prop. Strategy #{ID}'].mean(), 5) for ID, table in data.items()]
-    stds = [round(table[f'Prop. Strategy #{ID}'].std(), 5) for ID, table in data.items()]
+    stds = [round(table[f'Prop. Strategy #{ID}'].std()/np.sqrt(length), 5) for ID, table in data.items()]
 
     fig, ax = plt.subplots()
     strategies = list(range(8))
@@ -75,7 +76,7 @@ def plotAllStrategiesSummary(data):
                 elinewidth=2,
                 markeredgewidth=2)
 
-    plt.rcParams.update({'font.size': 40})
+    # plt.rcParams.update({'font.size': 40})
 
     return fig, ax
 

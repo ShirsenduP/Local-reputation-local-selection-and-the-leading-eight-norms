@@ -24,18 +24,20 @@ if __name__ == '__main__':
     newXLabels = list(range(13, 2, -1))
     i = 0
 
-    # Plots of cooperation
+    # Plots of cooperation of leading four
     for ID in jobIDs:
-        data = getDataFromID(ID)
+
+        # These strategies fail so no point in plotting
         if i in [2, 3, 4, 5]:
             i += 1
             continue
+
+        data = getDataFromID(ID)
         fig, ax = plotCooperationProportion(data)
         title = f'LrGe - $S_{i}$ vs RRL Degree'
         plt.title(title)
         plt.xlabel("Degree")
         plt.ylabel(f"Average Proportion of Cooperation")
         plt.xticks(ticks=list(range(11)), labels=newXLabels)
-        plt.savefig(+ID)
-        # plt.show()
+        plt.savefig(ID)
         i += 1

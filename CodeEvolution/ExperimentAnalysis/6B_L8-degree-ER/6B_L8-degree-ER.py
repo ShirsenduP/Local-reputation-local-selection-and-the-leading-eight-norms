@@ -14,7 +14,7 @@ Strategy i = [0,7] vs degree d [13, 3]
 from CodeEvolution.ExperimentAnalysis.analysis import *
 
 if __name__ == '__main__':
-    jobIDs = ['1557510', '1557511', '1536574', '1536575', '1536576', '1536577', '1557512', '1560446']
+    jobIDs = [None]
 
     # Data was generated in reverse order, fix by using reverse labels
     newXLabels = list(range(13, 2, -1))
