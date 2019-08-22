@@ -10,7 +10,8 @@ from collections import OrderedDict
 def getDataFromID(ID):
     """When given a jobID, return the data in all the .csv files corresponding to that job. For cluster jobs
     only."""
-    dir, _ = os.path.split(os.getcwd())  # TODO this when running outside of the ExperimentAnalysis dir breaks!
+    dir, _ = os.path.split(os.getcwd())
+    dir, _ = os.path.split(dir) # TODO: while loop to recurse through higher directories til file found
     # print(dir)
     remoteData = os.path.join(dir, 'RemoteData')
 
@@ -56,7 +57,7 @@ def getStrategyLabels():
     return labelForGraphs
 
 
-def plotAllStrategiesSummary(data, filename=None):
+def plotAllStrategiesSummary(data):
     """Given the job ID of an experiment in the RemoteData directory, plot the means of the proportions of mutants
     amongst each strategy along with error bars. Optionally save plot as .png in dataPath directory."""
 
@@ -79,14 +80,14 @@ def plotAllStrategiesSummary(data, filename=None):
     return fig, ax
 
 
-def plotCooperationProportion(data, filename=None):
+def plotCooperationProportion(data):
     """Given the job ID of an experiment in the RemoteData directory, plot the average final proportions of
     cooperation. Optionally save plot as .png in dataPath directory."""
 
     # Get the average proportion of the main strategy in the population
     length = data[0].shape[0]
     means = [round(table['Prop. of Cooperators'].mean(), 5) for ID, table in data.items()]
-    [print(key) for key, value in data.items()]
+    # [print(key) for key, value in data.items()]
     standardErrors = [round(table['Prop. of Cooperators'].std()/np.sqrt(length), 5) for ID, table in
             data.items()]
     fig, ax = plt.subplots()
@@ -98,5 +99,31 @@ def plotCooperationProportion(data, filename=None):
                 capsize=5,
                 elinewidth=2,
                 markeredgewidth=2)
+
+    return fig, ax
+
+
+def plotSingleStrategy(data, strategyID):
+    """Given the normal output from getDataFromID, the 'data' is an OrderedDict object with the keys as the several
+    values of the parameter being tested, and the values are the standard results table for each corresponding
+    parameter."""
+
+    # Get the average proportion of the main strategy in the population
+    means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for _, table in data.items()]
+    stds = [round(table[f'Prop. Strategy #{strategyID}'].std(), 5) for _, table in data.items()]
+
+    # print(means)
+    # print(stds)
+
+    fig, ax = plt.subplots()
+    strategies = list(range(len(means)))
+    ax.errorbar(strategies, means,
+                yerr=stds,
+                ecolor='grey',
+                solid_capstyle='projecting',
+                capsize=5,
+                elinewidth=2,
+                markeredgewidth=2)
+
 
     return fig, ax

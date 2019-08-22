@@ -106,12 +106,7 @@ Experiment 10 ------------------------------------------------------------------
 Effect of increasing the mutation rate on LrGeERNetwork to see where the threshold is for mutation to dominate
 Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the expected number of mutations/time-step.
 
-	10A_0
-	10A_1
-	10A_6
-	10A_7
-
-        1574518 2.03886 E_10A0     ucabpod      qw    08/21/2019 15:57:31                                    1
-        1574519 2.03670 E_10A1     ucabpod      qw    08/21/2019 15:57:34                                    1
-        1574520 2.03477 E_10A6     ucabpod      qw    08/21/2019 15:57:36                                    1
-        1574521 0.00000 E_10A7     ucabpod      qw    08/21/2019 15:57:38                                    1
+	10A_0   1574518
+	10A_1   1574519
+	10A_6   1574520
+	10A_7   1574521
