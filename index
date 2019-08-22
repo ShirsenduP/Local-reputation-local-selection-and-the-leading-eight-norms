@@ -18,7 +18,7 @@ Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe
     6B_0
     6B_1
     6B_6
-    6B_7    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    6B_7    FAILED -> new 1576517
 
         1574496 3.49968 E_6B0      ucabpod      r     08/21/2019 15:52:40 Bagpuss@node-h00a-036              1
         1574497 2.31639 E_6B1      ucabpod      qw    08/21/2019 15:52:38                                    1
@@ -91,17 +91,17 @@ Effect of simulation on variance of convergence point, Erdos Renyi network, size
 intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 
 	9A_0
-	9A_1    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	9A_1    1576515
 	9A_6
 	9A_7
 
         1574513 2.05082 E_9A0      ucabpod      qw    08/21/2019 15:56:49                                    1
-        1574514 2.04719 E_9A1      ucabpod      qw    08/21/2019 15:56:50                                    1
+        1574514 2.04719 E_9A1      ucabpod      qw    08/21/2019 15:56:50                                    1 FAILED new -> 1576515
         1574515 2.04404 E_9A6      ucabpod      qw    08/21/2019 15:56:52                                    1
         1574516 0.00000 E_9A7      ucabpod      qw    08/21/2019 15:56:54
 
 ========================================================================================================================
-Experiment 10
+Experiment 10 ----------------------------------------------------------------------------------------------------------
 
 Effect of increasing the mutation rate on LrGeERNetwork to see where the threshold is for mutation to dominate
 Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the expected number of mutations/time-step.
