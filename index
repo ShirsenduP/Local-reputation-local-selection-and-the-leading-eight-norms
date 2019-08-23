@@ -78,11 +78,17 @@ Global Evolution and an Erdos Renyi network. Only tested on the leading four.
         1574510 2.06486 E_8B1      ucabpod      qw    08/21/2019 15:55:57                                    1
         1574511 2.05897 E_8B6      ucabpod      qw    08/21/2019 15:56:00                                    1
         1574512 0.00000 E_8B7      ucabpod      qw    08/21/2019 15:56:02
-
+        ALSO FAILED
         1574544 2.04008 E_8B0      ucabpod      qw    08/21/2019 16:04:44                                    1
         1574545 2.03785 E_8B1      ucabpod      qw    08/21/2019 16:04:46                                    1
         1574546 2.03586 E_8B6      ucabpod      qw    08/21/2019 16:04:47                                    1
         1574547 0.00000 E_8B7      ucabpod      qw    08/21/2019 16:04:49                                    1   1
+
+
+1577967 2.11539 E_8B0      ucabpod      r     08/22/2019 23:37:12 Bagpuss@node-h00a-048              1
+1577968 2.11539 E_8B1      ucabpod      r     08/22/2019 23:37:57 Bagpuss@node-h00a-047              1
+1577969 2.11539 E_8B6      ucabpod      r     08/22/2019 23:38:00 Bagpuss@node-h00a-035              1
+1577970 2.11539 E_8B7      ucabpod      r     08/22/2019 23:38:12 Bagpuss@node-h00a-004              1
 
 ========================================================================================================================
 Experiment 9

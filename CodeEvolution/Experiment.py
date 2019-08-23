@@ -204,6 +204,17 @@ class Experiment:
         listOfStates = tuple(listOfStates)
         return listOfStates
 
+    @staticmethod
+    def generateSmallWorldParameters(nLower=2, nUpper=50, probabilityLower=0, probabilityUpper=1, nStep=10,
+                                     probStep=0.1):
+        """Iterate through both axes of initial degree (initialNeighbourCount) and the rewiringProbability to give a
+        2-D plane of configurations"""
+        smallWorldParams = []
+        for n in np.arange(nLower, nUpper, nStep):
+            for prob in np.arange(probabilityLower, probabilityUpper + 0.01, probStep):
+                smallWorldParams.append((n, round(prob, 3)))
+        return smallWorldParams
+
 
 if __name__ == '__main__':
     C = Config(initialState=State(0, 1, 8), degree=5)
