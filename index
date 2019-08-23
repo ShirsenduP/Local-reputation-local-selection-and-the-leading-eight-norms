@@ -15,29 +15,17 @@ Effect of degree of regular random lattice on proportions of cooperation Strateg
 Effect of degree on regular random lattice on proportions of cooperation
 Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe, ONLY TEN REPEATS
 
-    6B_0
-    6B_1
-    6B_6
-    6B_7    FAILED -> new 1576517
-
-        1574496 3.49968 E_6B0      ucabpod      r     08/21/2019 15:52:40 Bagpuss@node-h00a-036              1
-        1574497 2.31639 E_6B1      ucabpod      qw    08/21/2019 15:52:38                                    1
-        1574498 2.21092 E_6B6      ucabpod      qw    08/21/2019 15:52:40                                    1
-        1574499 2.15819 E_6B7      ucabpod      qw    08/21/2019 15:52:42                                    1
-                                       1
-
+    6B_0    1574496
+    6B_1    1574497
+    6B_6    1574498
+    6B_7    1576517
 
 Effect of equivalent density on Erdos Renyi random network, LrGe
 
-    6C_0
-    6C_1
-    6C_6
-    6C_7
-
-        1574503 2.12655 E_6C0      ucabpod      qw    08/21/2019 15:53:22                                    1
-        1574504 2.10546 E_6C1      ucabpod      qw    08/21/2019 15:53:24                                    1
-        1574505 2.09040 E_6C6      ucabpod      qw    08/21/2019 15:53:26                                    1
-        1574506 0.00000 E_6C7      ucabpod      qw    08/21/2019 15:53:28
+    6C_0    1574503
+    6C_1    1574504
+    6C_6    1574505
+    6C_7    1574506
 
 ========================================================================================================================
 Experiment 7 -----------------------------------------------------------------------------------------------------------
@@ -68,27 +56,11 @@ Experiment 8B
 Effect of size of network on the number of leading strategies for Local Reputation,
 Global Evolution and an Erdos Renyi network. Only tested on the leading four.
 
-	8B.0
-	8B.1
-	8B.6
-	8B.7
+	8B.0    1577967
+	8B.1    1577968
+	8B.6    1577969
+	8B.7    1577970
 
-        FAILED - INCORRECT FILEPATH TO SCRIPT
-        1574509 2.07207 E_8B0      ucabpod      qw    08/21/2019 15:55:55                                    1
-        1574510 2.06486 E_8B1      ucabpod      qw    08/21/2019 15:55:57                                    1
-        1574511 2.05897 E_8B6      ucabpod      qw    08/21/2019 15:56:00                                    1
-        1574512 0.00000 E_8B7      ucabpod      qw    08/21/2019 15:56:02
-        ALSO FAILED
-        1574544 2.04008 E_8B0      ucabpod      qw    08/21/2019 16:04:44                                    1
-        1574545 2.03785 E_8B1      ucabpod      qw    08/21/2019 16:04:46                                    1
-        1574546 2.03586 E_8B6      ucabpod      qw    08/21/2019 16:04:47                                    1
-        1574547 0.00000 E_8B7      ucabpod      qw    08/21/2019 16:04:49                                    1   1
-
-
-1577967 2.11539 E_8B0      ucabpod      r     08/22/2019 23:37:12 Bagpuss@node-h00a-048              1
-1577968 2.11539 E_8B1      ucabpod      r     08/22/2019 23:37:57 Bagpuss@node-h00a-047              1
-1577969 2.11539 E_8B6      ucabpod      r     08/22/2019 23:38:00 Bagpuss@node-h00a-035              1
-1577970 2.11539 E_8B7      ucabpod      r     08/22/2019 23:38:12 Bagpuss@node-h00a-004              1
 
 ========================================================================================================================
 Experiment 9
@@ -96,15 +68,11 @@ Experiment 9
 Effect of simulation on variance of convergence point, Erdos Renyi network, size 300, test maxT from 500-5000 at
 intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 
-	9A_0
+	9A_0    1574513
 	9A_1    1576515
-	9A_6
-	9A_7
+	9A_6    1574515
+	9A_7    1574516
 
-        1574513 2.05082 E_9A0      ucabpod      qw    08/21/2019 15:56:49                                    1
-        1574514 2.04719 E_9A1      ucabpod      qw    08/21/2019 15:56:50                                    1 FAILED new -> 1576515
-        1574515 2.04404 E_9A6      ucabpod      qw    08/21/2019 15:56:52                                    1
-        1574516 0.00000 E_9A7      ucabpod      qw    08/21/2019 15:56:54
 
 ========================================================================================================================
 Experiment 10 ----------------------------------------------------------------------------------------------------------
@@ -125,7 +93,8 @@ Experiment 11
     probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). (default 4 nearest neighbours,
     probability 0 -> 1 in steps of 0.1.
 
-	11A_0
-	11A_1
-	11A_6
-	11A_7
+    Submitted: 11:13 Fri 23 Aug: 36 hours
+	11A_0   1578774
+	11A_1   1578775
+	11A_6   1578776
+	11A_7   1578777
