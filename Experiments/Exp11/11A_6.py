@@ -9,7 +9,8 @@ if __name__ == '__main__':
     Test 11A - 0
     
     Finding the proportions of cooperation in watts-strogatz-small-world models, parameterised by rewiring 
-    probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). 
+    probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). (default 4 nearest neighbours, 
+    probability 0 -> 1 in steps of 0.1.
 
     """
 
