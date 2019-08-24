@@ -17,12 +17,11 @@ if __name__ == '__main__':
     rerunSimulations = True
     repeats = 100
     var = 'smallWorld'
-    mainID = 0
-
     values = []
     for n in np.arange(4, 4.01, 1):
         for prob in np.arange(0, 1.01, 0.1):
-            values.append((n, round(prob, 3)))
+            values.append((int(n), round(prob, 3)))
+    mainID = 0
 
     if rerunSimulations:
 
@@ -33,5 +32,5 @@ if __name__ == '__main__':
                        variable=var, values=values)
 
         E.showExperiments()
-        E.run(cluster=True)
-
+        # E.run(cluster=True)
+        E.run(display=True)

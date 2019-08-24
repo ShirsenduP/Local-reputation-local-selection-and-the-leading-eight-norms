@@ -212,7 +212,7 @@ class Experiment:
         smallWorldParams = []
         for n in np.arange(nLower, nUpper, nStep):
             for prob in np.arange(probabilityLower, probabilityUpper + 0.01, probStep):
-                smallWorldParams.append((n, round(prob, 3)))
+                smallWorldParams.append((int(n), round(prob, 3)))
         return smallWorldParams
 
 

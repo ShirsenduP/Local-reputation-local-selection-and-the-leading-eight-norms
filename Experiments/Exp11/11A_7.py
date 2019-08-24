@@ -20,7 +20,7 @@ if __name__ == '__main__':
     values = []
     for n in np.arange(4, 4.01, 1):
         for prob in np.arange(0, 1.01, 0.1):
-            values.append((n, round(prob, 3)))
+            values.append((int(n), round(prob, 3)))
     mainID = 7
 
     if rerunSimulations:
