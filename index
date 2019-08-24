@@ -17,6 +17,8 @@ SUMMARY
     Experiment  9A - in progress
     Experiment  11A - in progress
 
+NOTE
+    - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
 
 ========================================================================================================================
 ========================================================================================================================
@@ -115,7 +117,7 @@ Experiment 11 - IN PROGRESS
     probability 0 -> 1 in steps of 0.1.
 
     Submitted: 08/24/2019 16:02:04
-	11A_0   1582606 - (1582518)
+	11A_0   1582671 - (1582606, 1582518)
 	11A_1   1582607 - (1582519)
 	11A_6   1582608 - (1582520)
 	11A_7   1582609 - (1582521)
