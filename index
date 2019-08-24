@@ -22,7 +22,7 @@ Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe
 
 Effect of equivalent density on Erdos Renyi random network, LrGe
 
-    6C_0    1574503
+    6C_0    1580008     (failed 1574503)
     6C_1    1574504
     6C_6    1574505
     6C_7    1574506
@@ -68,10 +68,10 @@ Experiment 9
 Effect of simulation on variance of convergence point, Erdos Renyi network, size 300, test maxT from 500-5000 at
 intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 
-	9A_0    1574513
-	9A_1    1576515
-	9A_6    1574515
-	9A_7    1574516
+	9A_0    1574513 NEEDS TO BE REDONE
+	9A_1    1576515 done
+	9A_6    1574515 done
+	9A_7    1574516 done
 
 
 ========================================================================================================================
