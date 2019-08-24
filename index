@@ -1,22 +1,22 @@
 ========================================================================================================================
-index
 ========================================================================================================================
-
-
+INDEX
+========================================================================================================================
+========================================================================================================================
 
 SUMMARY
 
     Experiment  6A - completed
-    Experiment  6B - in progress, many tests failing because of package update
-    Experiment  6C - in progress, many tests failing because of package update
     Experiment  7A - completed
     Experiment  8A - completed
+    Experiment  10A - completed
+
+    Experiment  6B - in progress, many tests failing because of package update
+    Experiment  6C - in progress, many tests failing because of package update
     Experiment  8B - in progress
     Experiment  9A - in progress
-    Experiment  10A - completed
     Experiment  11A - in progress
 
- NOTES
 
 ========================================================================================================================
 ========================================================================================================================
@@ -108,14 +108,16 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 
 
 ========================================================================================================================
-Experiment 11 - IN PROGRESS !!!!! need to fix
+Experiment 11 - IN PROGRESS
 
     Finding the proportions of cooperation in watts-strogatz-small-world models, parameterised by rewiring
     probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). (default 4 nearest neighbours,
     probability 0 -> 1 in steps of 0.1.
 
-    Submitted: 08/24/2019 15:14:38
-	11A_0   1582518
-	11A_1   1582519
-	11A_6   1582520
-	11A_7   1582521
+    Submitted: 08/24/2019 16:02:04
+	11A_0   1582606 - (1582518)
+	11A_1   1582607 - (1582519)
+	11A_6   1582608 - (1582520)
+	11A_7   1582609 - (1582521)
+
+
