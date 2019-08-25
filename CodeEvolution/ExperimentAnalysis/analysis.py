@@ -31,7 +31,7 @@ def getDataFromID(ID):
     for file in files:
         if '.csv' not in file:
             files.remove(file)
-    logging.warning(f'files are in {files}')
+    logging.info(f'files are in {path}')
 
     # Load panda dataframe results
     dataDict = {}
@@ -46,7 +46,7 @@ def getDataFromID(ID):
     orderedDataDict = OrderedDict()
     for name in fileNames:
         orderedDataDict[name] = dataDict[name]
-
+    # print(orderedDataDict.keys())
     return orderedDataDict
 
 

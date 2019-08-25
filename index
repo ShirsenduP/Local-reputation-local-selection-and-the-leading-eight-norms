@@ -10,12 +10,12 @@ SUMMARY
     Experiment  7A - completed
     Experiment  8A - completed
     Experiment  10A - completed
+    Experiment  11A - completed
 
     Experiment  6B - in progress, many tests failing because of package update
     Experiment  6C - in progress, many tests failing because of package update
     Experiment  8B - in progress
     Experiment  9A - in progress
-    Experiment  11A - in progress
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -110,7 +110,7 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 
 
 ========================================================================================================================
-Experiment 11 - IN PROGRESS
+Experiment 11 - COMPLETED
 
     Finding the proportions of cooperation in watts-strogatz-small-world models, parameterised by rewiring
     probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). (default 4 nearest neighbours,
