@@ -11,7 +11,7 @@ if __name__ == '__main__':
     """
 
     rerunSimulations = True
-    repeats = 10
+    repeats = 5
 
 
     # Testing degree(density)

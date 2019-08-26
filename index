@@ -9,13 +9,13 @@ SUMMARY
     Experiment  6A - completed
     Experiment  7A - completed
     Experiment  8A - completed
+    Experiment  9A - completed
     Experiment  10A - completed
     Experiment  11A - completed
 
     Experiment  6B - in progress, many tests failing because of package update
     Experiment  6C - in progress, many tests failing because of package update
     Experiment  8B - in progress
-    Experiment  9A - in progress
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -90,12 +90,12 @@ just in case the above fail
 1587843 2.07608 E_8B6      ucabpod      qw    08/25/2019 20:01:53                                    1        
 1587844 2.06974 E_8B7      ucabpod      qw    08/25/2019 20:01:55                                    1    
 ========================================================================================================================
-Experiment 9 - IN PROGRESS
+Experiment 9 - COMPLETED
 
 Effect of simulation on variance of convergence point, Erdos Renyi network, size 300, test maxT from 500-5000 at
 intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 
-	9A_0    1582527 ....
+	9A_0    1582527 done
 	9A_1    1576515 done
 	9A_6    1574515 done
 	9A_7    1574516 done

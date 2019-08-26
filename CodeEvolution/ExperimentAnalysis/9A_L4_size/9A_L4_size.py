@@ -15,8 +15,8 @@ intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 
 if __name__ == '__main__':
 
-    jobIDs = ['1576515', '1574515', '1574516']
-    strategyIDs = [1, 6, 7]
+    jobIDs = ['1582527', '1576515', '1574515', '1574516']
+    strategyIDs = [0, 1, 6, 7]
 
     for strategy, jobID in zip(strategyIDs, jobIDs):
         data = getDataFromID(jobID)
