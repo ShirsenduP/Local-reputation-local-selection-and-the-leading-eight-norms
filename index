@@ -101,12 +101,16 @@ Effect of the preferential attachment parameter on l8 on scale-free network
 Experiment 8B - IN PROGRESS
 
 Effect of size of network on the number of leading strategies for Local Reputation,
-Global Evolution and an Erdos Renyi network. Only tested on the leading four.
+Global Evolution and an Erdos Renyi network.
 
-	8B.0    (1582580) (1577967)
-	8B.1    (1577968)
-	8B.6    (1577969)
-	8B.7    (1577970)
+	8B.0    1633653    (1582580) (1577967)
+	8B.1    1633657    (1577968)
+	8B.2    1633661
+	8B.3    1633665
+	8B.4    1633669
+	8B.5    1633673
+	8B.6    1633677    (1577969)
+	8B.7    1633680    (1577970)
 
 ========================================================================================================================
 Experiment 9A - COMPLETED
