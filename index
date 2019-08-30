@@ -13,8 +13,8 @@ SUMMARY
     Experiment  10A - completed
     Experiment  11A - completed
 
-    Experiment  6B - in progress, many tests failing because of package update
-    Experiment  6C - in progress, many tests failing because of package update
+    Experiment  6B - in progress
+    Experiment  6C - in progress
     Experiment  8B - in progress
 
 NOTE
@@ -38,17 +38,22 @@ Effect of degree of regular random lattice on proportions of cooperation Strateg
 Effect of degree on regular random lattice on proportions of cooperation
 Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe, ONLY TEN REPEATS
 
-    6B_0    1574496
-    6B_1    1574497
-    6B_6    1582545 - (1574498)
-    6B_7    1576517
+    6B_0    1595969 1589776 | (1589775) (1574496)
+    6B_1    1595970 1589777 | (1589778) (1574497)
+    6B_6    1589779 1589780 | (1582545) (1574498)
+    6B_7    1589782 1589783 | (1576517)
 
 Effect of equivalent density on Erdos Renyi random network, LrGe
 
-    6C_0    1582533
-    6C_1    1574504
-    6C_6    1582551 - (1574505)
-    6C_7    1574506
+    6C_0    1595971 1589784 | (1589785) (1582533)
+    6C_1    1589786 1589787 | (1574504)
+    6C_6    1595972 1589789 | (1589788) (1582551) - (1574505)
+    6C_7    1589790 1589791 | (1574506)
+
+1595969 2.08328 E_6B0      ucabpod      r     08/28/2019 13:29:35 Bagpuss@node-h00a-011              1
+1595970 2.08328 E_6B1      ucabpod      r     08/28/2019 13:29:39 Bagpuss@node-h00a-010              1
+1595971 2.08328 E_6C0      ucabpod      r     08/28/2019 13:29:50 Bagpuss@node-h00a-010              1
+1595972 2.08328 E_6C6      ucabpod      r     08/28/2019 13:29:50 Bagpuss@node-h00a-010              1
 
 ========================================================================================================================
 Experiment 7 - COMPLETED
@@ -79,16 +84,16 @@ Experiment 8B - IN PROGRESS
 Effect of size of network on the number of leading strategies for Local Reputation,
 Global Evolution and an Erdos Renyi network. Only tested on the leading four.
 
-	8B.0    1582580 (1577967)
-	8B.1    1577968
-	8B.6    1577969
-	8B.7    1577970
+	8B.0    2.16663    1582580 (1577967)
+	8B.1    2.08368    1577968
+	8B.6    2.07608    1577969
+	8B.7    2.06974    1577970
 
 just in case the above fail 
-1587841 2.16663 E_8B0      ucabpod      r     08/25/2019 20:01:56 Bagpuss@node-h00a-004              1        
-1587842 2.08368 E_8B1      ucabpod      qw    08/25/2019 20:01:51                                    1        
-1587843 2.07608 E_8B6      ucabpod      qw    08/25/2019 20:01:53                                    1        
-1587844 2.06974 E_8B7      ucabpod      qw    08/25/2019 20:01:55                                    1    
+1587841  E_8B0      ucabpod      r     08/25/2019 20:01:56 Bagpuss@node-h00a-004              1
+1587842  E_8B1      ucabpod      qw    08/25/2019 20:01:51                                    1
+1587843  E_8B6      ucabpod      qw    08/25/2019 20:01:53                                    1
+1587844  E_8B7      ucabpod      qw    08/25/2019 20:01:55                                    1
 ========================================================================================================================
 Experiment 9 - COMPLETED
 

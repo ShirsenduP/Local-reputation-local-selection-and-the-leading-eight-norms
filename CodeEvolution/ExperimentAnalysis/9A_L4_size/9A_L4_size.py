@@ -26,5 +26,6 @@ if __name__ == '__main__':
         plt.ylabel(f"Average Final Proportion of Cooperation")
         xpos, xticks = range(0, 20, 2), list(range(500, 5001, 500))
         plt.xticks(xpos, xticks, rotation=45)
-        plt.savefig(jobID + "_cooperation")
-        # plt.show()
+        # plt.savefig(jobID + "_cooperation")
+
+    plt.show()

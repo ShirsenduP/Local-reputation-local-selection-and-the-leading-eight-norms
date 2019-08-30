@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
         # Run each experiment for each of the leading 8
         # Default Parameters for simulations
-        C = Config(size=300, mutationProbability=0.1, maxPeriods=5000,
+        C = Config(size=300, mutationProbability=0.1, maxPeriods=2500,
                    initialState=State(mainID=mainID, proportion=1, mutantID=8))
         E = Experiment(networkType=LrGeRRLNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
