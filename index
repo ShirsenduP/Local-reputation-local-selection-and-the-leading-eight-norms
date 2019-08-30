@@ -75,6 +75,7 @@ Effect of equivalent density on Erdos Renyi random network, LrGe
 ========================================================================================================================
 Experiment 7 - COMPLETED
 
+
 Testing the dominance of the leading 8 on these setups of networks
 
     Erdos Renyi
@@ -86,6 +87,7 @@ Testing the dominance of the leading 8 on these setups of networks
 
 ========================================================================================================================
 Experiment 8A - COMPLETED
+
 
 Effect of the preferential attachment parameter on l8 on scale-free network
 
@@ -120,11 +122,11 @@ intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 ========================================================================================================================
 Experiment 9B - COMPLETED
 
-    9B_2
-    9B_3
-    9B_4
-    9B_5
 
+    9B_2    1633286
+    9B_3    1633287
+    9B_4    1633288
+    9B_5    1633289
 
 ========================================================================================================================
 Experiment 10A - COMPLETED
