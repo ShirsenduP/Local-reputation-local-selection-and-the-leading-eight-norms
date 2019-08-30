@@ -119,7 +119,7 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 
 
 ========================================================================================================================
-Experiment 11 - COMPLETED
+Experiment 11A - COMPLETED
 
     Finding the proportions of cooperation in watts-strogatz-small-world models, parameterised by rewiring
     probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). (default 4 nearest neighbours,
@@ -131,4 +131,12 @@ Experiment 11 - COMPLETED
 	11A_6   1582608 - (1582520)
 	11A_7   1582609 - (1582521)
 
+========================================================================================================================
+Experiment 11B - COMPLETED
 
+    Same as 11A but for strategies 2, 3, 4, 5 (not the leading four)
+
+    11B_2
+	11B_3
+	11B_4
+	11B_5
