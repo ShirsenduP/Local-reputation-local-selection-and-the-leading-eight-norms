@@ -16,6 +16,8 @@ SUMMARY
     Experiment  6B - in progress
     Experiment  6C - in progress
     Experiment  8B - in progress
+    Experiment 10B - in progress
+    Experiment 11B - in progress
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -38,22 +40,37 @@ Effect of degree of regular random lattice on proportions of cooperation Strateg
 Effect of degree on regular random lattice on proportions of cooperation
 Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe, ONLY TEN REPEATS
 
-    6B_0    1595969 1589776 | (1589775) (1574496)
-    6B_1    1595970 1589777 | (1589778) (1574497)
-    6B_6    1589779 1589780 | (1582545) (1574498)
-    6B_7    1589782 1589783 | (1576517)
+    6B_0   | (1595969) (1589776) (1589775) (1574496)
+    6B_1   | (1595970) (1589777) (1589778) (1574497)
+    6B_6   | (1589779) (1589780) (1582545) (1574498)
+    6B_7   | (1589782) (1589783) (1576517)
 
 Effect of equivalent density on Erdos Renyi random network, LrGe
 
-    6C_0    1595971 1589784 | (1589785) (1582533)
-    6C_1    1589786 1589787 | (1574504)
-    6C_6    1595972 1589789 | (1589788) (1582551) - (1574505)
-    6C_7    1589790 1589791 | (1574506)
+    6C_0   |  (1595971) (1589784) (1589785) (1582533)
+    6C_1   |  (1589786) (1589787) (1574504)
+    6C_6   |  (1595972) (1589789) (1589788) (1582551) - (1574505)
+    6C_7   |  (1589790) (1589791) (1574506)
 
-1595969 2.08328 E_6B0      ucabpod      r     08/28/2019 13:29:35 Bagpuss@node-h00a-011              1
-1595970 2.08328 E_6B1      ucabpod      r     08/28/2019 13:29:39 Bagpuss@node-h00a-010              1
-1595971 2.08328 E_6C0      ucabpod      r     08/28/2019 13:29:50 Bagpuss@node-h00a-010              1
-1595972 2.08328 E_6C6      ucabpod      r     08/28/2019 13:29:50 Bagpuss@node-h00a-010              1
+
+1631629 2.07141 E_6B0      ucabpod      r     08/30/2019 13:38:05 Bagpuss@node-h00a-018              1
+1631630 2.07141 E_6B0      ucabpod      r     08/30/2019 13:38:05 Bagpuss@node-h00a-017              1
+1631631 2.07141 E_6B1      ucabpod      r     08/30/2019 13:38:09 Bagpuss@node-h00a-006              1
+1631632 2.07141 E_6B1      ucabpod      r     08/30/2019 13:39:07 Bagpuss@node-h00a-006              1
+1631633 2.07141 E_6B6      ucabpod      r     08/30/2019 13:39:12 Bagpuss@node-h00a-007              1
+1631634 2.07141 E_6B6      ucabpod      r     08/30/2019 13:39:12 Bagpuss@node-h00a-003              1
+1631635 2.07141 E_6B7      ucabpod      r     08/30/2019 13:39:17 Bagpuss@node-h00a-007              1
+1631636 2.07141 E_6B7      ucabpod      r     08/30/2019 13:39:17 Bagpuss@node-h00a-003              1
+
+1631637 2.07141 E_6C7      ucabpod      r     08/30/2019 13:39:39 Bagpuss@node-h00a-017              1
+1631638 2.07141 E_6C7      ucabpod      r     08/30/2019 13:39:48 Bagpuss@node-h00a-033              1
+1631639 2.07141 E_6C6      ucabpod      r     08/30/2019 13:40:14 Bagpuss@node-h00a-035              1
+1631640 2.07141 E_6C6      ucabpod      r     08/30/2019 13:40:19 Bagpuss@node-h00a-004              1
+1631641 2.07141 E_6C1      ucabpod      r     08/30/2019 13:40:28 Bagpuss@node-h00a-041              1
+1631642 2.07141 E_6C1      ucabpod      r     08/30/2019 13:42:46 Bagpuss@node-h00a-011              1
+1631643 2.07141 E_6C0      ucabpod      r     08/30/2019 13:43:25 Bagpuss@node-h00a-026              1
+1631644 2.07141 E_6C0      ucabpod      r     08/30/2019 13:44:12 Bagpuss@node-h00a-021              1
+
 
 ========================================================================================================================
 Experiment 7 - COMPLETED
@@ -107,7 +124,7 @@ intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 
 
 ========================================================================================================================
-Experiment 10 - COMPLETED
+Experiment 10A - COMPLETED
 
 Effect of increasing the mutation rate on LrGeERNetwork to see where the threshold is for mutation to dominate
 Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the expected number of mutations/time-step.
@@ -117,7 +134,15 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 	10A_6   1574520
 	10A_7   1574521
 
+========================================================================================================================
+Experiment 10B - COMPLETED
 
+    Same as 10A but for strategies 2, 3, 4, 5 (not the leading four)
+
+    10B_2
+    10B_3
+    10B_4
+    10B_5
 ========================================================================================================================
 Experiment 11A - COMPLETED
 
@@ -132,11 +157,11 @@ Experiment 11A - COMPLETED
 	11A_7   1582609 - (1582521)
 
 ========================================================================================================================
-Experiment 11B - COMPLETED
+Experiment 11B - IN PROGRESS
 
     Same as 11A but for strategies 2, 3, 4, 5 (not the leading four)
 
-    11B_2
-	11B_3
-	11B_4
-	11B_5
+    11B_2   1632302
+	11B_3   1632303
+	11B_4   1632304
+	11B_5   1632305
