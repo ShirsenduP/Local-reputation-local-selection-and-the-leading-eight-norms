@@ -24,7 +24,7 @@ cd $TMPDIR
 # run application
 module load python3/recommended
 source /home/ucabpod/Scratch/CodeEvolution/env/bin/activate
-/usr/bin/time --verbose python /home/ucabpod/Scratch/CodeEvolution/Experiments/8A_6.py
+/usr/bin/time --verbose python /home/ucabpod/Scratch/CodeEvolution/Experiments/Exp8/8A_6.py
 
 # archive all files to scratch
 tar zcvf $HOME/Scratch/files_from_job_$JOB_ID.tar.gz $TMPDIR
