@@ -6,18 +6,19 @@ INDEX
 
 SUMMARY
 
-    Experiment  6A - completed
-    Experiment  7A - completed
-    Experiment  8A - completed
-    Experiment  9A - completed
+    Experiment   6A - completed
+    Experiment   7A - completed
+    Experiment   8A - completed
+    Experiment   9A - completed
     Experiment  10A - completed
     Experiment  11A - completed
 
-    Experiment  6B - in progress
-    Experiment  6C - in progress
-    Experiment  8B - in progress
-    Experiment 10B - in progress
-    Experiment 11B - in progress
+    Experiment   6B - in progress
+    Experiment   6C - in progress
+    Experiment   8B - in progress
+    Experiment   9B - in progress
+    Experiment  10B - in progress
+    Experiment  11B - in progress
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -71,7 +72,6 @@ Effect of equivalent density on Erdos Renyi random network, LrGe
 1631643 2.07141 E_6C0      ucabpod      r     08/30/2019 13:43:25 Bagpuss@node-h00a-026              1
 1631644 2.07141 E_6C0      ucabpod      r     08/30/2019 13:44:12 Bagpuss@node-h00a-021              1
 
-
 ========================================================================================================================
 Experiment 7 - COMPLETED
 
@@ -101,18 +101,13 @@ Experiment 8B - IN PROGRESS
 Effect of size of network on the number of leading strategies for Local Reputation,
 Global Evolution and an Erdos Renyi network. Only tested on the leading four.
 
-	8B.0    2.16663    1582580 (1577967)
-	8B.1    2.08368    1577968
-	8B.6    2.07608    1577969
-	8B.7    2.06974    1577970
+	8B.0    (1582580) (1577967)
+	8B.1    (1577968)
+	8B.6    (1577969)
+	8B.7    (1577970)
 
-just in case the above fail 
-1587841  E_8B0      ucabpod      r     08/25/2019 20:01:56 Bagpuss@node-h00a-004              1
-1587842  E_8B1      ucabpod      qw    08/25/2019 20:01:51                                    1
-1587843  E_8B6      ucabpod      qw    08/25/2019 20:01:53                                    1
-1587844  E_8B7      ucabpod      qw    08/25/2019 20:01:55                                    1
 ========================================================================================================================
-Experiment 9 - COMPLETED
+Experiment 9A - COMPLETED
 
 Effect of simulation on variance of convergence point, Erdos Renyi network, size 300, test maxT from 500-5000 at
 intervals of 250 to see if maxT of 5000 is necessary for every simulation.
@@ -121,6 +116,14 @@ intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 	9A_1    1576515 done
 	9A_6    1574515 done
 	9A_7    1574516 done
+
+========================================================================================================================
+Experiment 9B - COMPLETED
+
+    9B_2
+    9B_3
+    9B_4
+    9B_5
 
 
 ========================================================================================================================
@@ -135,16 +138,18 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 	10A_7   1574521
 
 ========================================================================================================================
-Experiment 10B - COMPLETED
+Experiment 10B - IN PROGRESS
 
     Same as 10A but for strategies 2, 3, 4, 5 (not the leading four)
 
-    10B_2
-    10B_3
-    10B_4
-    10B_5
+    10B_2   1632729
+    10B_3   1632730
+    10B_4   1632731
+    10B_5   1632732
+
 ========================================================================================================================
 Experiment 11A - COMPLETED
+
 
     Finding the proportions of cooperation in watts-strogatz-small-world models, parameterised by rewiring
     probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). (default 4 nearest neighbours,
@@ -165,3 +170,5 @@ Experiment 11B - IN PROGRESS
 	11B_3   1632303
 	11B_4   1632304
 	11B_5   1632305
+
+========================================================================================================================
