@@ -11,7 +11,7 @@ def getDataFromID(ID):
     """When given a jobID, return the data in all the .csv files corresponding to that job. For cluster jobs
     only."""
     dir, _ = os.path.split(os.getcwd())
-    dir, _ = os.path.split(dir) # TODO: while loop to recurse through higher directories til file found
+    dir, _ = os.path.split(dir)  # TODO: while loop to recurse through higher directories til file found
     # print(dir)
     remoteData = os.path.join(dir, 'RemoteData')
 
@@ -57,30 +57,6 @@ def getStrategyLabels():
     return labelForGraphs
 
 
-def plotAllStrategiesSummary(data):
-    """Given the job ID of an experiment in the RemoteData directory, plot the means of the proportions of mutants
-    amongst each strategy along with error bars. Optionally save plot as .png in dataPath directory."""
-
-    # Get the average proportion of the main strategy in the population
-    length = data[0].shape[0]
-    means = [round(table[f'Prop. Strategy #{ID}'].mean(), 5) for ID, table in data.items()]
-    stds = [round(table[f'Prop. Strategy #{ID}'].std()/np.sqrt(length), 5) for ID, table in data.items()]
-
-    fig, ax = plt.subplots()
-    strategies = list(range(8))
-    ax.errorbar(strategies, means,
-                yerr=stds,
-                ecolor='grey',
-                solid_capstyle='projecting',
-                capsize=5,
-                elinewidth=2,
-                markeredgewidth=2)
-
-    # plt.rcParams.update({'font.size': 40})
-
-    return fig, ax
-
-
 def plotCooperationProportion(data):
     """Given the job ID of an experiment in the RemoteData directory, plot the average final proportions of
     cooperation. Optionally save plot as .png in dataPath directory."""
@@ -89,8 +65,8 @@ def plotCooperationProportion(data):
     length = data[0].shape[0]
     means = [round(table['Prop. of Cooperators'].mean(), 5) for ID, table in data.items()]
     # [print(key) for key, value in data.items()]
-    standardErrors = [round(table['Prop. of Cooperators'].std()/np.sqrt(length), 5) for ID, table in
-            data.items()]
+    standardErrors = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for ID, table in
+                      data.items()]
     fig, ax = plt.subplots()
     strategies = list(range(len(means)))
     ax.errorbar(strategies, means,
@@ -117,8 +93,8 @@ def plotSingleStrategy(data, strategyID):
     # print(stds)
 
     fig, ax = plt.subplots()
-    strategies = list(range(len(means)))
-    ax.errorbar(strategies, means,
+    var = list(range(len(means)))
+    ax.errorbar(var, means,
                 yerr=stds,
                 ecolor='grey',
                 solid_capstyle='projecting',
@@ -126,5 +102,125 @@ def plotSingleStrategy(data, strategyID):
                 elinewidth=2,
                 markeredgewidth=2)
 
-
     return fig, ax
+
+
+def plotAllStrategyCooperations(listOfJobIDs, strategyIDs, skip=[]):
+    """Given a list of job IDs and the corresponding strategy IDs in the same order, plot all the proportions of
+    cooperation on the same plot."""
+
+    fig, ax = plt.subplots()
+    for ID, strategyID in zip(listOfJobIDs, strategyIDs):
+        if strategyID in skip:
+            continue
+        data = getDataFromID(ID)
+        length = data[0].shape[0]
+        means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
+        stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
+        var = list(range(len(means)))
+        up = [mean + std for mean, std in zip(means, stds)]
+        down = [mean - std for mean, std in zip(means, stds)]
+        plt.plot(var, means, label=f'$s_{strategyID}$')
+        plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+
+
+def plotAllStrategyProportions(listOfJobIDs, strategyIDs, skip=[]):
+    """Given a list of job IDs and the corresponding strategy IDs in the same order, plot all the proportions of
+    cooperation on the same plot."""
+
+    fig, ax = plt.subplots()
+    for ID, strategyID in zip(listOfJobIDs, strategyIDs):
+        if strategyID in skip:
+            continue
+        data = getDataFromID(ID)
+        length = data[0].shape[0]
+        means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for _, table in data.items()]
+        stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for _, table in data.items()]
+        var = list(range(len(means)))
+        up = [mean + std for mean, std in zip(means, stds)]
+        down = [mean - std for mean, std in zip(means, stds)]
+        plt.plot(var, means, label=f'$s_{strategyID}$')
+        plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+
+
+def plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip=[]):
+    """Given a list of job IDs, their corresponding strategy IDs, and a list of IDs to be skipped, plot the average
+    proportion of the main strategy in the population as a function of a variable to be tested. This will layer the
+    line plots (of each strategy) on the same plot."""
+
+    fig, ax = plt.subplots()
+    for jobID, strategyID in zip(jobIDs, strategyIDs):
+        if strategyID in skip:
+            continue
+        data = getDataFromID(jobID)
+        length = data[0].shape[0]
+        means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
+        stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
+        var = list(range(len(means)))
+        up = [mean + std for mean, std in zip(means, stds)]
+        down = [mean - std for mean, std in zip(means, stds)]
+        plt.plot(var, means, label=f'$s_{strategyID}$')
+        plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+
+
+def plotLeadingEightProportions(jobIDs, models):
+    """Plot the final average proportion of all strategies on a single graph"""
+    markers = ['s', 'o', 'h']
+    fig, ax = plt.subplots()
+    for jobID, model, marker in zip(jobIDs, models, markers):
+        data = getDataFromID(jobID) # keys are strategies, values are the tables
+        length = data[0].shape[0]
+        means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for strategyID, table in data.items()]
+        stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for strategyID,
+                                                                                             table in data.items()]
+        var = list(range(len(means)))
+        plt.errorbar(var, means,
+                    yerr=stds,
+                    lw=0,
+                    ms=1,
+                    solid_capstyle='projecting',
+                    capsize=2,
+                    marker=marker,
+                    elinewidth=2,
+                    markeredgewidth=2,
+                    label=f'{model}')
+#
+# def plotAllStrategiesSummary(jobIDs, strategyIDs):
+#     """Given the job ID of an experiment in the RemoteData directory, plot the means of the proportions of mutants
+#     amongst each strategy along with error bars. Optionally save plot as .png in dataPath directory."""
+#
+#     # Get the average proportion of the main strategy in the population
+#     # length = data[0].shape[0]
+#     # means = [round(table[f'Prop. Strategy #{ID}'].mean(), 5) for ID, table in data.items()]
+#     # stds = [round(table[f'Prop. Strategy #{ID}'].std() / np.sqrt(length), 5) for ID, table in data.items()]
+#     # up = [mean + std for mean, std in zip(means, stds)]
+#     # down = [mean - std for mean, std in zip(means, stds)]
+#     #
+#     fig, ax = plt.subplots()
+#
+#     for jobID, strategyID in zip(jobIDs, strategyIDs):
+#         if strategyID in skip:
+#             continue
+#         data = getDataFromID(jobID)
+#         length = data[0].shape[0]
+#         means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
+#         stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
+#         var = list(range(len(means)))
+#         up = [mean + std for mean, std in zip(means, stds)]
+#         down = [mean - std for mean, std in zip(means, stds)]
+#         plt.plot(var, means, label=f'$s_{strategyID}$')
+#         plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+#
+#     # strategies = list(range(8))
+#     # ax.errorbar(strategies, means,
+#     #             yerr=stds,
+#     #             ecolor='grey',
+#     #             solid_capstyle='projecting',
+#     #             capsize=5,
+#     #             elinewidth=2,
+#     #             markeredgewidth=2)
+#
+#     # plt.rcParams.update({'font.size': 40})
+#
+#     return fig, ax
+#

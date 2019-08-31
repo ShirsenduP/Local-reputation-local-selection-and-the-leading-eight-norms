@@ -6,19 +6,23 @@ INDEX
 
 SUMMARY
 
-    Experiment   6A - completed
-    Experiment   7A - completed
-    Experiment   9A - completed
-    Experiment  10A - completed
-    Experiment  11A - completed
+Graphs Completed
+    Experiment   8A
+    Experiment   9A
+    Experiment  10A
 
-    Experiment   6B - in progress
-    Experiment   6C - in progress
-    Experiment   8A - in progress
-    Experiment   8B - in progress
-    Experiment   9B - in progress
-    Experiment  10B - in progress
-    Experiment  11B - in progress
+Completed
+    Experiment   6A
+    Experiment   7A
+    Experiment  11A
+
+In-progress
+    Experiment   6B
+    Experiment   6C
+    Experiment   8B
+    Experiment   9B
+    Experiment  10B
+    Experiment  11B
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -86,22 +90,20 @@ Testing the dominance of the leading 8 on these setups of networks
 
 
 ========================================================================================================================
-Experiment 8A - IN PROGRESS
-
+Experiment 8A - COMPLETED
 
 Effect of the preferential attachment parameter on l8 on scale-free network
 
-    8A.0    1536580 done
-    8A.1    1536581 done
-    8A.6    1536582 done
-    8A.7    1536583 done
+    8A.0    1536580
+    8A.1    1536581
+    8A.2    1635795
+    8A.3    1635796
+    8A.4    1635797
+    8A.5    1635798
+    8A.6    1536582
+    8A.7    1536583
 
-    8A.2    1633791
-    8A.3    1633792
-    8A.4    1633795
-    8A.5    1633798
 
-========================================================================================================================
 Experiment 8B - IN PROGRESS
 
 Effect of size of network on the number of leading strategies for Local Reputation,
@@ -122,19 +124,17 @@ Experiment 9A - COMPLETED
 Effect of simulation on variance of convergence point, Erdos Renyi network, size 300, test maxT from 500-5000 at
 intervals of 250 to see if maxT of 5000 is necessary for every simulation.
 
-	9A_0    1582527 done
-	9A_1    1576515 done
-	9A_6    1574515 done
-	9A_7    1574516 done
-
-========================================================================================================================
-Experiment 9B - COMPLETED
-
-
+	9A_0    1582527
+	9A_1    1576515
     9B_2    1633286
     9B_3    1633287
     9B_4    1633288
     9B_5    1633289
+	9A_6    1574515
+	9A_7    1574516
+
+
+
 
 ========================================================================================================================
 Experiment 10A - COMPLETED
@@ -147,7 +147,6 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 	10A_6   1574520
 	10A_7   1574521
 
-========================================================================================================================
 Experiment 10B - IN PROGRESS
 
     Same as 10A but for strategies 2, 3, 4, 5 (not the leading four)
@@ -171,7 +170,6 @@ Experiment 11A - COMPLETED
 	11A_6   1582608 - (1582520)
 	11A_7   1582609 - (1582521)
 
-========================================================================================================================
 Experiment 11B - IN PROGRESS
 
     Same as 11A but for strategies 2, 3, 4, 5 (not the leading four)

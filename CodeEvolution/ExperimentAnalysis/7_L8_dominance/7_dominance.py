@@ -15,14 +15,21 @@ from CodeEvolution.ExperimentAnalysis.analysis import *
 
 if __name__ == '__main__':
 
-    jobIDs = ['1536567', '1536568', '1536569', '1536570']
-    models = ['GrGe', 'LrGe', 'LrLe', 'GrLe']
+    jobIDs = ['1536568', '1536569', '1536570']
+    models = ['LrGe', 'LrLe', 'GrLe']
 
-    for jobID, model in zip(jobIDs, models):
-        data = getDataFromID(jobID)
-
-        fig, ax = plotAllStrategiesSummary(data)
-        plt.title(f'{model} - Leading Eight vs All-D')
-        plt.xlabel("Strategy ID")
-        plt.ylabel(f"Average Final Proportion")
-        plt.savefig(jobID + "_" + model)
+    plotLeadingEightProportions(jobIDs, models)
+    plt.legend()
+    plt.show()
+    #
+    #
+    #
+    # for jobID, model in zip(jobIDs, models):
+    #     data = getDataFromID(jobID)
+    #
+    #     fig, ax = plotLeadingEightProportions(jobIDs, models)
+    #     plt.title(f'{model} - Leading Eight vs All-D')
+    #     plt.xlabel("Strategy ID")
+    #     plt.ylabel(f"Average Final Proportion")
+    #     plt.savefig(jobID + "_" + model)
+    #

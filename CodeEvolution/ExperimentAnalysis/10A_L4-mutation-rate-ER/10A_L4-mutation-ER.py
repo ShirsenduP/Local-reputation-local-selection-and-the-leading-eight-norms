@@ -6,6 +6,10 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 
     10A_0   1574518
     10A_1   1574519
+    10B_2   1632729
+    10B_3   1632730
+    10B_4   1632731
+    10B_5   1632732
     10A_6   1574520
     10A_7   1574521
 
@@ -14,33 +18,31 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 from CodeEvolution.ExperimentAnalysis.analysis import *
 
 if __name__ == '__main__':
-    jobIDs = ['1574518', '1574519', '1574520', '1574521']
 
-    # Data was generated in reverse order, fix by using reverse labels
-    newXTicks = [0.1] + list(range(1, 11))
-    newXLabels = [0.1] + list(np.arange(0.5, 10.1, 0.5))
-    strats = [0, 1, 6, 7]
+    jobIDs = ['1574518', '1574519', '1632729', '1632730', '1632731', '1632732', '1574520', '1574521']
+    strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
+    skip = [2, 3, 4, 5]
 
-    # Plots of cooperation
-    for i, ID in zip(strats, jobIDs):
-        data = getDataFromID(ID)
-        fig, ax = plotCooperationProportion(data)
-        title = f'LrGe - $S_{i}$ vs Mutation Rate'
-        plt.title(title)
-        plt.xlabel("Rate of Mutation")
-        plt.ylabel(f"Average Proportion of Cooperation")
-        plt.xticks(ticks=newXTicks, labels=newXLabels)
-        plt.savefig(ID+'_cooperation')
-        # plt.show()
+    newXTicks = list(range(0, 11))
+    newXLabels = list(np.arange(0, 11, 1))
 
-    # Plots of proportions of strategies
-    for i, ID in zip(strats, jobIDs):
-        data = getDataFromID(ID)
-        fig, ax = plotSingleStrategy(data, i)
-        title = f'LrGe - $S_{i}$ vs Mutation Rate'
-        plt.title(title)
-        plt.xlabel("Rate of Mutation")
-        plt.ylabel(f"Average Final Proportion")
-        plt.xticks(ticks=newXTicks, labels=newXLabels)
-        plt.savefig(ID+'_proportion')
-        # plt.show()
+    # Proportion of Cooperation
+    plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs)
+    plt.title(f'LrGeER vs Max Length of Simulation')
+    plt.xlabel("Mutation Rate")
+    plt.ylabel("Average Final Proportion of Cooperation")
+    plt.legend(loc='upper right')
+    plt.xticks(newXLabels, newXTicks)
+    plt.savefig("10A_mutationrate-cooperation")
+    # plt.show()
+
+    # Proportion of Strategies
+    plotAllStrategyProportions(jobIDs, strategyIDs, skip)
+    plt.title(f'LrGeER vs Max Length of Simulation')
+    plt.xlabel("Mutation Rate")
+    plt.ylabel("Average Final Proportion of Strategies")
+    plt.legend(loc='upper right')
+    plt.xticks(newXLabels, newXTicks)
+    plt.savefig("10A_mutationrate-proportion")
+    # plt.show()
+

@@ -41,10 +41,10 @@ if __name__ == '__main__':
     # Evaluator.plotAllStrategiesSummary(title='Leading Eight Strategies with Local Reputation and Local Evolution vs '
     #                                    'All-C_', dataPath="LrLe_population_2019-07-18 23:50:31", mutantID=9, save=True)
     #
-    # Evaluator.plotAllStrategies(title="Leading Eight Strategies with Local Reputation and Local Evolution vs All-C",
+    # Evaluator.plotAllStrategyCooperations(title="Leading Eight Strategies with Local Reputation and Local Evolution vs All-C",
     #                             dataPath="LrLe_population_2019-07-18 23:50:31", mutantID=9, save=True)
     #
-    # Evaluator.plotAllStrategies(title="Leading Eight Strategies with Local Reputation and Local Evolution vs All-D",
+    # Evaluator.plotAllStrategyCooperations(title="Leading Eight Strategies with Local Reputation and Local Evolution vs All-D",
     #                             dataPath="LrLe_population_2019-07-18 21:32:51", mutantID=8, save=True)
 
     default = Config(size=200, sparseDensity=True, mutationProbability=0.1)
