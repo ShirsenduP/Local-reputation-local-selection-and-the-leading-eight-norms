@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     # Proportion of Cooperation
     plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Max Length of Simulation')
+    plt.title(f'LrGeER vs Mutation Rate')
     plt.xlabel("Mutation Rate")
     plt.ylabel("Average Final Proportion of Cooperation")
     plt.legend(loc='upper right')
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     # Proportion of Strategies
     plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Max Length of Simulation')
+    plt.title(f'LrGeER vs Mutation Rate')
     plt.xlabel("Mutation Rate")
     plt.ylabel("Average Final Proportion of Strategies")
     plt.legend(loc='upper right')
