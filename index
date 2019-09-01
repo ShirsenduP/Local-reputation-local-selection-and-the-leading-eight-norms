@@ -7,22 +7,22 @@ INDEX
 SUMMARY
 
 Graphs Completed
+    Experiment   6A
+    Experiment   6B
     Experiment   8A
     Experiment   9A
     Experiment  10A
 
 Completed
-    Experiment   6A
     Experiment   7A
-    Experiment  11A
-
-In-progress
-    Experiment   6B
-    Experiment   6C
-    Experiment   8B
     Experiment   9B
+    Experiment  11A
     Experiment  10B
     Experiment  11B
+
+In-progress
+    Experiment   6C - FAILED
+    Experiment   8B - FAILED
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -45,10 +45,11 @@ Effect of degree of regular random lattice on proportions of cooperation Strateg
 Effect of degree on regular random lattice on proportions of cooperation
 Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe, ONLY TEN REPEATS
 
-    6B_0   | (1595969) (1589776) (1589775) (1574496)
-    6B_1   | (1595970) (1589777) (1589778) (1574497)
-    6B_6   | (1589779) (1589780) (1582545) (1574498)
-    6B_7   | (1589782) (1589783) (1576517)
+    6B_0    1631629
+    6B_1    1631631
+    6B_6    1631633
+    6B_7    1631635
+
 
 Effect of equivalent density on Erdos Renyi random network, LrGe
 
@@ -147,7 +148,7 @@ Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the
 	10A_6   1574520
 	10A_7   1574521
 
-Experiment 10B - IN PROGRESS
+Experiment 10B - COMPLETED
 
     Same as 10A but for strategies 2, 3, 4, 5 (not the leading four)
 
@@ -170,7 +171,7 @@ Experiment 11A - COMPLETED
 	11A_6   1582608 - (1582520)
 	11A_7   1582609 - (1582521)
 
-Experiment 11B - IN PROGRESS
+Experiment 11B - COMPLETED
 
     Same as 11A but for strategies 2, 3, 4, 5 (not the leading four)
 

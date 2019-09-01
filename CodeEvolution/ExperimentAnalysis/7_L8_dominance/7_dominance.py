@@ -13,23 +13,103 @@ Testing the dominance of the leading 8 on these setups of networks
 
 from CodeEvolution.ExperimentAnalysis.analysis import *
 
+def set_size(w,h, ax=None):
+    """ w, h: width, height in inches """
+    if not ax: ax=plt.gca()
+    l = ax.figure.subplotpars.left
+    r = ax.figure.subplotpars.right
+    t = ax.figure.subplotpars.top
+    b = ax.figure.subplotpars.bottom
+    figw = float(w)/(r-l)
+    figh = float(h)/(t-b)
+    ax.figure.set_size_inches(figw, figh)
+
 if __name__ == '__main__':
 
     jobIDs = ['1536568', '1536569', '1536570']
     models = ['LrGe', 'LrLe', 'GrLe']
 
-    plotLeadingEightProportions(jobIDs, models)
+    # 2 Subplots to show the two y regions of interesting data on a split plot
+    f, (ax, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+
+    for jobID, model in zip(jobIDs, models):
+        data = getDataFromID(jobID)  # keys are strategies, values are the tables
+        length = data[0].shape[0]
+        means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for strategyID, table in data.items()]
+        stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for strategyID,
+                                                                                             table in data.items()]
+        var = list(range(len(means)))
+
+        # Plot all the data on both axes
+        ax.errorbar(var, means,
+                    yerr=stds,
+                    lw=0,
+                    ms=2,
+                    solid_capstyle='projecting',
+                    capsize=4,
+                    marker='o',
+                    elinewidth=2,
+                    markeredgewidth=4,
+                    label=f'{model}')
+        ax2.errorbar(var, means,
+                     yerr=stds,
+                     lw=0,
+                     ms=2,
+                     solid_capstyle='projecting',
+                     capsize=4,
+                     marker='o',
+                     elinewidth=2,
+                     markeredgewidth=4,
+                     label=f'{model}')
+        ax3.errorbar(var, means,
+                     yerr=stds,
+                     lw=0,
+                     ms=2,
+                     solid_capstyle='projecting',
+                     capsize=4,
+                     marker='o',
+                     elinewidth=2,
+                     markeredgewidth=4,
+                     label=f'{model}')
+    # Zoom in on intersting regions
+    ax.set_ylim(0.99, 1)
+    ax2.set_ylim(0.7, 0.95)
+    ax3.set_ylim(0, 0.25)
+
+    # Remote spines between axes
+    ax.spines['bottom'].set_visible(False)
+    ax2.spines['top'].set_visible(False)
+    ax2.spines['bottom'].set_visible(False)
+    ax3.spines['top'].set_visible(False)
+    ax2.axes.get_xaxis().set_visible(False)
+    ax.xaxis.tick_top()
+    # ax.tick_params(labeltop='off')  # don't put tick labels at the top
+    # ax2.tick_params(labeltop='off')  # don't put tick labels at the top
+    ax3.xaxis.tick_bottom()
+
+    # Spine cut lines
+    d = .01  # how big to make the diagonal lines in axes coordinates
+    kwargs = dict(transform=ax.transAxes, color='k', clip_on=False)
+    ax.plot((-d, +d), (-d, +d), **kwargs)  # top-left diagonal
+    ax.plot((1 - d, 1 + d), (-d, +d), **kwargs)  # top-right diagonal
+
+    kwargs.update(transform=ax2.transAxes)  # switch to the bottom axes
+    ax2.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
+    ax2.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
+
+    kwargs = dict(transform=ax2.transAxes, color='k', clip_on=False)
+    ax2.plot((-d, +d), (-d, +d), **kwargs)  # top-left diagonal
+    ax2.plot((1 - d, 1 + d), (-d, +d), **kwargs)  # top-right diagonal
+
+    kwargs.update(transform=ax3.transAxes)  # switch to the bottom axes
+    ax3.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
+    ax3.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
+
+    ax.title.set_text('Average Final Strategy Proportion')
+    f.text(0, 0.5, 'Strategy Proportion', va='center', rotation='vertical')
+    plt.xlabel('Strategy ID')
     plt.legend()
-    plt.show()
-    #
-    #
-    #
-    # for jobID, model in zip(jobIDs, models):
-    #     data = getDataFromID(jobID)
-    #
-    #     fig, ax = plotLeadingEightProportions(jobIDs, models)
-    #     plt.title(f'{model} - Leading Eight vs All-D')
-    #     plt.xlabel("Strategy ID")
-    #     plt.ylabel(f"Average Final Proportion")
-    #     plt.savefig(jobID + "_" + model)
-    #
+    plt.tight_layout()
+
+    plt.savefig('7A_leading4')
+    # plt.show()

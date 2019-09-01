@@ -176,13 +176,13 @@ def plotLeadingEightProportions(jobIDs, models):
         var = list(range(len(means)))
         plt.errorbar(var, means,
                     yerr=stds,
-                    lw=0,
-                    ms=1,
+                    lw=0.2,
+                    ms=2,
                     solid_capstyle='projecting',
-                    capsize=2,
-                    marker=marker,
+                    capsize=4,
+                    marker='o',
                     elinewidth=2,
-                    markeredgewidth=2,
+                    markeredgewidth=4,
                     label=f'{model}')
 #
 # def plotAllStrategiesSummary(jobIDs, strategyIDs):

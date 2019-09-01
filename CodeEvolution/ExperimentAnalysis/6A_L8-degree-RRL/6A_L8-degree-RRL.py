@@ -19,25 +19,27 @@ from CodeEvolution.ExperimentAnalysis.analysis import *
 
 if __name__ == '__main__':
     jobIDs = ['1557510', '1557511', '1536574', '1536575', '1536576', '1536577', '1557512', '1560446']
+    # skip = []
+    skip = [2, 3, 4, 5]
 
-    # Data was generated in reverse order, fix by using reverse labels
-    newXLabels = list(range(13, 2, -1))
-    i = 0
+    plotAllStrategyProportions(jobIDs, list(range(8)), skip)
+    plt.title('LrGeRRL vs RRL Degree')
+    newXLocs = list(range(3, 14))
+    newXTicks = list(range(11))
+    plt.xlabel("RRL Degree $d$")
+    plt.ylabel(f"Average Final Strategy Proportion")
+    plt.xticks(newXTicks, newXLocs)
+    plt.legend(bbox_to_anchor=(0.85,0.7))
+    plt.savefig('6A_proportion')
+    plt.show()
 
-    # Plots of cooperation of leading four
-    for ID in jobIDs:
-
-        # These strategies fail so no point in plotting
-        if i in [2, 3, 4, 5]:
-            i += 1
-            continue
-
-        data = getDataFromID(ID)
-        fig, ax = plotCooperationProportion(data)
-        title = f'LrGe - $S_{i}$ vs RRL Degree'
-        plt.title(title)
-        plt.xlabel("Degree")
-        plt.ylabel(f"Average Proportion of Cooperation")
-        plt.xticks(ticks=list(range(11)), labels=newXLabels)
-        plt.savefig(ID)
-        i += 1
+    plotAllStrategyCooperations(jobIDs, list(range(8)), skip)
+    plt.title('LrGeRRL vs RRL Degree')
+    newXLocs = list(range(3, 14))
+    newXTicks = list(range(11))
+    plt.xlabel("RRL Degree $d$")
+    plt.ylabel(f"Average Proportion of Cooperation")
+    plt.xticks(newXTicks, newXLocs)
+    plt.legend()
+    plt.savefig('6A_cooperation')
+    # plt.show()
