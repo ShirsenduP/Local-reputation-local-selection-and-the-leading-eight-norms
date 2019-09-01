@@ -27,7 +27,7 @@ if __name__ == '__main__':
     newXLabels = list(np.arange(0, 11, 1))
 
     # Proportion of Cooperation
-    plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs)
+    plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
     plt.title(f'LrGeER vs Max Length of Simulation')
     plt.xlabel("Mutation Rate")
     plt.ylabel("Average Final Proportion of Cooperation")
