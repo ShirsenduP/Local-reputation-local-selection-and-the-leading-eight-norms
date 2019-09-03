@@ -94,14 +94,14 @@ Experiment 8B - IN PROGRESS
 Effect of size of network on the number of leading strategies for Local Reputation,
 Global Evolution and an Erdos Renyi network.
 
-	8B.0    1745174
-	8B.1    1745175
-	8B.2    1745176
-	8B.3    1745177
-	8B.4    1745178
-	8B.5    1745179
-	8B.6    1745180
-	8B.7    1745181
+	8B.0    1746310
+	8B.1    1746316
+	8B.2    1746320
+	8B.3    1746323
+	8B.4    1748536
+	8B.5    1748537
+	8B.6    1748538
+	8B.7    1748539
 
 ========================================================================================================================
 Experiment 9A - COMPLETED
@@ -170,10 +170,10 @@ Experiment 12 - IN PROGRESS
     of where the network can recover. Range 0-1 in 0.05 increments.
 
     Erdos Renyi
-    12A_0
-    12A_1
-    12A_6
-    12A_7
+    12A_0   1748476
+    12A_1   1748480
+    12A_6   1748483
+    12A_7   1748487
 
     Scale-Free (preferential attachment parameter 2)
     12B_0

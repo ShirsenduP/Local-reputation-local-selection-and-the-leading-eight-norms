@@ -1,4 +1,4 @@
-from CodeEvolution.models import LrGeERNetwork
+from CodeEvolution.models import LrGePLNetwork
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 import numpy as np
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     """
 
     rerunSimulations = True
-    repeats = 100
+    repeats = 2
     mainID = 6
     var = 'population'
     values = Experiment.generateSinglePopulationProportionList(mainID, 8)
@@ -23,8 +23,9 @@ if __name__ == '__main__':
     if rerunSimulations:
 
         # Default Parameters for simulations
-        C = Config(size=300, mutationProbability=0, sparseDensity=True, maxPeriods=5000)
-        E = Experiment(networkType=LrGeERNetwork, defaultConfig=C, repeats=repeats,
+        C = Config(size=300, mutationProbability=0, sparseDensity=True, maxPeriods=5000, attachment=2)
+        E = Experiment(networkType=LrGePLNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()
-        E.run(cluster=True)
+        # E.run(cluster=True)
+        E.run(display=True)
