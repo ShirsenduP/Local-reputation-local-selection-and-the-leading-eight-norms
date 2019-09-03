@@ -7,22 +7,22 @@ INDEX
 SUMMARY
 
 Graphs Completed
-    Experiment   6A
-    Experiment   6B
-    Experiment   7A
-    Experiment   8A
-    Experiment   9A
-    Experiment   9B
-    Experiment  10A
-    Experiment  10B
-    Experiment  11A
-    Experiment  11B
+    Experiment   6A     RRL for d = [3, 13]
+    Experiment   6B     RRL vs ER
+    Experiment   7A     Leading 4 on ER
+    Experiment   8A     Pref. attachment parameter on Scale Free Networks
+    Experiment   9A     Tmax effect on convergence
+    Experiment   9B     Tmax effect on convergence
+    Experiment  10A     Rate of mutation
+    Experiment  10B     Rate of mutation
+    Experiment  11A     Rewiring probability (amount of randomness in network) in WSSW
+    Experiment  11B     Rewiring probability (amount of randomness in network) in WSSW
 
 Completed
 
 In-progress
-    Experiment   6C - FAILED
-    Experiment   8B - FAILED
+    Experiment   6C     RRL vs ER
+    Experiment   8B     Size (# of agents) on ER networks
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
