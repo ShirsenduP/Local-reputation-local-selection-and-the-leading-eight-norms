@@ -6,7 +6,7 @@ import numpy as np
 if __name__ == '__main__':
 
     """
-    Test 12A - 0
+    Test 12A - 7
     
     Allowing no mutation, but modulating the initial proportion of mutants in the population to find the limiting point
     of where the network can recover. Range 0-1 in 0.05 increments. Taking Tmax to 3000 as time to convergence has 

@@ -13,7 +13,7 @@
 #$ -l tmpfs=10G
 
 # Name of job
-#$ -N E_12B7
+#$ -N E_12C7
 
 # Set working dir
 #$ -wd /home/ucabpod/Scratch/TestOutput
@@ -24,7 +24,7 @@ cd $TMPDIR
 # run application
 module load python3/recommended
 source /home/ucabpod/Scratch/CodeEvolution/env2/bin/activate
-/usr/bin/time --verbose python /home/ucabpod/Scratch/CodeEvolution/Experiments/Exp12/12B_7.py
+/usr/bin/time --verbose python /home/ucabpod/Scratch/CodeEvolution/Experiments/Exp12/12C_7.py
 
 # archive all files to scratch
 tar zcvf $HOME/Scratch/files_from_job_$JOB_ID.tar.gz $TMPDIR
