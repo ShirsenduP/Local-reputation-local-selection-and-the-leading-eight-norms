@@ -23,7 +23,7 @@ cd $TMPDIR
 
 # run application
 module load python3/recommended
-source /home/ucabpod/Scratch/CodeEvolution/env/bin/activate
+source /home/ucabpod/Scratch/CodeEvolution/env2/bin/activate
 /usr/bin/time --verbose python /home/ucabpod/Scratch/CodeEvolution/Experiments/Exp8/8B_5.py
 
 # archive all files to scratch

@@ -225,6 +225,7 @@ class Experiment:
                 logging.info(f'Changing density from {config.density} to {sparseDensity}.')
                 config.density = sparseDensity
 
+
 if __name__ == '__main__':
     C = Config(initialState=State(0, 1, 8), degree=5)
     # pops = Experiment.generatePopulationList(proportion=1, mutantID=8)
