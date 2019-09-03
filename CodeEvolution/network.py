@@ -105,7 +105,7 @@ class Network:
         # print(self)
         attempts = 0
         maxAttempts = 5
-        while self.getMinDegree() < 2 and attempts < maxAttempts:
+        while self.getMinDegree() < 2 or attempts < maxAttempts:
 
             attempts += 1
             logging.debug(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
@@ -125,9 +125,10 @@ class Network:
             if invalidAgentCount > 0:
                 logging.info(f"{invalidAgentCount} invalid agents.")
 
-        if attempts == maxAttempts:
-            logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
-            # raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
+            if attempts == maxAttempts:
+                logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
+                raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
+                
 
     def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
