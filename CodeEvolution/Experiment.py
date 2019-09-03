@@ -48,7 +48,6 @@ class Experiment:
                 setattr(tests[i], 'mutant',
                         Population(ID=self.values[i][1].ID, proportion=self.values[i][1].proportion))
                 setattr(tests[i], 'socialNormID', self.values[i][0].ID)
-
         else:
             # General Case
             tests = []
@@ -205,6 +204,20 @@ class Experiment:
         return listOfStates
 
     @staticmethod
+    def generateSinglePopulationProportionList(strategyID, mutantID):
+        """Create a sequential list of population objects running through a single strategy with different
+        proportions between it and the mutant strategy. Have to double check with population size to see if some
+        decimal proportions lead to a non-integer number of agents with that strategy."""
+        listOfStates = []
+        strats = np.arange(1, 0, -0.05)
+        strats = [round(strats[i], 3) for i in range(len(strats))]
+        for i in strats:
+            listOfStates.append((Population(ID=strategyID, proportion=i), Population(ID=mutantID,
+                                                                                     proportion=round(1-i,3))))
+        listOfStates = tuple(listOfStates)
+        return listOfStates
+
+    @staticmethod
     def generateSmallWorldParameters(nLower=2, nUpper=50, probabilityLower=0, probabilityUpper=1, nStep=10,
                                      probStep=0.1):
         """Iterate through both axes of initial degree (initialNeighbourCount) and the rewiringProbability to give a
@@ -239,4 +252,3 @@ if __name__ == '__main__':
     E.showExperiments()
     E.run(export=True)
 
-# TODO plot the variation of convergence as we vary Tmax to see if it moves towards convergence - DO THIS FIRST

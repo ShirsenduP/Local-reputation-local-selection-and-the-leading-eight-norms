@@ -352,6 +352,11 @@ class Network:
     def mutation(self, mutantStrategyID):
         """Each agent has probability of (alpha/n) of becoming a mutant in any time period where alpha is the
         expected number of mutants added per time-step."""
+
+        # Skip if there will be no mutation
+        if self.config.mutationProbability == 0:
+            return
+
         probabilityOfMutation = self.config.mutationProbability / self.config.size
         for agent in self.agentList:
             r = random.random()

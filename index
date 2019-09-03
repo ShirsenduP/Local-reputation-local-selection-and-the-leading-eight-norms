@@ -23,6 +23,7 @@ Completed
 In-progress
     Experiment   6C     RRL vs ER
     Experiment   8B     Size (# of agents) on ER networks
+    Experiment  12A     Initial proportions of the leading 4 (no point in doing the non-ess ones)
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -163,3 +164,25 @@ Experiment 11B - COMPLETED
 	11B_5   1632305
 
 ========================================================================================================================
+Experiment 12 - IN PROGRESS
+
+    Allowing no mutation, but modulating the initial proportion of mutants in the population to find the limiting point
+    of where the network can recover. Range 0-1 in 0.05 increments.
+
+    Erdos Renyi
+    12A_0
+    12A_1
+    12A_6
+    12A_7
+
+    Scale-Free (preferential attachment parameter 2)
+    12B_0
+    12B_1
+    12B_6
+    12B_7
+
+    Small world (rewiring parameter 0.5)
+    12B_0
+    12B_1
+    12B_6
+    12B_7
