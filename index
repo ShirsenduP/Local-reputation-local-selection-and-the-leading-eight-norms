@@ -170,20 +170,20 @@ Experiment 12 - IN PROGRESS
     of where the network can recover. Range 0-1 in 0.05 increments.
 
     Erdos Renyi
-    12A_0   1748575
-    12A_1   1748580
-    12A_6   1748581
-    12A_7   1748582
+    12A_0   1748690
+    12A_1   1748691
+    12A_6   1748692
+    12A_7   1748693
 
     Scale-Free (preferential attachment parameter 2)
-    12B_0
-    12B_1
-    12B_6
-    12B_7
+    12B_0   1748699
+    12B_1   1748972
+    12B_6   1748976
+    12B_7   1748979
 
     Small world (rewiring parameter k,p = 4, 0.5, each agent originally connected to 4 nearest neighbours in ring
     topology, 50% of each edge being rewired to an unconnected agent)
-    12B_0
-    12B_1
-    12B_6
-    12B_7
+    12C_0   1748703
+    12C_1   1748987
+    12C_6   1748990
+    12C_7   1748991
