@@ -128,7 +128,7 @@ class Network:
             if attempts == maxAttempts:
                 logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
                 raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
-                
+
 
     def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when

@@ -5,7 +5,7 @@ from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 from CodeEvolution.structures import RandomRegularLattice as RRL
 
-logging.basicConfig(level=logging.CRITICAL)
+
 if __name__ == '__main__':
 
     """
@@ -35,4 +35,4 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeERNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()
-        E.run(display=True)
+        E.run(cluster=True)
