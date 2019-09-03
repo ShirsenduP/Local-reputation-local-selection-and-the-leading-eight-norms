@@ -215,6 +215,15 @@ class Experiment:
                 smallWorldParams.append((int(n), round(prob, 3)))
         return smallWorldParams
 
+    def checkDensitiesForSize(self):
+        """When changing the size of an ER Network if using sparseDensity flag, scan through all configs and correct
+        the densities."""
+        for config in self.experiments:
+            size = config.size
+            sparseDensity = 2 * np.log(size)/size
+            if config.density != sparseDensity:
+                logging.info(f'Changing density from {config.density} to {sparseDensity}.')
+                config.density = sparseDensity
 
 if __name__ == '__main__':
     C = Config(initialState=State(0, 1, 8), degree=5)

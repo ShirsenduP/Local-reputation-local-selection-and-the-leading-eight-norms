@@ -22,6 +22,7 @@ if __name__ == '__main__':
         E = Experiment(networkType=LrGeERNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
 
+        E.checkDensitiesForSize()
         E.showExperiments()
         E.run(cluster=True)
 

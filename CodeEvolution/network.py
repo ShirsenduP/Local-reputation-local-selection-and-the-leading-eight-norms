@@ -104,13 +104,12 @@ class Network:
         self.createNetwork(agentType)
         # print(self)
         attempts = 0
-        maxAttempts = 5
-        while self.getMinDegree() < 2 or attempts < maxAttempts:
-
+        maxAttempts = 50
+        while self.getMinDegree() < 2 and attempts < maxAttempts:
+            logging.critical(f'while: {self.getMinDegree()} < 2 or {attempts} < {maxAttempts}')
             attempts += 1
             logging.debug(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
             # print(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
-
             # Reset network
             Strategy.reset()
             self.agentList = []
@@ -205,7 +204,7 @@ class Network:
         system converges at pre-allocated randomly chosen convergence check intervals."""
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
-            logging.warn(f't={self.currentPeriod}')
+            logging.info(f't={self.currentPeriod}')
             # debugNetwork = str(self)
             logging.info(f"T = {self.currentPeriod} - census: {self.getCensus()}")
             self.resetUtility()

@@ -53,22 +53,12 @@ Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe
 
 Effect of equivalent density on Erdos Renyi random network, LrGe
 
-    6C_0   |  (1595971) (1589784) (1589785) (1582533)
-    6C_1   |  (1589786) (1589787) (1574504)
-    6C_6   |  (1595972) (1589789) (1589788) (1582551) - (1574505)
-    6C_7   |  (1589790) (1589791) (1574506)
+    6C_0  1737593
+    6C_1  1737195
+    6C_6  1737199
+    6C_7  1737203
 
 
-
-
-1631637 2.07141 E_6C7      ucabpod      r     08/30/2019 13:39:39 Bagpuss@node-h00a-017              1
-1631638 2.07141 E_6C7      ucabpod      r     08/30/2019 13:39:48 Bagpuss@node-h00a-033              1
-1631639 2.07141 E_6C6      ucabpod      r     08/30/2019 13:40:14 Bagpuss@node-h00a-035              1
-1631640 2.07141 E_6C6      ucabpod      r     08/30/2019 13:40:19 Bagpuss@node-h00a-004              1
-1631641 2.07141 E_6C1      ucabpod      r     08/30/2019 13:40:28 Bagpuss@node-h00a-041              1
-1631642 2.07141 E_6C1      ucabpod      r     08/30/2019 13:42:46 Bagpuss@node-h00a-011              1
-1631643 2.07141 E_6C0      ucabpod      r     08/30/2019 13:43:25 Bagpuss@node-h00a-026              1
-1631644 2.07141 E_6C0      ucabpod      r     08/30/2019 13:44:12 Bagpuss@node-h00a-021              1
 
 ========================================================================================================================
 Experiment 7 - COMPLETED
@@ -103,14 +93,14 @@ Experiment 8B - IN PROGRESS
 Effect of size of network on the number of leading strategies for Local Reputation,
 Global Evolution and an Erdos Renyi network.
 
-	8B.0    1633653    (1582580) (1577967)
-	8B.1    1633657    (1577968)
-	8B.2    1633661
-	8B.3    1633665
-	8B.4    1633669
-	8B.5    1633673
-	8B.6    1633677    (1577969)
-	8B.7    1633680    (1577970)
+	8B.0    1738231
+	8B.1    1738234
+	8B.2    1738238
+	8B.3    1738241
+	8B.4    1738244
+	8B.5    1738245
+	8B.6    1738246
+	8B.7    1738247
 
 ========================================================================================================================
 Experiment 9A - COMPLETED
@@ -158,11 +148,10 @@ Experiment 11A - COMPLETED
     probability alpha ranging from 0 (regular lattice) to 1 (fully random graph). (default 4 nearest neighbours,
     probability 0 -> 1 in steps of 0.1.
 
-    Submitted: 08/24/2019 16:02:04
-	11A_0   1582671 - (1582606, 1582518)
-	11A_1   1582607 - (1582519)
-	11A_6   1582608 - (1582520)
-	11A_7   1582609 - (1582521)
+	11A_0   1582671
+	11A_1   1582607
+	11A_6   1582608
+	11A_7   1582609
 
 Experiment 11B - COMPLETED
 
