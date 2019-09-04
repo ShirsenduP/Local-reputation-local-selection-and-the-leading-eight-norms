@@ -45,4 +45,3 @@ if __name__ == '__main__':
     plt.xticks(xpos, xticks, rotation=45)
     plt.savefig("8B_size_cooperation-proportion")
     # plt.show()
-    
