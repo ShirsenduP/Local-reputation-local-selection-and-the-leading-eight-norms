@@ -18,11 +18,11 @@ Graphs Completed
     Experiment  10B     Rate of mutation
     Experiment  11A     Rewiring probability (amount of randomness in network) in WSSW
     Experiment  11B     Rewiring probability (amount of randomness in network) in WSSW
+    Experiment  12B     Initial proportions of the leading 4 on SF networks
+    Experiment  12C     Initial proportions of the leading 4 on SW networks
 
 Experiment Completed
     Experiment   6C     RRL vs ER
-    Experiment  12B     Initial proportions of the leading 4 on SF networks
-    Experiment  12C     Initial proportions of the leading 4 on SW networks
 
 In-progress
     Experiment  12A     Initial proportions of the leading 4 on ER networks
@@ -61,7 +61,11 @@ Effect of equivalent density on Erdos Renyi random network, LrGe
     6C_6  1737199
     6C_7  1737203
 
-
+extras
+1758700 2.21414 E_6C0      ucabpod      r     09/05/2019 11:23:16 Bagpuss@node-h00a-012              1
+1758701 2.21414 E_6C1      ucabpod      r     09/05/2019 11:23:20 Bagpuss@node-h00a-016              1
+1758702 2.21414 E_6C6      ucabpod      r     09/05/2019 11:23:20 Bagpuss@node-h00a-040              1
+1758703 0.00000 E_6C7      ucabpod      qw    09/05/2019 11:23:18                                    1
 
 ========================================================================================================================
 Experiment 7 - COMPLETED

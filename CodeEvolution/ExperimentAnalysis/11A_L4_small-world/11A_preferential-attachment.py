@@ -53,17 +53,3 @@ if __name__ == '__main__':
     plt.savefig("11A_rewiring-probability_proportion")
     # plt.show()
 
-
-
-    #
-    # for strategy, jobID in zip(strategyIDs, jobIDs):
-    #     data = getDataFromID(jobID)
-    #     fig, ax = plotCooperationProportion(data)
-    #     plt.title(f'LrGeWSSW $s_{strategy}$ vs Rewiring Probability')
-    #     plt.xlabel("$\\alpha$")
-    #     plt.ylabel(f"Average Final Proportion of Cooperation")
-    #     newLocs = list(range(11))
-    #     newTicks = [round(i*0.1, 3) for i in range(11)]
-    #     plt.xticks(ticks=newLocs, labels=newTicks)
-    #     plt.savefig(jobID + "_cooperation")
-    #     # plt.show()
