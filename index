@@ -20,13 +20,12 @@ Graphs Completed
     Experiment  11B     Rewiring probability (amount of randomness in network) in WSSW
 
 Experiment Completed
-    NA
-
-In-progress
     Experiment   6C     RRL vs ER
-    Experiment  12A     Initial proportions of the leading 4 on ER networks
     Experiment  12B     Initial proportions of the leading 4 on SF networks
     Experiment  12C     Initial proportions of the leading 4 on SW networks
+
+In-progress
+    Experiment  12A     Initial proportions of the leading 4 on ER networks
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -178,7 +177,7 @@ Experiment 12A - IN PROGRESS
     12A_6   1748692
     12A_7   1748693
 
-Experiment 12B - IN PROGRESS
+Experiment 12B - DONE
 
     Scale-Free (preferential attachment parameter 2)
     12B_0   1748699
@@ -186,7 +185,7 @@ Experiment 12B - IN PROGRESS
     12B_6   1749038
     12B_7   1749039
 
-Experiment 12C - IN PROGRESS
+Experiment 12C - DONE
 
     Small world (rewiring parameter k,p = 4, 0.5, each agent originally connected to 4 nearest neighbours in ring
     topology, 50% of each edge being rewired to an unconnected agent)
