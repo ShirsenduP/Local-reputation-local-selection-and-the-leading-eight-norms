@@ -9,17 +9,24 @@ Strategy i = [0,1,6,7] vs degree d = [3, 10, 25, 50, 100, 200, 299], LrGe, ONLY 
     6B_6    1631633
     6B_7    1631635
 
+    6C_0  1737593
+    6C_1  1737195
+    6C_6  1737199
+    6C_7  1737203
+
 """
+
 
 from CodeEvolution.ExperimentAnalysis.analysis import *
 
 if __name__ == '__main__':
-    jobIDs = ['1631629', '1631631', '1631633', '1631635']
+    jobIDsB = ['1631629', '1631631', '1631633', '1631635']
+    jobIDsC = ['1737593','1737195','1737199','1737203']
     degrees = [3, 10, 25, 50, 100, 200, 299]
     strategyIDs = [0, 1, 6, 7]
 
     fig, ax = plt.subplots()
-    for ID, strategyID in zip(jobIDs, strategyIDs):
+    for ID, strategyID in zip(jobIDsB, strategyIDs):
 
         data = getDataFromID(ID)
         length = data[0].shape[0]
@@ -30,6 +37,7 @@ if __name__ == '__main__':
         plt.plot(degrees, means, label=f'$s_{strategyID}$')
         plt.fill_between(degrees, down, up, alpha=0.1, antialiased=True)
 
+
     plt.title(f'LrGeRRL vs Number of neighbours $d$')
     plt.xlabel('Number of neighbours $d$')
     plt.ylabel('Average Final Proportion of Strategy')
@@ -39,23 +47,23 @@ if __name__ == '__main__':
     # plt.savefig('6B_rrl_proportion')
     plt.show()
 
-    # fig, ax = plt.subplots()
-    # for ID, strategyID in zip(jobIDs, strategyIDs):
-    #
-    #     data = getDataFromID(ID)
-    #     length = data[0].shape[0]
-    #     means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
-    #     stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
-    #     up = [mean + std for mean, std in zip(means, stds)]
-    #     down = [mean - std for mean, std in zip(means, stds)]
-    #     plt.plot(degrees, means, label=f'$s_{strategyID}$')
-    #     plt.fill_between(degrees, down, up, alpha=0.1, antialiased=True)
-    #
-    # plt.title(f'LrGeRRL vs Number of neighbours $d$')
-    # plt.xlabel('Number of neighbours $d$')
-    # plt.ylabel('Average Proportion of Cooperation')
-    # plt.xticks(degrees, degrees, rotation=90)
-    # plt.legend(bbox_to_anchor=(0.45, 0.35), )
-    # plt.tight_layout()
-    # # plt.show()
+    fig, ax = plt.subplots()
+    for ID, strategyID in zip(jobIDsB, strategyIDs):
+
+        data = getDataFromID(ID)
+        length = data[0].shape[0]
+        means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
+        stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
+        up = [mean + std for mean, std in zip(means, stds)]
+        down = [mean - std for mean, std in zip(means, stds)]
+        plt.plot(degrees, means, label=f'$s_{strategyID}$')
+        plt.fill_between(degrees, down, up, alpha=0.1, antialiased=True)
+
+    plt.title(f'LrGeRRL vs Number of neighbours $d$')
+    plt.xlabel('Number of neighbours $d$')
+    plt.ylabel('Average Proportion of Cooperation')
+    plt.xticks(degrees, degrees, rotation=90)
+    plt.legend(bbox_to_anchor=(0.45, 0.35))
+    plt.tight_layout()
+    plt.show()
     # plt.savefig('6B_rrl_cooperation')

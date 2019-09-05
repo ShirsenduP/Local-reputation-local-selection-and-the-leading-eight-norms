@@ -46,7 +46,7 @@ Effect of degree of regular random lattice on proportions of cooperation Strateg
 	6A_7    1560446 done
 
 Effect of degree on regular random lattice on proportions of cooperation
-Strategy i = [0,1,6,7] vs degree d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe, ONLY TEN REPEATS
+Strategy i = [0,1,6,7] vs degreze d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe, ONLY TEN REPEATS
 
     6B_0    1631629
     6B_1    1631631
@@ -61,11 +61,6 @@ Effect of equivalent density on Erdos Renyi random network, LrGe
     6C_6  1737199
     6C_7  1737203
 
-extras
-1758700 2.21414 E_6C0      ucabpod      r     09/05/2019 11:23:16 Bagpuss@node-h00a-012              1
-1758701 2.21414 E_6C1      ucabpod      r     09/05/2019 11:23:20 Bagpuss@node-h00a-016              1
-1758702 2.21414 E_6C6      ucabpod      r     09/05/2019 11:23:20 Bagpuss@node-h00a-040              1
-1758703 0.00000 E_6C7      ucabpod      qw    09/05/2019 11:23:18                                    1
 
 ========================================================================================================================
 Experiment 7 - COMPLETED

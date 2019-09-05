@@ -14,8 +14,8 @@ if __name__ == '__main__':
     rerunSimulations = True
     repeats = 5
 
-    # degrees = [10, 100, 200, 299]
-    degrees = [3, 25, 50]
+    degrees = [10, 100, 200, 299]
+    # degrees = [3, 25, 50]
 
     # Testing density (from degree)
     var = 'density'
