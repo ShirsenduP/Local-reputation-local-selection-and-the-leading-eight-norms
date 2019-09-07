@@ -32,7 +32,6 @@ class GlobalEvolution:
         # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
         for strategy, _ in strategyUtils.items():
             strategyUtils[strategy] /= (totalUtil * alpha)
-            # TODO What is the purpose of \alpha?
 
         logging.debug(f"\tt = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
 
@@ -58,6 +57,11 @@ class LocalEvolution:
     def evolutionaryUpdate(self, alpha=10):
         """Local Learning - Out of the subset of agents that are connected to the focal agent, adopt the strategy of the
          best/better performing agent with some probability."""
+        # TODO: BUG? Anyone who is yet to update, but is connected to an already updated agent has a chance of updating
+        #  with incorrect information, primarily the original strategies of all his neighbouring agents before
+        #  update. Don't think this affects primary results, but only the speed of evolution, can accellerate the
+        #  speed of evolution of a profitable strategy
+
         for agent in self.agentList:
             agent.updateStrategy(self.config.updateProbability, copyTheBest=True)
 
