@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     # Proportion of Cooperation
     plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Rewiring Probability')
+    plt.title(f'LrGeWSSW vs Rewiring Probability')
     plt.xlabel("Rewiring Probability")
     plt.ylabel("Average Final Proportion of Cooperation")
     plt.ylim(0.7, 0.9)
@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     # Proportion of Strategies
     plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Rewiring Probability')
+    plt.title(f'LrGeWSSW vs Rewiring Probability')
     plt.xlabel("Rewiring Probability")
     plt.ylabel("Average Final Proportion of Strategies")
     plt.ylim(0.8, 1)

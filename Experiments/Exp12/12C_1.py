@@ -23,7 +23,7 @@ if __name__ == '__main__':
     if rerunSimulations:
 
         # Default Parameters for simulations
-        C = Config(size=300, mutationProbability=0, sparseDensity=True, maxPeriods=5000, smallWorld=(4, 0.5))
+        C = Config(size=300, mutationProbability=0, sparseDensity=True, maxPeriods=5000, smallWorld=(4, 0.01))
         E = Experiment(networkType=LrGeWSSWNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()

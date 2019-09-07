@@ -7,25 +7,29 @@ INDEX
 SUMMARY
 
 Graphs Completed
-    Experiment   6A     RRL for d = [3, 13]
+-    Experiment   6A     RRL for d = [3, 13]
     Experiment   6B     RRL vs ER
-    Experiment   7A     Leading 4 on ER
-    Experiment   8A     Pref. attachment parameter on Scale Free Networks
-    Experiment   8B     Size (# of agents) on ER networks
+-    Experiment   7A     Leading 4 on ER
     Experiment   9A     Tmax effect on convergence
     Experiment   9B     Tmax effect on convergence
-    Experiment  10A     Rate of mutation
-    Experiment  10B     Rate of mutation
-    Experiment  11A     Rewiring probability (amount of randomness in network) in WSSW
-    Experiment  11B     Rewiring probability (amount of randomness in network) in WSSW
+-    Experiment  10A     Rate of mutation
+-    Experiment  10B     Rate of mutation
+-    Experiment  11A     Rewiring probability (amount of randomness in network) in WSSW
+-    Experiment  11B     Rewiring probability (amount of randomness in network) in WSSW
     Experiment  12B     Initial proportions of the leading 4 on SF networks
     Experiment  12C     Initial proportions of the leading 4 on SW networks
+
+
+Graphs messed up
+-    Experiment   8A     Pref. attachment parameter on Scale Free Networks
+    Experiment   8B     Size (# of agents) on ER networks
 
 Experiment Completed
     Experiment   6C     RRL vs ER
 
 In-progress
     Experiment  12A     Initial proportions of the leading 4 on ER networks
+    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -61,6 +65,10 @@ Effect of equivalent density on Erdos Renyi random network, LrGe
     6C_6  1737199
     6C_7  1737203
 
+1759821 2.05342 E_6C0      ucabpod      r     09/05/2019 15:45:26 Bagpuss@node-h00a-011              1
+1759822 2.05342 E_6C1      ucabpod      r     09/05/2019 15:45:29 Bagpuss@node-h00a-011              1
+1759823 0.00000 E_6C6      ucabpod      qw    09/05/2019 15:45:28                                    1
+1759824 0.00000 E_6C7      ucabpod      qw    09/05/2019 15:45:29                                    1
 
 ========================================================================================================================
 Experiment 7 - COMPLETED
@@ -163,6 +171,10 @@ Experiment 11B - COMPLETED
 	11B_3   1632303
 	11B_4   1632304
 	11B_5   1632305
+
+Experiment 11C - IN PROGRESS
+
+    Redo 11A/11B for more appropriate range of values of rewiring probability on logscale from 10^-3 to 10^0
 
 ========================================================================================================================
 Experiment 12A - IN PROGRESS

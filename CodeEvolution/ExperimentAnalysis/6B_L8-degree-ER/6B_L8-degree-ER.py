@@ -22,11 +22,12 @@ from CodeEvolution.ExperimentAnalysis.analysis import *
 if __name__ == '__main__':
     jobIDsB = ['1631629', '1631631', '1631633', '1631635']
     jobIDsC = ['1737593','1737195','1737199','1737203']
-    degrees = [3, 10, 25, 50, 100, 200, 299]
+    # degrees = [3, 10, 25, 50, 100, 200, 299]
+    degrees = [10, 100, 200, 299]
     strategyIDs = [0, 1, 6, 7]
 
     fig, ax = plt.subplots()
-    for ID, strategyID in zip(jobIDsB, strategyIDs):
+    for ID, strategyID in zip(jobIDsC, strategyIDs):
 
         data = getDataFromID(ID)
         length = data[0].shape[0]
@@ -48,7 +49,7 @@ if __name__ == '__main__':
     plt.show()
 
     fig, ax = plt.subplots()
-    for ID, strategyID in zip(jobIDsB, strategyIDs):
+    for ID, strategyID in zip(jobIDsC, strategyIDs):
 
         data = getDataFromID(ID)
         length = data[0].shape[0]

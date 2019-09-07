@@ -19,8 +19,8 @@ from CodeEvolution.ExperimentAnalysis.analysis import *
 
 if __name__ == '__main__':
     jobIDs = ['1557510', '1557511', '1536574', '1536575', '1536576', '1536577', '1557512', '1560446']
-    # skip = []
-    skip = [2, 3, 4, 5]
+    skip = []
+    # skip = [2, 3, 4, 5]
 
     plotAllStrategyProportions(jobIDs, list(range(8)), skip)
     plt.title('LrGeRRL vs RRL Degree')
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     plt.ylabel(f"Average Final Strategy Proportion")
     plt.xticks(newXTicks, newXLocs)
     plt.legend(bbox_to_anchor=(0.85,0.7))
-    plt.savefig('6A_proportion')
+    # plt.savefig('6A_proportion')
     plt.show()
 
     plotAllStrategyCooperations(jobIDs, list(range(8)), skip)
@@ -41,5 +41,5 @@ if __name__ == '__main__':
     plt.ylabel(f"Average Proportion of Cooperation")
     plt.xticks(newXTicks, newXLocs)
     plt.legend()
-    plt.savefig('6A_cooperation')
+    # plt.savefig('6A_cooperation')
     # plt.show()

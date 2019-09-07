@@ -11,7 +11,7 @@ if __name__ == '__main__':
     """
 
     rerunSimulations = True
-    repeats = 10
+    repeats = 100
     var = 'population'
     values = Experiment.generatePopulationList(proportion=1, mutantID=8)
 
