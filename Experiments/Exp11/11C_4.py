@@ -15,7 +15,7 @@ if __name__ == '__main__':
     """
 
     rerunSimulations = True
-    repeats = 2
+    repeats = 100
     var = 'smallWorld'
     deg = 4
     values = []
