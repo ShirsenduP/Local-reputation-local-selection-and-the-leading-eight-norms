@@ -21,7 +21,7 @@ if __name__ == '__main__':
     values = []
     for prob in np.logspace(-4, 0, 40):
         values.append((deg, round(prob, 3)))
-    mainID = 0
+    mainID = 2
 
     if rerunSimulations:
 
