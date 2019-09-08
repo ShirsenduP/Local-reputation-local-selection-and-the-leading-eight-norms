@@ -99,5 +99,5 @@ if __name__ == '__main__':
     axes[0,0].set_title("$d$-RRL")
     axes[0,1].set_title("ER")
 
-    # plt.show()
-    plt.savefig('6B_heterogeneity')
+    plt.show()
+    # plt.savefig('6B_heterogeneity', dpi=fig.dpi) # DPI SCALE WEIRD

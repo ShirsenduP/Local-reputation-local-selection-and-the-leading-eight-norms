@@ -23,13 +23,24 @@ if __name__ == '__main__':
     jobIDs = ['1536580', '1536581', '1635795', '1635796', '1635797', '1635798', '1536582', '1536583']
     strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
     skip = [2, 3, 4, 5]
-    xticks, xlabels = list(range(9)), list(range(2, 11))
+    # skip = []
+    xticks, xlabels = list(range(0, 9, 2)), list(range(2, 11, 2))
 
+    fig, axes = plt.subplots(1, 2, sharey='all', figsize=(6, 2), dpi=80)
+
+    plt.sca(axes[0])
     plotAllStrategyCooperations(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGePL vs Preferential Attachment Parameter')
-    plt.xlabel("$m$")
-    plt.ylabel(f"Average Final Proportion of Cooperation")
+    axes[0].set_title('Cooperation')
     plt.xticks(xticks, xlabels)
-    plt.legend(loc='lower right')
-    plt.savefig("8A_preferential-attachment")
-    # plt.show()
+    plt.ylabel('Proportion')
+
+    plt.sca(axes[1])
+    plotAllStrategyProportions(jobIDs, strategyIDs, skip)
+    axes[1].set_title('Strategy')
+    plt.xticks(xticks, xlabels)
+
+    labels = [f'$s_{strategyID}$' for strategyID in strategyIDs if strategyID not in skip]
+    plt.gca().legend(loc='center left', bbox_to_anchor=(1,0.5))
+    fig.text(0.5, 0.001, 'Preferential Attachment Parameter $m$', ha='center')
+    # plt.savefig("8A_Preferential-attachment")
+    plt.show()

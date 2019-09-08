@@ -109,7 +109,7 @@ def plotAllStrategyCooperations(listOfJobIDs, strategyIDs, skip=[]):
     """Given a list of job IDs and the corresponding strategy IDs in the same order, plot all the proportions of
     cooperation on the same plot."""
 
-    fig, ax = plt.subplots()
+    # fig, ax = plt.subplots()
     for ID, strategyID in zip(listOfJobIDs, strategyIDs):
         if strategyID in skip:
             continue
@@ -120,7 +120,7 @@ def plotAllStrategyCooperations(listOfJobIDs, strategyIDs, skip=[]):
         var = list(range(len(means)))
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
-        plt.plot(var, means, label=f'$s_{strategyID}$')
+        plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
         plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
 
 
@@ -139,7 +139,7 @@ def plotAllStrategyProportions(listOfJobIDs, strategyIDs, skip=[]):
         var = list(range(len(means)))
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
-        plt.plot(var, means, label=f'$s_{strategyID}$')
+        plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
         plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
 
 
