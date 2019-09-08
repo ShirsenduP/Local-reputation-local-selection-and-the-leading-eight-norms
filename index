@@ -6,9 +6,12 @@ INDEX
 
 SUMMARY
 
+Multiplots Completed
+-    Experiment   6B     RRL vs ER
+-    Experiment   6C     RRL vs ER
+
 Graphs Completed
 -    Experiment   6A     RRL for d = [3, 13]
-    Experiment   6B     RRL vs ER
 -    Experiment   7A     Leading 4 on ER
     Experiment   9A     Tmax effect on convergence
     Experiment   9B     Tmax effect on convergence
@@ -16,16 +19,17 @@ Graphs Completed
 -    Experiment  10B     Rate of mutation
 -    Experiment  11A     Rewiring probability (amount of randomness in network) in WSSW
 -    Experiment  11B     Rewiring probability (amount of randomness in network) in WSSW
-    Experiment  12B     Initial proportions of the leading 4 on SF networks
-    Experiment  12C     Initial proportions of the leading 4 on SW networks
 
 
 Graphs messed up
 -    Experiment   8A     Pref. attachment parameter on Scale Free Networks
     Experiment   8B     Size (# of agents) on ER networks
 
+Graphs need to be combined after 12A completes
+    Experiment  12B     Initial proportions of the leading 4 on SF networks
+    Experiment  12C     Initial proportions of the leading 4 on SW networks
+
 Experiment Completed
-    Experiment   6C     RRL vs ER
 
 In-progress
     Experiment  12A     Initial proportions of the leading 4 on ER networks
@@ -36,7 +40,7 @@ NOTE
 
 ========================================================================================================================
 ========================================================================================================================
-Experiment 6 - IN PROGRESS
+Experiment 6 - COMPLETE
 
 Effect of degree of regular random lattice on proportions of cooperation Strategy i = [0,7] vs degree d [3, 13]
 
@@ -52,23 +56,19 @@ Effect of degree of regular random lattice on proportions of cooperation Strateg
 Effect of degree on regular random lattice on proportions of cooperation
 Strategy i = [0,1,6,7] vs degreze d = [3, 5, 10, 25, 50, 75, 100, 200, 299], LrGe, ONLY TEN REPEATS
 
-    6B_0    1631629
-    6B_1    1631631
-    6B_6    1631633
-    6B_7    1631635
+    6B_0    1631629  (1631630)  NOTE: all .csv files found in first jobID folder
+    6B_1    1631631  (1631632)
+    6B_6    1631633  (1631634)
+    6B_7    1631635  (1631636)
 
 
 Effect of equivalent density on Erdos Renyi random network, LrGe
 
-    6C_0  1737593
-    6C_1  1737195
-    6C_6  1737199
-    6C_7  1737203
+    6C_0    1759821  (1737593)  NOTE: all .csv files found in first jobID folder
+    6C_1    1759822  (1737195)
+    6C_6    1759823  (1737199)
+    6C_7    1759824  (1737203)
 
-1759821 2.05342 E_6C0      ucabpod      r     09/05/2019 15:45:26 Bagpuss@node-h00a-011              1
-1759822 2.05342 E_6C1      ucabpod      r     09/05/2019 15:45:29 Bagpuss@node-h00a-011              1
-1759823 0.00000 E_6C6      ucabpod      qw    09/05/2019 15:45:28                                    1
-1759824 0.00000 E_6C7      ucabpod      qw    09/05/2019 15:45:29                                    1
 
 ========================================================================================================================
 Experiment 7 - COMPLETED
@@ -220,10 +220,10 @@ Experiment 12B - IN PROGRESS
     Scale-Free (preferential attachment parameter 2)
     12B_0   1748699
     12B_1   1749037
-    12B_2
-    12B_3
-    12B_4
-    12B_5
+    12B_2   1770567
+    12B_3   1770568
+    12B_4   1770569
+    12B_5   1770570
     12B_6   1749038
     12B_7   1749039
 
@@ -232,26 +232,18 @@ Experiment 12B - IN PROGRESS
 1770569 0.00000 E_12B4     ucabpod      qw    09/07/2019 12:14:52                                    1
 1770570 0.00000 E_12B5     ucabpod      qw    09/07/2019 12:14:53                                    1
 
-Experiment 12C - IN PROGRESS
+Experiment 12C - COMPLETED
 
-    Small world (rewiring parameter k,p = 4, 0.5, each agent originally connected to 4 nearest neighbours in ring
+    Small world (rewiring parameter k,p = 4, 0.01, each agent originally connected to 4 nearest neighbours in ring
     topology, 50% of each edge being rewired to an unconnected agent)
-    12C_0   1748703
-    12C_1   1748987
-    12C_2
-    12C_3
-    12C_4
-    12C_5
-    12C_6   1748990
-    12C_7   1748991
+    12C_0   1770559
+    12C_1   1770560
+    12C_2   1770561
+    12C_3   1770562
+    12C_4   1770563
+    12C_5   1770564
+    12C_6   1770565
+    12C_7   1770566
 
-1770559 2.30000 E_12C0     ucabpod      r     09/07/2019 12:14:27 Bagpuss@node-h00a-027              1
-1770560 2.30000 E_12C1     ucabpod      t     09/07/2019 12:14:32 Bagpuss@node-h00a-014              1
-1770561 2.30000 E_12C2     ucabpod      r     09/07/2019 12:14:32 Bagpuss@node-h00a-011              1
-1770562 2.30000 E_12C3     ucabpod      r     09/07/2019 12:14:32 Bagpuss@node-h00a-016              1
-1770563 2.30000 E_12C4     ucabpod      r     09/07/2019 12:14:32 Bagpuss@node-h00a-016              1
-1770564 0.00000 E_12C5     ucabpod      qw    09/07/2019 12:14:28                                    1
-1770565 0.00000 E_12C6     ucabpod      qw    09/07/2019 12:14:30                                    1
-1770566 0.00000 E_12C7     ucabpod      qw    09/07/2019 12:14:31                                    1
 
 ========================================================================================================================

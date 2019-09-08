@@ -128,7 +128,7 @@ def plotAllStrategyProportions(listOfJobIDs, strategyIDs, skip=[]):
     """Given a list of job IDs and the corresponding strategy IDs in the same order, plot all the proportions of
     cooperation on the same plot."""
 
-    fig, ax = plt.subplots()
+    # fig, ax = plt.subplots()
     for ID, strategyID in zip(listOfJobIDs, strategyIDs):
         if strategyID in skip:
             continue
@@ -148,7 +148,7 @@ def plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip=[]):
     proportion of the main strategy in the population as a function of a variable to be tested. This will layer the
     line plots (of each strategy) on the same plot."""
 
-    fig, ax = plt.subplots()
+    # fig, ax = plt.subplots()
     for jobID, strategyID in zip(jobIDs, strategyIDs):
         if strategyID in skip:
             continue
