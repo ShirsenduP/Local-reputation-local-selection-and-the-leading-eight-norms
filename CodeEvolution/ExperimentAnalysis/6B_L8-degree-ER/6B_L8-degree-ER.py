@@ -31,10 +31,13 @@ if __name__ == '__main__':
     equivalent_densities = []
     for d in degrees:
         config = Config(size=300, degree=d)
-        equivalent_densities.append(round(RRL.getTheoreticalDensity(config),3))
+        equivalent_densities.append(round(RRL.getTheoreticalDensity(config),2))
+
+    ## PLOTS
 
     fig, axes = plt.subplots(2, 2, sharex='col', sharey='all')
     plt.subplots_adjust(left=0.05, right=0.6, bottom=0.15, top=0.6)
+
     # 6B RRL DEGREE TEST
     for ID, strategyID in zip(jobIDsB, strategyIDs):
 
@@ -45,8 +48,7 @@ if __name__ == '__main__':
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
         axes[0][0].plot(degrees, means, label=f'$s_{strategyID}$', marker='.')
-        axes[0][0].fill_between(degrees, down, up, alpha=0.1, antialiased=True)
-    # plt.xticks(degrees, [], rotation=90)
+        axes[0][0].fill_between(degrees, down, up, alpha=0.1)
 
     for ID, strategyID in zip(jobIDsB, strategyIDs):
 
@@ -57,8 +59,8 @@ if __name__ == '__main__':
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
         axes[1][0].plot(degrees, means, label=f'$s_{strategyID}$', marker='.')
-        axes[1][0].fill_between(degrees, down, up, alpha=0.1, antialiased=True)
-    # plt.xticks(degrees, degrees, rotation=90)
+        axes[1][0].fill_between(degrees, down, up, alpha=0.1)
+
     # 6C ER DENSITY COMPARISON TEST
 
     for ID, strategyID in zip(jobIDsC, strategyIDs):
@@ -70,7 +72,7 @@ if __name__ == '__main__':
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
         axes[0][1].plot(degrees, means, label=f'$s_{strategyID}$', marker='.')
-        axes[0][1].fill_between(degrees, down, up, alpha=0.1, antialiased=True)
+        axes[0][1].fill_between(degrees, down, up, alpha=0.1)
     # plt.xticks(degrees, [], rotation=90)
 
     for ID, strategyID in zip(jobIDsC, strategyIDs):
@@ -82,22 +84,23 @@ if __name__ == '__main__':
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
         axes[1, 1].plot(degrees, means, label=f'$s_{strategyID}$', marker='.')
-        axes[1, 1].fill_between(degrees, down, up, alpha=0.1, antialiased=True)
+        axes[1, 1].fill_between(degrees, down, up, alpha=0.1)
 
-    # fig.suptitle("Effect of Heterogeneity", fontsize=16, y=1)
     labels = [f'$s_{strategyID}$' for strategyID in strategyIDs]
-    plt.figlegend(labels=labels,
-                  loc='lower center',
-                  framealpha=1,
-                  bbox_to_anchor=(0.55, 0.1),
-                  ncol=4,
-                  fancybox=True)
-    plt.xticks(degrees, equivalent_densities)
+    axes[1][0].set_xticks(degrees)
+    axes[1][0].set_xticklabels(degrees)
+    axes[1][0].set_xlabel('$d$')
+
+    axes[1][1].set_xticks(degrees)
+    axes[1][1].set_xticklabels(equivalent_densities)
+    axes[1][1].set_xlabel('$\lambda$')
 
     axes[1,0].set_ylabel("Prop. of \nCooperators")
     axes[0,0].set_ylabel("Prop. of \nStrategy")
     axes[0,0].set_title("$d$-RRL")
     axes[0,1].set_title("ER")
+    handles, labels = axes[0,0].get_legend_handles_labels()
+    lgd = axes[1][1].legend(handles, labels, loc='middle center', bbox_to_anchor=(1.1, 1.65))
 
-    plt.show()
-    # plt.savefig('6B_heterogeneity', dpi=fig.dpi) # DPI SCALE WEIRD
+    # plt.show()
+    plt.savefig('6B_heterogeneity_vs_er', bbox_extra_artists=(lgd,), bbox_inches='tight')

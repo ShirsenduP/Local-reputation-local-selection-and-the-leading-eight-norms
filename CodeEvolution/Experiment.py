@@ -239,6 +239,9 @@ class Experiment:
                 config.density = sparseDensity
 
 
+## TODO: experiment details into config.txt, xvalues, xvariable name etc, can partially automate labelling of graphs too
+## TODO: create script to generate all the .py files and .sh files, just a forloop writing out a big f string with
+# strategy ID codes
 if __name__ == '__main__':
     C = Config(initialState=State(0, 1, 8), degree=5)
     # pops = Experiment.generatePopulationList(proportion=1, mutantID=8)

@@ -26,23 +26,20 @@ if __name__ == '__main__':
     newXTicks = list(range(0, 11))
     newXLabels = list(np.arange(0, 11, 1))
 
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex='all', sharey='all')
+
+
     # Proportion of Cooperation
-    plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Mutation Rate')
-    plt.xlabel("Mutation Rate")
-    plt.ylabel("Average Final Proportion of Cooperation")
-    plt.legend(loc='upper right')
-    plt.xticks(newXLabels, newXTicks)
-    plt.savefig("10A_mutationrate-cooperation")
-    # plt.show()
+    plt.sca(ax1)
+    plotAllStrategyProportions(jobIDs, strategyIDs, skip)
+    ax1.set_ylabel("Prop. of \nStrategy")
 
     # Proportion of Strategies
-    plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Mutation Rate')
-    plt.xlabel("Mutation Rate")
-    plt.ylabel("Average Final Proportion of Strategies")
-    plt.legend(loc='upper right')
-    plt.xticks(newXLabels, newXTicks)
-    plt.savefig("10A_mutationrate-proportion")
-    # plt.show()
+    plt.sca(ax2)
+    plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
+    ax2.set_xlabel("Mutations / period")
+    ax2.set_ylabel("Prop. of \nCooperators")
 
+    handles, labels = ax2.get_legend_handles_labels()
+    lgd = ax2.legend(handles, labels, loc='center right', bbox_to_anchor=(1.18,1.1))
+    plt.savefig('10A_mutation_rate', bbox_extra_artists=(lgd,), bbox_inches='tight')

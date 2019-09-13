@@ -7,33 +7,34 @@ INDEX
 SUMMARY
 
 Multiplots Completed
--    Experiment   6B     RRL vs ER
--    Experiment   6C     RRL vs ER
-
-Graphs Completed
--    Experiment   6A     RRL for d = [3, 13]
+-    Experiment   6B/6C  RRL vs ER
 -    Experiment   7A     Leading 4 on ER
-    Experiment   9A     Tmax effect on convergence
-    Experiment   9B     Tmax effect on convergence
--    Experiment  10A     Rate of mutation
--    Experiment  10B     Rate of mutation
--    Experiment  11A     Rewiring probability (amount of randomness in network) in WSSW
--    Experiment  11B     Rewiring probability (amount of randomness in network) in WSSW
-
-
-Graphs messed up
 -    Experiment   8A     Pref. attachment parameter on Scale Free Networks
-    Experiment   8B     Size (# of agents) on ER networks
+-    Experiment   8B     Size (# of agents) on ER networks                                  !!Size on other ones?
+-    Experiment   9A/9B  Tmax on ER network                                                 !!Tmax on other ones?
+-    Experiment  10A/10B Mutation rate on ER network                                        !!Mutation on other ones?
+-    Experiment  11C     Rewiring probability correct values in WSSW
+
+Graphs Completed for old tests !!! DO NOT USE !!!
+-    Experiment  11A/11B Rewiring probability (amount of randomness in network) in WSSW
+-    Experiment   6A     RRL for d = [3, 13] - DO NOT USE
 
 Graphs need to be combined after 12A completes
-    Experiment  12B     Initial proportions of the leading 4 on SF networks
-    Experiment  12C     Initial proportions of the leading 4 on SW networks
+-    Experiment  12B     Initial proportions of the leading 4 on SF networks
+-    Experiment  12C     Initial proportions of the leading 4 on SW networks
 
 Experiment Completed
 
-In-progress
-    Experiment  12A     Initial proportions of the leading 4 on ER networks
-    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
+Experiment in progress
+-    Experiment  12A     Initial proportions of the leading 4 on ER networks
+-    NA
+
+Experiment needed
+-    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
+-    Experiment 8C, 8D, 8E size on RRL, SF, WSSW
+-    Experiment 9C, 9D, 9E Tmax on RRL, SF, WSSW
+-    Experiment 10C, 10D, 10E on mutation rate on RRL, SF, WSSW
+-    Experiment 13A     Probability of broadcasting information on ER graph (others too?!)
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -176,23 +177,15 @@ Experiment 11C - IN PROGRESS
 
     Redo 11A/11B for more appropriate range of values of rewiring probability on logscale from 10^-3 to 10^0
 
-    11C_0
-    11C_1
-    11C_2
-    11C_3
-    11C_4
-    11C_5
-    11C_6
-    11C_7
+    11C_0   1780485
+    11C_1   1780487
+    11C_2   1770601
+    11C_3   1770602
+    11C_4   1770603
+    11C_5   1770604
+    11C_6   1780488
+    11C_7   1780489
 
-1770599 2.08333 E_11C0     ucabpod      r     09/07/2019 12:25:13 Bagpuss@node-h00a-006              1
-1770600 2.08333 E_11C1     ucabpod      r     09/07/2019 12:25:13 Bagpuss@node-h00a-045              1
-1770601 0.00000 E_11C2     ucabpod      qw    09/07/2019 12:25:08                                    1
-1770602 0.00000 E_11C3     ucabpod      qw    09/07/2019 12:25:10                                    1
-1770603 0.00000 E_11C4     ucabpod      qw    09/07/2019 12:25:11                                    1
-1770604 0.00000 E_11C5     ucabpod      qw    09/07/2019 12:25:12                                    1
-1770605 0.00000 E_11C6     ucabpod      qw    09/07/2019 12:25:14                                    1
-1770606 0.00000 E_11C7     ucabpod      qw    09/07/2019 12:25:16                                    1
 
 ========================================================================================================================
 Experiment 12A - IN PROGRESS
@@ -201,21 +194,16 @@ Experiment 12A - IN PROGRESS
     of where the network can recover. Range 0-1 in 0.05 increments.
 
     Erdos Renyi - IN PROGRESS
-    12A_0   1748690
-    12A_1   1748691
-    12A_2
-    12A_3
-    12A_4
-    12A_5
-    12A_6   1748692
-    12A_7   1748693
+    12A_0   1796952 (1748690)
+    12A_1   1796953 (1748691)
+    12A_2   1770572
+    12A_3   1770573
+    12A_4   1770574
+    12A_5   1770575
+    12A_6   1796954 (1748692)
+    12A_7   1796955 (1748693)
 
-1770572 0.00000 E_12A2     ucabpod      qw    09/07/2019 12:15:13                                    1
-1770573 0.00000 E_12A3     ucabpod      qw    09/07/2019 12:15:14                                    1
-1770574 0.00000 E_12A4     ucabpod      qw    09/07/2019 12:15:16                                    1
-1770575 0.00000 E_12A5     ucabpod      qw    09/07/2019 12:15:17                                    1
-
-Experiment 12B - IN PROGRESS
+Experiment 12B - COMPLETED
 
     Scale-Free (preferential attachment parameter 2)
     12B_0   1748699
@@ -226,11 +214,6 @@ Experiment 12B - IN PROGRESS
     12B_5   1770570
     12B_6   1749038
     12B_7   1749039
-
-1770567 2.09797 E_12B2     ucabpod      qw    09/07/2019 12:14:49                                    1
-1770568 0.00000 E_12B3     ucabpod      qw    09/07/2019 12:14:51                                    1
-1770569 0.00000 E_12B4     ucabpod      qw    09/07/2019 12:14:52                                    1
-1770570 0.00000 E_12B5     ucabpod      qw    09/07/2019 12:14:53                                    1
 
 Experiment 12C - COMPLETED
 

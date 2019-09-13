@@ -10,8 +10,8 @@ from collections import OrderedDict
 def getDataFromID(ID):
     """When given a jobID, return the data in all the .csv files corresponding to that job. For cluster jobs
     only."""
-    dir, _ = os.path.split(os.getcwd())
-    dir, _ = os.path.split(dir)  # TODO: while loop to recurse through higher directories til file found
+    original_dir, _ = os.path.split(os.getcwd())
+    dir, _ = os.path.split(original_dir)  # TODO: while loop to recurse through higher directories til file found
     # print(dir)
     remoteData = os.path.join(dir, 'RemoteData')
 
@@ -24,6 +24,7 @@ def getDataFromID(ID):
                 path = os.path.join(root, name)
 
     if path is None:
+        logging.critical(f"working directory: {original_dir}")
         raise FileNotFoundError(f"Experiment results with id {ID} not found.")
 
     # Get only the csv files
@@ -124,7 +125,7 @@ def plotAllStrategyCooperations(listOfJobIDs, strategyIDs, skip=[]):
         plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
 
 
-def plotAllStrategyProportions(listOfJobIDs, strategyIDs, skip=[]):
+def plotAllStrategyProportions(listOfJobIDs, strategyIDs, skip=[], var=None):
     """Given a list of job IDs and the corresponding strategy IDs in the same order, plot all the proportions of
     cooperation on the same plot."""
 
@@ -136,14 +137,15 @@ def plotAllStrategyProportions(listOfJobIDs, strategyIDs, skip=[]):
         length = data[0].shape[0]
         means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for _, table in data.items()]
         stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for _, table in data.items()]
-        var = list(range(len(means)))
+        if var is None:
+            var = list(range(len(means)))
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
         plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
         plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
 
 
-def plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip=[]):
+def plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip=[], var=None):
     """Given a list of job IDs, their corresponding strategy IDs, and a list of IDs to be skipped, plot the average
     proportion of the main strategy in the population as a function of a variable to be tested. This will layer the
     line plots (of each strategy) on the same plot."""
@@ -156,10 +158,11 @@ def plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip=[]):
         length = data[0].shape[0]
         means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
         stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
-        var = list(range(len(means)))
+        if var is None:
+            var = list(range(len(means)))
         up = [mean + std for mean, std in zip(means, stds)]
         down = [mean - std for mean, std in zip(means, stds)]
-        plt.plot(var, means, label=f'$s_{strategyID}$')
+        plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
         plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
 
 

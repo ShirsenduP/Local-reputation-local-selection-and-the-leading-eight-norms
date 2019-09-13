@@ -108,7 +108,7 @@ if __name__ == '__main__':
     ax.title.set_text('Average Final Strategy Proportion')
     f.text(0, 0.5, 'Strategy Proportion', va='center', rotation='vertical')
     plt.xlabel('Strategy ID')
-    plt.legend()
+    plt.legend(loc='lower right')
     plt.tight_layout()
 
     plt.savefig('7A_leading4')

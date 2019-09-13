@@ -23,22 +23,23 @@ if __name__ == '__main__':
     skip = [2, 3, 4, 5]
     # skip = []
 
-    plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Max Length of Simulation')
-    plt.xlabel("$T_{max}$")
-    plt.ylabel(f"Average Final Proportion of Strategy")
-    xpos, xticks = range(0, 20, 2), list(range(500, 5001, 500))
-    plt.legend(loc='lower right')
-    plt.xticks(xpos, xticks, rotation=45)
-    # plt.savefig("9A_Tmax_strategy-proportion")
-    # plt.show()
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex='all')
+    labels = [f'$s_{strategyID}$' for strategyID in strategyIDs if strategyID not in skip]
+    xticks, xlabels = range(0, 20, 2), list(range(500, 5001, 500))
 
+    plt.sca(ax1)
+    plotAllStrategyProportions(jobIDs, strategyIDs, skip)
+    ax1.set_xticks(xticks)
+    ax1.set_xticklabels(xlabels)
+    ax1.set_ylabel("Prop. of \nStrategy")
+
+    plt.sca(ax2)
     plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-    plt.title(f'LrGeER vs Max Length of Simulation')
-    plt.xlabel("$T_{max}$")
-    plt.ylabel("Average Final Proportion of Cooperation")
-    xpos, xticks = range(0, 20, 2), list(range(500, 5001, 500))
-    plt.legend(loc='lower right')
-    plt.xticks(xpos, xticks, rotation=45)
-    # plt.savefig("9A_Tmax_cooperation")
-    # plt.show()
+    ax2.set_xticks(xticks)
+    ax2.set_xticklabels(xlabels)
+    ax2.set_xlabel('$T_{max}$ Length of simulation')
+    ax2.set_ylabel("Prop. of \nCooperators")
+
+    handles, labels = ax2.get_legend_handles_labels()
+    lgd = ax2.legend(handles, labels, loc='center right', bbox_to_anchor=(1.18, 1.1))
+    plt.savefig('9A_Tmax', bbox_extra_artists=(lgd,), bbox_inches='tight')
