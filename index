@@ -29,10 +29,10 @@ Experiment in progress
 -    Experiment  12A     Initial proportions of the leading 4 on ER networks
 -    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
 -    Experiment 8C, 8D, 8E size on RRL, SF, WSSW
+-    Experiment 10D, 10E, 10F on mutation rate on RRL, SF, WSSW
 
 Experiment needed
 -    Experiment 9C, 9D, 9E Tmax on RRL, SF, WSSW
--    Experiment 10D, 10E, 10F on mutation rate on RRL, SF, WSSW
 -    Experiment 13A     Probability of broadcasting information on ER graph (others too?!)
 
 NOTE
@@ -199,6 +199,74 @@ Experiment 10C - IN PROGRESS
     10C_6   1797981
     10C_7   1797982
 
+Experiment 10D - IN PROGRESS
+
+    Exp 10A on RRL network
+
+    E_10D0  1798041
+    E_10D1  1798042
+    E_10D2  1798043
+    E_10D3  1798044
+    E_10D4  1798045
+    E_10D5  1798047
+    E_10D6  1798048
+    E_10D7  1798049
+
+
+Experiment 10E - IN PROGRESS
+
+    Exp 10A on Scale free network
+
+    E_10E0  1798050
+    E_10E1  1798051
+    E_10E2  1798052
+    E_10E3  1798053
+    E_10E4  1798054
+    E_10E5  1798055
+    E_10E6  1798056
+    E_10E7  1798057
+
+
+ Experiment 10E - IN PROGRESS
+
+    Exp 10A on WSSW network
+
+    E_10F0  1798058
+    E_10F1  1798059
+    E_10F2  1798060
+    E_10F3  1798061
+    E_10F4  1798062
+    E_10F5  1798063
+    E_10F6  1798064
+    E_10F7  1798065
+
+
+ 2.00518 E_10D0     ucabpod      qw    09/13/2019 12:22:48                                    1
+ 2.00503 E_10D1     ucabpod      qw    09/13/2019 12:22:50                                    1
+ 2.00488 E_10D2     ucabpod      qw    09/13/2019 12:22:52                                    1
+ 2.00475 E_10D3     ucabpod      qw    09/13/2019 12:22:54                                    1
+ 2.00462 E_10D4     ucabpod      qw    09/13/2019 12:22:59                                    1
+ 0.00000 E_10D5     ucabpod      qw    09/13/2019 12:23:13                                    1
+ 0.00000 E_10D6     ucabpod      qw    09/13/2019 12:23:15                                    1
+ 0.00000 E_10D7     ucabpod      qw    09/13/2019 12:23:16                                    1
+
+ 2.00422 E_10E0     ucabpod      qw    09/13/2019 12:23:43                                    1
+ 2.00412 E_10E1     ucabpod      qw    09/13/2019 12:23:47                                    1
+ 0.00000 E_10E2     ucabpod      qw    09/13/2019 12:23:49                                    1
+ 0.00000 E_10E3     ucabpod      qw    09/13/2019 12:23:50                                    1
+ 0.00000 E_10E4     ucabpod      qw    09/13/2019 12:23:51                                    1
+ 0.00000 E_10E5     ucabpod      qw    09/13/2019 12:23:52                                    1
+ 0.00000 E_10E6     ucabpod      qw    09/13/2019 12:23:54                                    1
+ 0.00000 E_10E7     ucabpod      qw    09/13/2019 12:23:55                                    1
+
+ 2.00353 E_10F0     ucabpod      qw    09/13/2019 12:24:08                                    1
+ 2.00346 E_10F1     ucabpod      qw    09/13/2019 12:24:11                                    1
+ 2.00339 E_10F2     ucabpod      qw    09/13/2019 12:24:13                                    1
+ 0.00000 E_10F3     ucabpod      qw    09/13/2019 12:24:15                                    1
+ 0.00000 E_10F4     ucabpod      qw    09/13/2019 12:24:17                                    1
+ 0.00000 E_10F5     ucabpod      qw    09/13/2019 12:24:18                                    1
+ 0.00000 E_10F6     ucabpod      qw    09/13/2019 12:24:20                                    1
+ 0.00000 E_10F7     ucabpod      qw    09/13/2019 12:24:23                                    1
 
 ========================================================================================================================
 Experiment 11A - COMPLETED
