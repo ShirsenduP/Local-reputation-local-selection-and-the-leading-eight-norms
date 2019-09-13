@@ -3,9 +3,9 @@
 INDEX
 ========================================================================================================================
 ========================================================================================================================
+TODO: Convert this index into a .csv for easier search and lookup capabilities
 
 SUMMARY
-
 Multiplots Completed
 -    Experiment   6B/6C  RRL vs ER
 -    Experiment   7A     Leading 4 on ER
@@ -27,13 +27,12 @@ Experiment Completed
 
 Experiment in progress
 -    Experiment  12A     Initial proportions of the leading 4 on ER networks
--    NA
-
-Experiment needed
 -    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
 -    Experiment 8C, 8D, 8E size on RRL, SF, WSSW
+
+Experiment needed
 -    Experiment 9C, 9D, 9E Tmax on RRL, SF, WSSW
--    Experiment 10C, 10D, 10E on mutation rate on RRL, SF, WSSW
+-    Experiment 10D, 10E, 10F on mutation rate on RRL, SF, WSSW
 -    Experiment 13A     Probability of broadcasting information on ER graph (others too?!)
 
 NOTE
@@ -113,6 +112,46 @@ Global Evolution and an Erdos Renyi network.
 	8B.6    1748538
 	8B.7    1748539
 
+Experiment 8C - IN PROGRESS
+
+Effect of increasing size on LrGe RRL network with d=4
+
+	8C_0    1797984
+	8C_1    1797985
+	8C_2    1797986
+	8C_3    1797987
+	8C_4    1797988
+	8C_5    1797989
+	8C_6    1797990
+	8C_7    1797991
+
+Experiment 8D - IN PROGRESS
+
+Effect of increasing size on LrGe PL network with pref attachment = 2
+
+	8D_0    1797992
+	8D_1    1797993
+	8D_2    1797994
+	8D_3    1797995
+	8D_4    1797996
+	8D_5    1797997
+	8D_6    1797998
+	8D_7    1797999
+
+Experiment 8E - IN PROGRESS
+
+Effect of increasing size on LrGe WSSW network with (4, 0.001)
+
+	8E_0    1798002
+	8E_1    1798003
+	8E_2    1798004
+	8E_3    1798005
+	8E_4    1798006
+	8E_5    1798007
+	8E_6    1798008
+	8E_7    1798009
+
+
 ========================================================================================================================
 Experiment 9A - COMPLETED
 
@@ -150,6 +189,16 @@ Experiment 10B - COMPLETED
     10B_3   1632730
     10B_4   1632731
     10B_5   1632732
+
+Experiment 10C - IN PROGRESS
+
+    Same as 10A but for strategies 0, 1, 6, 7 for mutation rates in steps of 2 upto 20
+
+    10C_0   1797979
+    10C_1   1797980
+    10C_6   1797981
+    10C_7   1797982
+
 
 ========================================================================================================================
 Experiment 11A - COMPLETED
