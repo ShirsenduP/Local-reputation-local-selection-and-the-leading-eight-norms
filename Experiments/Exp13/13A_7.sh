@@ -1,4 +1,4 @@
-7#!/bin/bash -l
+#!/bin/bash -l
 
 # Force bash as executing shell
 #$ -S /bin/bash
