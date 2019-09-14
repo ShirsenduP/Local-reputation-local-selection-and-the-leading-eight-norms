@@ -18,7 +18,7 @@ if __name__ == '__main__':
     repeats = 100
     var = 'mutationProbability'
     values = list(np.arange(0, 20, 2))
-    mainID = 0
+    mainID = 6
 
     if rerunSimulations:
 
