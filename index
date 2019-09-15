@@ -10,10 +10,12 @@ Multiplots Completed
 -    Experiment   6B/6C  RRL vs ER
 -    Experiment   7A     Leading 4 on ER
 -    Experiment   8A     Pref. attachment parameter on Scale Free Networks
--    Experiment   8B     Size (# of agents) on ER networks                                  !!Size on other ones?
+-    Experiment   8B     Size (# of agents) on ER networks
+-    Experiment 8C, 8D, 8E size on RRL, SF, WSSW
 -    Experiment   9A/9B  Tmax on ER network                                                 !!Tmax on other ones?
--    Experiment  10A/10B Mutation rate on ER network                                        !!Mutation on other ones?
+-    Experiment  10A/10B Mutation rate on ER network
 -    Experiment  11C     Rewiring probability correct values in WSSW
+-    Experiment 10D, 10E, 10F on mutation rate on RRL, SF, WSSW
 
 Graphs Completed for old tests !!! DO NOT USE !!!
 -    Experiment  11A/11B Rewiring probability (amount of randomness in network) in WSSW
@@ -24,16 +26,15 @@ Graphs need to be combined after 12A completes
 -    Experiment  12C     Initial proportions of the leading 4 on SW networks
 
 Experiment Completed
+-    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
 
 Experiment in progress
+-    Experiment 11D      Changing starting number of neighbours of WSSW
 -    Experiment  12A     Initial proportions of the leading 4 on ER networks
--    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
--    Experiment 8C, 8D, 8E size on RRL, SF, WSSW
--    Experiment 10D, 10E, 10F on mutation rate on RRL, SF, WSSW
+-    Experiment 13A     Probability of broadcasting information on ER graph (others too?!)
 
 Experiment needed
--    Experiment 9C, 9D, 9E Tmax on RRL, SF, WSSW
--    Experiment 13A     Probability of broadcasting information on ER graph (others too?!)
+-    Experiment 9C, 9D, 9E Tmax on RRL, SF, WSSW (not too important)
 
 NOTE
     - JobIDs in brackets represent failed jobs, data (if it exists) will be in the failed directory in RemoteData
@@ -112,7 +113,7 @@ Global Evolution and an Erdos Renyi network.
 	8B.6    1748538
 	8B.7    1748539
 
-Experiment 8C - IN PROGRESS
+Experiment 8C - COMPLETE
 
 Effect of increasing size on LrGe RRL network with d=4
 
@@ -125,7 +126,7 @@ Effect of increasing size on LrGe RRL network with d=4
 	8C_6    1797990
 	8C_7    1797991
 
-Experiment 8D - IN PROGRESS
+Experiment 8D - COMPLETE
 
 Effect of increasing size on LrGe PL network with pref attachment = 2
 
@@ -138,7 +139,7 @@ Effect of increasing size on LrGe PL network with pref attachment = 2
 	8D_6    1797998
 	8D_7    1797999
 
-Experiment 8E - IN PROGRESS
+Experiment 8E - COMPLETE
 
 Effect of increasing size on LrGe WSSW network with (4, 0.001)
 
@@ -194,12 +195,12 @@ Experiment 10C - IN PROGRESS
 
     Same as 10A but for strategies 0, 1, 6, 7 for mutation rates in steps of 2 upto 20
 
-    10C_0   1797979
-    10C_1   1797980
-    10C_6   1797981
-    10C_7   1797982
+    10C_0   1802831     1797979
+    10C_1   1802832     1797980
+    10C_6   1802833     1797981
+    10C_7   1802834     1797982
 
-Experiment 10D - IN PROGRESS
+Experiment 10D - COMPLETED
 
     Exp 10A on RRL network
 
@@ -213,7 +214,7 @@ Experiment 10D - IN PROGRESS
     E_10D7  1798049
 
 
-Experiment 10E - IN PROGRESS
+Experiment 10E - COMPLETED
 
     Exp 10A on Scale free network
 
@@ -227,7 +228,7 @@ Experiment 10E - IN PROGRESS
     E_10E7  1798057
 
 
- Experiment 10E - IN PROGRESS
+ Experiment 10E - COMPLETED
 
     Exp 10A on WSSW network
 
@@ -240,33 +241,6 @@ Experiment 10E - IN PROGRESS
     E_10F6  1798064
     E_10F7  1798065
 
-
- 2.00518 E_10D0     ucabpod      qw    09/13/2019 12:22:48                                    1
- 2.00503 E_10D1     ucabpod      qw    09/13/2019 12:22:50                                    1
- 2.00488 E_10D2     ucabpod      qw    09/13/2019 12:22:52                                    1
- 2.00475 E_10D3     ucabpod      qw    09/13/2019 12:22:54                                    1
- 2.00462 E_10D4     ucabpod      qw    09/13/2019 12:22:59                                    1
- 0.00000 E_10D5     ucabpod      qw    09/13/2019 12:23:13                                    1
- 0.00000 E_10D6     ucabpod      qw    09/13/2019 12:23:15                                    1
- 0.00000 E_10D7     ucabpod      qw    09/13/2019 12:23:16                                    1
-
- 2.00422 E_10E0     ucabpod      qw    09/13/2019 12:23:43                                    1
- 2.00412 E_10E1     ucabpod      qw    09/13/2019 12:23:47                                    1
- 0.00000 E_10E2     ucabpod      qw    09/13/2019 12:23:49                                    1
- 0.00000 E_10E3     ucabpod      qw    09/13/2019 12:23:50                                    1
- 0.00000 E_10E4     ucabpod      qw    09/13/2019 12:23:51                                    1
- 0.00000 E_10E5     ucabpod      qw    09/13/2019 12:23:52                                    1
- 0.00000 E_10E6     ucabpod      qw    09/13/2019 12:23:54                                    1
- 0.00000 E_10E7     ucabpod      qw    09/13/2019 12:23:55                                    1
-
- 2.00353 E_10F0     ucabpod      qw    09/13/2019 12:24:08                                    1
- 2.00346 E_10F1     ucabpod      qw    09/13/2019 12:24:11                                    1
- 2.00339 E_10F2     ucabpod      qw    09/13/2019 12:24:13                                    1
- 0.00000 E_10F3     ucabpod      qw    09/13/2019 12:24:15                                    1
- 0.00000 E_10F4     ucabpod      qw    09/13/2019 12:24:17                                    1
- 0.00000 E_10F5     ucabpod      qw    09/13/2019 12:24:18                                    1
- 0.00000 E_10F6     ucabpod      qw    09/13/2019 12:24:20                                    1
- 0.00000 E_10F7     ucabpod      qw    09/13/2019 12:24:23                                    1
 
 ========================================================================================================================
 Experiment 11A - COMPLETED
@@ -302,6 +276,19 @@ Experiment 11C - IN PROGRESS
     11C_5   1770604
     11C_6   1780488
     11C_7   1780489
+
+Experiment 11D - IN PROGRESS
+
+    WSSW networks changing the original value of k prior to rewiring. Setting rewiring to 0.001 (from small world paper)
+
+    11D_0   1803837
+    11D_1   1803838
+    11D_2   1803839
+    11D_3   1803840
+    11D_4   1803841
+    11D_5   1803842
+    11D_6   1803843
+    11D_7   1803844
 
 
 ========================================================================================================================
@@ -347,3 +334,16 @@ Experiment 12C - COMPLETED
 
 
 ========================================================================================================================
+
+Experiment 13A - IN PROGRESS
+
+    LrGe ER network, probability delta of a neighbour receiving an agent's new reputation following an interaction
+
+    13A_0   1798098
+    13A_1   1798099
+    13A_2   1798100
+    13A_3   1798101
+    13A_4   1798102
+    13A_5   1798103
+    13A_6   1798104
+    13A_7   1803845 (1802891)

@@ -18,9 +18,6 @@ Experiment 11A------------------------------------------------------------------
     
 """
 
-
-
-
 if __name__ == '__main__':
 
     jobIDs = ['1582671', '1582607', '1632302','1632303','1632304','1632305', '1582608', '1582609']
@@ -29,31 +26,6 @@ if __name__ == '__main__':
 
     xticks = list(range(11))
     xlabels = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1.0]
-
-    # fig,
-    #
-    # # Proportion of Cooperation
-    # plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-    # plt.title(f'LrGeWSSW vs Rewiring Probability')
-    # plt.xlabel("Rewiring Probability")
-    # plt.ylabel("Average Final Proportion of Cooperation")
-    # plt.ylim(0.7, 0.9)
-    # plt.legend(loc='lower right')
-    # plt.xticks(newXLabels, newXTicks)
-    # plt.savefig("11A_rewiring-probability_cooperation")
-    # # plt.show()
-    #
-    # # Proportion of Strategies
-    # plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-    # plt.title(f'LrGeWSSW vs Rewiring Probability')
-    # plt.xlabel("Rewiring Probability")
-    # plt.ylabel("Average Final Proportion of Strategies")
-    # plt.ylim(0.8, 1)
-    # plt.legend(loc='lower right')
-    # plt.xticks(newXLabels, newXTicks)
-    # plt.savefig("11A_rewiring-probability_proportion")
-    # # plt.show()
-    #
 
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex='all')
     # labels = [f'$s_{strategyID}$' for strategyID in strategyIDs if strategyID not in skip]

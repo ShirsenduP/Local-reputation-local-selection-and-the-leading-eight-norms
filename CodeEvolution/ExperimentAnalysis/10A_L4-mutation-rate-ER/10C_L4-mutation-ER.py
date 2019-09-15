@@ -1,30 +1,32 @@
 """
-Experiment 10A
+Experiment 10D
 
-Effect of increasing the mutation rate on LrGeERNetwork to see where the threshold is for mutation to dominate
-Range from 0.1, 0.5 - 10 in 0.5 increments. Recall this parameter represents the expected number of mutations/time-step.
+    Exp 10A on RRL network
 
-    10A_0   1574518
-    10A_1   1574519
-    10B_2   1632729
-    10B_3   1632730
-    10B_4   1632731
-    10B_5   1632732
-    10A_6   1574520
-    10A_7   1574521
+    E_10D0  1798041
+    E_10D1  1798042
+    E_10D2  1798043
+    E_10D3  1798044
+    E_10D4  1798045
+    E_10D5  1798047
+    E_10D6  1798048
+    E_10D7  1798049
+
 
 """
 
 from CodeEvolution.ExperimentAnalysis.analysis import *
 
 if __name__ == '__main__':
+############################## D
 
-    jobIDs = ['1574518', '1574519', '1632729', '1632730', '1632731', '1632732', '1574520', '1574521']
-    strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
+    jobIDs = ['1802831','1802832','1802833','1802834']
+
+    strategyIDs = [0, 1, 6, 7]
     skip = [2, 3, 4, 5]
 
-    newXTicks = list(range(0, 11))
-    newXLabels = list(np.arange(0, 11, 1))
+    xlabels = list(np.arange(0, 20, 2))
+    xticks = list(range(0, len(xlabels)))
 
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex='all', sharey='all')
 
@@ -33,13 +35,18 @@ if __name__ == '__main__':
     plt.sca(ax1)
     plotAllStrategyProportions(jobIDs, strategyIDs, skip)
     ax1.set_ylabel("Prop. of \nStrategy")
+    ax1.set_xticks(xticks)
+    ax1.set_xticklabels(xlabels)
 
     # Proportion of Strategies
     plt.sca(ax2)
     plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
     ax2.set_xlabel("Mutations / period")
     ax2.set_ylabel("Prop. of \nCooperators")
+    ax2.set_xticks(xticks)
+    ax2.set_xticklabels(xlabels)
+
 
     handles, labels = ax2.get_legend_handles_labels()
     lgd = ax2.legend(handles, labels, loc='center right', bbox_to_anchor=(1.18,1.1))
-    plt.savefig('10A_mutation_rate', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    plt.savefig('10C_mutation_rate_plus', bbox_extra_artists=(lgd,), bbox_inches='tight')

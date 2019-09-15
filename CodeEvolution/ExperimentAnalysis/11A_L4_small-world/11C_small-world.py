@@ -22,6 +22,7 @@ if __name__ == '__main__':
     jobIDs = ['1780485', '1780487', '1770601', '1770602', '1770603', '1770604', '1780488', '1780489']
     strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
     skip = [2, 3, 4, 5]
+    # skip = [0, 1, 6, 7]
     # skip = []
 
     xlabels = np.logspace(-4, 0, 40)
@@ -48,3 +49,4 @@ if __name__ == '__main__':
     handles, labels = ax2.get_legend_handles_labels()
     lgd = ax2.legend(handles, labels, loc='center right', bbox_to_anchor=(1.18, 1.1))
     plt.savefig('11C_rewiring-probability', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    # plt.show()

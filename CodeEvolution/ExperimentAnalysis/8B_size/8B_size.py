@@ -26,30 +26,8 @@ if __name__ == '__main__':
     skip = [2, 3, 4, 5]
     # skip = []
 
-    # plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-    # plt.title(f'LrGeER vs Size of Network')
-    # plt.xlabel("$n$ Agents")
-    # plt.ylabel(f"Average Final Proportion of Strategy")
-    xticks, xlabels = range(0, 10, 1), list(range(50, 550, 50))
-    # plt.legend(loc='best')
-    # plt.xticks(xpos, xticks, rotation=45)
-    # # plt.savefig("8B_size_strategy-proportion")
-    # plt.show()
-    #
-    # plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-    # plt.title(f'LrGeER vs Size of Network')
-    # plt.xlabel("$T_{max}$")
-    # plt.ylabel("Average Final Proportion of Cooperation")
-    # xpos, xticks = range(0, 10, 1), list(range(50, 550, 50))
-    # plt.legend(loc='best')
-    # plt.xticks(xpos, xticks, rotation=45)
-    # # plt.savefig("8B_size_cooperation-proportion")
-    # plt.show()
-    #
-    #
-    #
-
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex='all')
+    xticks, xlabels = range(0, 10, 1), list(range(50, 550, 50))
     # labels = [f'$s_{strategyID}$' for strategyID in strategyIDs if strategyID not in skip]
 
     plt.sca(ax1)

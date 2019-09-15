@@ -31,6 +31,7 @@ class Agent:
                 logging.debug(f"Agent({agent.id}) has history {agent.history}")
                 # logging.info(f"A({self.id}) broadcast to {self.history}")
                 # logging.info("======================================")
+        #TODO: shouldn't delta be 1 when under global reputation for perfect recall?
 
     def updateUtility(self, payoff):
         """Update the utility or cumulative payoff of an agent."""
