@@ -30,5 +30,5 @@ if __name__ == '__main__':
                        variable=var, values=values)
 
         E.showExperiments()
-        # E.run(cluster=True)
-        E.run(display=True)
+        E.run(cluster=True)
+        # E.run(display=True)
