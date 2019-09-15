@@ -15,7 +15,7 @@ if __name__ == '__main__':
     """
 
     rerunSimulations = True
-    repeats = 100
+    repeats = 25
     mainID = 0
     var = 'population'
     values = Experiment.generateSinglePopulationProportionList(mainID, 8)
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     if rerunSimulations:
 
         # Default Parameters for simulations
-        C = Config(size=300, mutationProbability=0, sparseDensity=True, maxPeriods=5000)
+        C = Config(size=300, mutationProbability=0, sparseDensity=True, maxPeriods=2500)
         E = Experiment(networkType=LrGeERNetwork, defaultConfig=C, repeats=repeats,
                        variable=var, values=values)
         E.showExperiments()
