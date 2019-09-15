@@ -19,6 +19,7 @@ if __name__ == '__main__':
     mainID = 0
     var = 'population'
     values = Experiment.generateSinglePopulationProportionList(mainID, 8)
+    values = values[12:]
 
     if rerunSimulations:
 
