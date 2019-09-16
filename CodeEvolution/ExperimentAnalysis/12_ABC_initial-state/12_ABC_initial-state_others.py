@@ -24,7 +24,8 @@ Experiment 12A - INCOMPLETE
 1804231 0.00000 E_12A4     ucabpod      qw    09/15/2019 15:11:43                                    1        
 1804232 0.00000 E_12A5     ucabpod      qw    09/15/2019 15:11:44                                    1        
 1804233 0.00000 E_12A6     ucabpod      qw    09/15/2019 15:11:46                                    1        
-1804234 0.00000 E_12A7     ucabpod      qw    09/15/2019 15:11:47                                    1                               1     
+1804234 0.00000 E_12A7     ucabpod      qw    09/15/2019 15:11:47                                    1                
+               1     
 
 Experiment 12B - DONE
 
@@ -89,27 +90,66 @@ if __name__ == '__main__':
 
     ###############################################################################################
     # ER
+    jobIDs = ['1804227', '1804228', '1804229', '1804230', '1804231', '1804232', '1804233', '1804234']
     # jobIDs = ['1574518', '1574519', '1632729', '1632730', '1632731', '1632732', '1574520', '1574521']
-    jobIDs = []
     strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
     skip = [0, 1, 6, 7]
     # skip = []
     xticks = list(range(0, 23, 2))
     xlabels = np.arange(0, 1.11, 0.1)
     xlabels = [round(x, 3) for x in xlabels]
-
+    var = np.arange(0.05, 1.0, 0.05)
+    var = [round(v, 3) for v in var]
     plt.sca(ax1)
-    plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-    ax1.set_xticks(xticks)
-    ax1.set_xticklabels(xlabels)
-    ax1.set_xlim(0, 10)
+    # plotAllStrategyProportions(jobIDs, strategyIDs, skip)
+
+    for ID, strategyID in zip(jobIDs, strategyIDs):
+        if strategyID in skip:
+            continue
+        data = getDataFromID(ID)
+        length = data[0].shape[0]
+        means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for _, table in data.items()]
+        stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for _, table in data.items()]
+        up = [mean + std for mean, std in zip(means, stds)]
+        down = [mean - std for mean, std in zip(means, stds)]
+
+        means = 11 * [1] + means
+        stds = 11 * [1] + stds
+        up = 11 * [1] + up
+        down = 11 * [1] + down
+        plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
+        plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+
+    # ax1.set_xticks(custom_xlabel)
+    ax1.set_xticklabels([])
+    ax1.set_xlim(0.75, 1)
 
     plt.sca(ax2)
-    plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-    ax2.set_xticks(xticks)
-    ax2.set_xticklabels(xlabels)
-    ax2.text(11, 0.5, "ER", size='9')
-    ax2.set_xlim(0, 10)
+    # plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
+
+    for jobID, strategyID in zip(jobIDs, strategyIDs):
+        if strategyID in skip:
+            continue
+        data = getDataFromID(jobID)
+        length = data[0].shape[0]
+        means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
+        stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
+
+        up = [mean + std for mean, std in zip(means, stds)]
+        down = [mean - std for mean, std in zip(means, stds)]
+
+        means = 11 * [1] + means
+        stds = 11 * [1] + stds
+        up = 11 * [1] + up
+        down = 11 * [1] + down
+
+        plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
+        plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+
+    # ax2.set_xticks(xticks)
+    ax2.set_xticklabels([])
+    ax2.text(1.027, 0.82, "ER", size='9')
+    ax2.set_xlim(0.75, 1)
     # ax2.set_xlabel('Size of Network $n$')
     # ax2.set_ylabel("Prop. of \nCooperators")
 
@@ -120,8 +160,9 @@ if __name__ == '__main__':
 
     ###############################################################################################
     # RRL
+    jobIDs = ['1804177', '1804178', '1804179', '1804180', '1804181', '1804182', '1804183', '1804184']
     # jobIDs = ['1798041', '1798042', '1798043', '1798044', '1798045', '1798047', '1798048', '1798049']
-    jobIDs = []
+    # jobIDs = []
     strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
     skip = [0, 1, 6, 7]
     # skip = []
@@ -217,4 +258,3 @@ if __name__ == '__main__':
     lgd = ax2.legend(handles, labels, loc='upper center', bbox_to_anchor=(-0.04, 1.6), ncol=4)
     plt.savefig('12_initial_state_combined_other', bbox_extra_artists=(lgd,))
     # plt.show()
-
