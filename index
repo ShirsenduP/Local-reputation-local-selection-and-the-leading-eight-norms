@@ -16,21 +16,19 @@ Multiplots Completed
 -    Experiment  10A/10B Mutation rate on ER network
 -    Experiment  11C     Rewiring probability correct values in WSSW
 -    Experiment 10D, 10E, 10F on mutation rate on RRL, SF, WSSW
+-    Experiment  12B     Initial proportions of the leading 4 on SF networks
+-    Experiment  12C     Initial proportions of the leading 4 on SW networks
+-    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
+-    Experiment 11D      Changing starting number of neighbours of WSSW
 
 Graphs Completed for old tests !!! DO NOT USE !!!
 -    Experiment  11A/11B Rewiring probability (amount of randomness in network) in WSSW
 -    Experiment   6A     RRL for d = [3, 13] - DO NOT USE
-
-Graphs need to be combined after 12A completes
--    Experiment  12B     Initial proportions of the leading 4 on SF networks
--    Experiment  12C     Initial proportions of the leading 4 on SW networks
+-    Experiment  12A     Initial proportions of the leading 4 on ER networks - DO NOT USE
 
 Experiment Completed
--    Experiment  10C     Do rate of mutation experiment again but for greater than 10 mutants to find where group I fails
 
 Experiment in progress
--    Experiment 11D      Changing starting number of neighbours of WSSW
--    Experiment  12A     Initial proportions of the leading 4 on ER networks
 -    Experiment 13A     Probability of broadcasting information on ER graph (others too?!)
 
 Experiment needed
@@ -264,7 +262,7 @@ Experiment 11B - COMPLETED
 	11B_4   1632304
 	11B_5   1632305
 
-Experiment 11C - IN PROGRESS
+Experiment 11C - COMPLETED
 
     Redo 11A/11B for more appropriate range of values of rewiring probability on logscale from 10^-3 to 10^0
 
@@ -277,7 +275,7 @@ Experiment 11C - IN PROGRESS
     11C_6   1780488
     11C_7   1780489
 
-Experiment 11D - IN PROGRESS
+Experiment 11D - COMPLETE
 
     WSSW networks changing the original value of k prior to rewiring. Setting rewiring to 0.001 (from small world paper)
 
@@ -292,12 +290,12 @@ Experiment 11D - IN PROGRESS
 
 
 ========================================================================================================================
-Experiment 12A - IN PROGRESS
+Experiment 12A - COMPLETE
 
     Allowing no mutation, but modulating the initial proportion of mutants in the population to find the limiting point
     of where the network can recover. Range 0-1 in 0.05 increments.
 
-    Erdos Renyi - IN PROGRESS
+    Erdos Renyi - FAILED (SKIPPED FOR NOW)
     12A_0   1796952 (1748690)
     12A_1   1796953 (1748691)
     12A_2   1770572

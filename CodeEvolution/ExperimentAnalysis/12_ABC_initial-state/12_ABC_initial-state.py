@@ -75,89 +75,89 @@ RRL d=4
 """
 
 if __name__ == '__main__':
-    # fig, ax = plt.subplots(4, 2, sharex='col', sharey='all')
-    fig, ax = plt.subplots(4, 2, sharey='all')
+    fig, ax = plt.subplots(3, 2, sharex='col', sharey='all')
+    # fig, ax = plt.subplots(4, 2, sharey='all')
     # fig.tight_layout()
-    ax1 = ax[0, 0]
-    ax2 = ax[0, 1]
-    ax3 = ax[1, 0]
-    ax4 = ax[1, 1]
-    ax5 = ax[2, 0]
-    ax6 = ax[2, 1]
-    ax7 = ax[3, 0]
-    ax8 = ax[3, 1]
+    ax3 = ax[0, 0]
+    ax4 = ax[0, 1]
+    ax5 = ax[1, 0]
+    ax6 = ax[1, 1]
+    ax7 = ax[2, 0]
+    ax8 = ax[2, 1]
+    # ax7 = ax[3, 0]
+    # ax8 = ax[3, 1]
 
     ###############################################################################################
-    # ER
-    jobIDs = ['1804227','1804228','1804229','1804230','1804231','1804232','1804233','1804234']
-    # jobIDs = ['1574518', '1574519', '1632729', '1632730', '1632731', '1632732', '1574520', '1574521']
-    strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
-    skip = [2, 3, 4, 5]
-    # skip = []
+    # # ER
+    # jobIDs = ['1804227','1804228','1804229','1804230','1804231','1804232','1804233','1804234']
+    # # jobIDs = ['1574518', '1574519', '1632729', '1632730', '1632731', '1632732', '1574520', '1574521']
+    # strategyIDs = [0, 1, 2, 3, 4, 5, 6, 7]
+    # skip = [2, 3, 4, 5]
+    # # skip = []
     xticks = list(range(0, 23, 2))
     xlabels = np.arange(0, 1.11, 0.1)
     xlabels = [round(x, 3) for x in xlabels]
-    var = np.arange(0.05, 1.0, 0.05)
-    var = [round(v, 3) for v in var]
-    plt.sca(ax1)
-    # plotAllStrategyProportions(jobIDs, strategyIDs, skip)
-
-    for ID, strategyID in zip(jobIDs, strategyIDs):
-        if strategyID in skip:
-            continue
-        data = getDataFromID(ID)
-        length = data[0].shape[0]
-        means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for _, table in data.items()]
-        stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for _, table in data.items()]
-        up = [mean + std for mean, std in zip(means, stds)]
-        down = [mean - std for mean, std in zip(means, stds)]
-
-        means = 11*[1] + means
-        stds = 11*[1] + stds
-        up = 11*[1] + up
-        down = 11*[1] + down
-        plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
-        plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
-
-    # ax1.set_xticks(custom_xlabel)
-    ax1.set_xticklabels([])
-    ax1.set_xlim(0.75, 1)
-
-    plt.sca(ax2)
-    # plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
-
-    for jobID, strategyID in zip(jobIDs, strategyIDs):
-        if strategyID in skip:
-            continue
-        data = getDataFromID(jobID)
-        length = data[0].shape[0]
-        means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
-        stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
-
-
-        up = [mean + std for mean, std in zip(means, stds)]
-        down = [mean - std for mean, std in zip(means, stds)]
-
-        means = 11*[1] + means
-        stds = 11*[1] + stds
-        up = 11*[1] + up
-        down = 11*[1] + down
-
-        plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
-        plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
-
-
-    # ax2.set_xticks(xticks)
-    ax2.set_xticklabels([])
-    ax2.text(1.027, 0.82, "ER", size='9')
-    ax2.set_xlim(0.75, 1)
-    # ax2.set_xlabel('Size of Network $n$')
-    # ax2.set_ylabel("Prop. of \nCooperators")
-
-    handles, labels = ax2.get_legend_handles_labels()
-    # lgd = ax2.legend(handles, labels, loc='center right', bbox_to_anchor=(1.18, 1.1))
-    # plt.savefig('8B_size', bbox_extra_artists=(lgd,), bbox_inches='tight')
-    # plt.show()
+    # var = np.arange(0.05, 1.0, 0.05)
+    # var = [round(v, 3) for v in var]
+    # plt.sca(ax1)
+    # # plotAllStrategyProportions(jobIDs, strategyIDs, skip)
+    #
+    # for ID, strategyID in zip(jobIDs, strategyIDs):
+    #     if strategyID in skip:
+    #         continue
+    #     data = getDataFromID(ID)
+    #     length = data[0].shape[0]
+    #     means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for _, table in data.items()]
+    #     stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for _, table in data.items()]
+    #     up = [mean + std for mean, std in zip(means, stds)]
+    #     down = [mean - std for mean, std in zip(means, stds)]
+    #
+    #     means = 11*[1] + means
+    #     stds = 11*[1] + stds
+    #     up = 11*[1] + up
+    #     down = 11*[1] + down
+    #     plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
+    #     plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+    #
+    # # ax1.set_xticks(custom_xlabel)
+    # ax1.set_xticklabels([])
+    # ax1.set_xlim(0.75, 1)
+    #
+    # plt.sca(ax2)
+    # # plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
+    #
+    # for jobID, strategyID in zip(jobIDs, strategyIDs):
+    #     if strategyID in skip:
+    #         continue
+    #     data = getDataFromID(jobID)
+    #     length = data[0].shape[0]
+    #     means = [round(table['Prop. of Cooperators'].mean(), 5) for _, table in data.items()]
+    #     stds = [round(table['Prop. of Cooperators'].std() / np.sqrt(length), 5) for _, table in data.items()]
+    #
+    #
+    #     up = [mean + std for mean, std in zip(means, stds)]
+    #     down = [mean - std for mean, std in zip(means, stds)]
+    #
+    #     means = 11*[1] + means
+    #     stds = 11*[1] + stds
+    #     up = 11*[1] + up
+    #     down = 11*[1] + down
+    #
+    #     plt.plot(var, means, label=f'$s_{strategyID}$', marker='.')
+    #     plt.fill_between(var, down, up, alpha=0.1, antialiased=True)
+    #
+    #
+    # # ax2.set_xticks(xticks)
+    # ax2.set_xticklabels([])
+    # ax2.text(1.027, 0.82, "ER", size='9')
+    # ax2.set_xlim(0.75, 1)
+    # # ax2.set_xlabel('Size of Network $n$')
+    # # ax2.set_ylabel("Prop. of \nCooperators")
+    #
+    # handles, labels = ax2.get_legend_handles_labels()
+    # # lgd = ax2.legend(handles, labels, loc='center right', bbox_to_anchor=(1.18, 1.1))
+    # # plt.savefig('8B_size', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    # # plt.show()
 
     ###############################################################################################
     # RRL
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
     ax4.set_xticks(xticks)
     ax4.set_xticklabels([])
-    ax4.text(20.5, 0.82, "4-RRL", size='9')
+    ax4.text(20.5, 0.92, "4-RRL", size='9')
     ax4.set_xlim(15, 20)
     # ax4.set_xlabel('Size of Network $n$')
     # ax4.set_ylabel("Prop. of \nCooperators")
@@ -212,7 +212,7 @@ if __name__ == '__main__':
     plotAllStrategiesForVariableCooperation(jobIDs, strategyIDs, skip)
     ax6.set_xticks(xticks)
     ax6.set_xticklabels([])
-    ax6.text(20.5, 0.82, "SF", size='9')
+    ax6.text(20.5, 0.92, "SF", size='9')
     ax6.set_xlim(15, 20)
     # ax6.set_xlabel('Size of Network $n$')
     # ax6.set_ylabel("Prop. of \nCooperators")
@@ -250,13 +250,13 @@ if __name__ == '__main__':
     fig.text(0.5, 0.03, 'Initial Proportion of All-D', ha='center', va='center')
     fig.text(0.05, 0.5, 'Prop. of Strategy', ha='center', va='center', rotation='vertical')
     fig.text(0.52, 0.5, 'Prop. of Cooperation', ha='center', va='center', rotation='vertical')
-    ax8.text(20.5, 0.82, "SW", size='9')
+    ax8.text(20.5, 0.92, "SW", size='9')
 
     # Network labels
     # fig.text(0.075, 0.2, 'SW', ha='center', va='center')
 
     handles, labels = ax8.get_legend_handles_labels()
-    lgd = ax2.legend(handles, labels, loc='upper center', bbox_to_anchor=(-0.04, 1.6), ncol=4)
+    lgd = ax4.legend(handles, labels, loc='upper center', bbox_to_anchor=(-0.07, 1.4), ncol=4)
     plt.savefig('12_initial_state_combined', bbox_extra_artists=(lgd,))
     # plt.show()
 
