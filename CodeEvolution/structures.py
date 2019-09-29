@@ -4,6 +4,8 @@ import random
 import networkx as nx
 from scipy import stats
 
+from CodeEvolution.agent import Agent
+
 
 class Structure:
     """Organisational class to house the variety of network structures that can be constructed."""
@@ -107,3 +109,34 @@ class WattsStrogatz(Structure):
         self.name = "Newman-Watts-Strogratz Small World"
         logging.info(f"{self.name} network initialised with adjacency matrix.")
         self.networkFromAdjacencyMatrix(agentType)
+
+
+class RighiCliques(Structure):
+    """Implements the 4-clique structure asdadjasdjaisdajdisada."""
+
+    def createNetwork(self, agentType):
+        pass
+        # density = self.config.density
+        # size = self.config.size
+        # self.nxGraph = nx.fast_gnp_random_graph(size, density)
+        # self.adjMatrix = nx.to_numpy_array(self.nxGraph)
+        # self.name = f"Erdos-Renyi Random Network with density {density}"
+        # logging.info(f"{self.name} network initialised with adjacency matrix.")
+        # self.networkFromAdjacencyMatrix(agentType)
+
+
+    def makeGraph(self, numberOfCliques):
+        """Given the number of 4-cliques, generate the graph."""
+
+        if numberOfCliques % 2 is not 0:
+            raise ValueError(f'The number of cliques ({numberOfCliques} must be even.')
+
+        def incrementCounter(counter):
+            return counter+1
+        numberOfAgents = 0
+        def create4Clique(numberOfAgents):
+            clique = []
+            for i in range(4):
+                clique.append(Agent(numberOfAgents+i, 0))
+
+            return clique
