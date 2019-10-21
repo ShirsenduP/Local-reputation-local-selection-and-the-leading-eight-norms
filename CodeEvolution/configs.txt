@@ -1,0 +1,16 @@
+{'size': 300, 'population': Population(ID=0, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 0, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+
+{'size': 300, 'population': Population(ID=1, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 1, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+
+{'size': 300, 'population': Population(ID=2, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 2, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+
+{'size': 300, 'population': Population(ID=3, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 3, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+
+{'size': 300, 'population': Population(ID=4, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 4, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+
+{'size': 300, 'population': Population(ID=5, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 5, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+
+{'size': 300, 'population': Population(ID=6, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 6, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+
+{'size': 300, 'population': Population(ID=7, proportion=1), 'mutant': Population(ID=8, proportion=0), 'socialNormID': 7, 'socialDilemma': {'name': 'PrisonersDilemma', 'benefit': 2, 'cost': 1}, 'omega': 0.99, 'maxPeriods': 2000, 'updateProbability': 0.1, 'delta': 1, 'mutationProbability': 0.1, 'density': 1, 'degree': None, 'attachment': None, 'smallWorld': None}
+

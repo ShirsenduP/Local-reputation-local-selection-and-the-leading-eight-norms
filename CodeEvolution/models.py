@@ -1,3 +1,5 @@
+import logging
+
 from CodeEvolution.network import Network
 from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
 from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
@@ -13,8 +15,13 @@ class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     def __init__(self, _config=None):
         config = _config
         config.density = 1  # Overwrite the density of any network run on GrGe to be fully connected
+        if config.delta is not 1:
+            config.delta = 1
+            logging.warn("Delta (probability of successful reputation broadcast) is not 1, there will be errors!")
         super().__init__(config)
         self.generate(agentType=GrGeAgent)
+        populationReputations = [agent.currentReputation for agent in self.agentList]
+        self.ledger = dict(zip(self.agentList, populationReputations))
 
 
 class LrGeERNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):

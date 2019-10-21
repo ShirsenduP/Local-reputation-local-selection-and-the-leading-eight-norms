@@ -31,7 +31,7 @@ class Agent:
                 logging.debug(f"Agent({agent.id}) has history {agent.history}")
                 # logging.info(f"A({self.id}) broadcast to {self.history}")
                 # logging.info("======================================")
-        #TODO: shouldn't delta be 1 when under global reputation for perfect recall?
+        #DONE: shouldn't delta be 1 when under global reputation for perfect recall?
         #TODO: move this method to the reputation class under Global and Local reputation
         #TODO: make new "ledger" in network to store everyone's most up to date reputation, check it doesn't have any
         # downstream unintended effects later on

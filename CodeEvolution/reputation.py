@@ -7,7 +7,9 @@ class GlobalReputation:
     def getOpponentsReputation(self, agent1, agent2):
         """(Global reputation - return the reputations of the two randomly chosen agents. The reputation of any agent
         is accessible to every other agent in the population."""
-        return agent1.currentReputation, agent2.currentReputation
+        agent1Rep = self.ledger[agent1]
+        agent2Rep = self.ledger[agent2]
+        return agent1Rep, agent2Rep
 
     def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
         """Assign reputations following an interaction with each agent's globally known reputation and not the
@@ -28,22 +30,19 @@ class GlobalReputation:
         NOTE:
         The reputations here 'agent1OldRep' and 'agent2OldRep are given within Network.playSocialDilemma: the
         Network.getOpponentsReputations line defined in the Global Reputation class. These two reputations are directly
-        the
-        reputations
-        seen by the
-        agents
-        themselves and everyone in the population."""
+        the reputations seen by the agents themselves and everyone in the population."""
 
 
 
         agent1NewRep = self.socialNorm.assignReputation(agent1OldRep, agent2OldRep, agent1Move)
         agent2NewRep = self.socialNorm.assignReputation(agent2OldRep, agent1OldRep, agent2Move)
 
-        # TODO Fix BROADCAST REPUTATION -> why does it break everything :( :( :'(
         agent1.updatePersonalReputation(agent1NewRep)
         agent2.updatePersonalReputation(agent2NewRep)
-        agent1.broadcastReputation(agent1NewRep, self.config.delta)
-        agent2.broadcastReputation(agent2NewRep, self.config.delta)
+        # agent1.broadcastReputation(agent1NewRep, self.config.delta)
+        # agent2.broadcastReputation(agent2NewRep, self.config.delta)
+        self.ledger[agent1] = agent1NewRep
+        self.ledger[agent2] = agent2NewRep
 
 
 class LocalReputation:
