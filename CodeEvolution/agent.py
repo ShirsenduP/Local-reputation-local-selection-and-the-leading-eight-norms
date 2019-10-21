@@ -32,6 +32,11 @@ class Agent:
                 # logging.info(f"A({self.id}) broadcast to {self.history}")
                 # logging.info("======================================")
         #TODO: shouldn't delta be 1 when under global reputation for perfect recall?
+        #TODO: move this method to the reputation class under Global and Local reputation
+        #TODO: make new "ledger" in network to store everyone's most up to date reputation, check it doesn't have any
+        # downstream unintended effects later on
+        #TODO: then to get opponent's reputation, everyone just checks the ledger, so change the
+        # getOpponentsReputation method in reputation.py accordingly
 
     def updateUtility(self, payoff):
         """Update the utility or cumulative payoff of an agent."""
