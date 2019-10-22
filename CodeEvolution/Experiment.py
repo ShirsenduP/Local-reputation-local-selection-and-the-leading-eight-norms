@@ -131,6 +131,7 @@ class Experiment:
                 print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
         except Exception:
             pass
+            #TODO: Vague Exception passing is probably not very good, should change
 
     @staticmethod
     def assignNewDensitiesFromDegree(testsList):
