@@ -278,8 +278,8 @@ class Network:
         agent1Reputation, agent2Reputation = self.getOpponentsReputation(agent1, agent2)
 
         # Each agent calculates their move according to their behavioural strategy
-        agent1Move = agent1.currentStrategy.chooseAction(agent1.currentReputation, agent2Reputation)
-        agent2Move = agent2.currentStrategy.chooseAction(agent2.currentReputation, agent1Reputation)
+        agent1Move = agent1.currentStrategy.chooseAction(agent1Reputation, agent2Reputation)
+        agent2Move = agent2.currentStrategy.chooseAction(agent2Reputation, agent1Reputation)
         self.tempActions[agent1Move] += 1
         self.tempActions[agent2Move] += 1
 
