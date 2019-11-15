@@ -21,7 +21,7 @@ class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
         super().__init__(config)
         self.generate(agentType=GrGeAgent)
         populationReputations = [agent.currentReputation for agent in self.agentList]
-        self.ledger = dict(zip(self.agentList, populationReputations))
+        # self.ledger = dict(zip(self.agentList, populationReputations))
 
 
 class LrGeERNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):

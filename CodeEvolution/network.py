@@ -106,7 +106,7 @@ class Network:
         attempts = 0
         maxAttempts = 50
         while self.getMinDegree() < 2 and attempts < maxAttempts:
-            logging.critical(f'while: {self.getMinDegree()} < 2 or {attempts} < {maxAttempts}')
+            logging.debug(f'while: {self.getMinDegree()} < 2 or {attempts} < {maxAttempts}')
             attempts += 1
             logging.debug(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
             # print(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
@@ -292,8 +292,8 @@ class Network:
         agent2.updateUtility(payoff2)
 
         # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        # self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        self.updateAfterSocialDilemma(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        # self.updateAfterSocialDilemma(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 
     def updateAfterSocialDilemma(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
         """Defined in GlobalReputation/LocalReputation classes."""
