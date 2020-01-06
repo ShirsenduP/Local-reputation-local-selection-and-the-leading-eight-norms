@@ -31,6 +31,7 @@ if __name__ == '__main__':
 
     # 2 Subplots to show the two y regions of interesting data on a split plot
     f, (ax, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+    f.set_size_inches(3.5, 2.5)
 
     for jobID, model in zip(jobIDs, models):
         data = getDataFromID(jobID)  # keys are strategies, values are the tables
@@ -38,43 +39,43 @@ if __name__ == '__main__':
         means = [round(table[f'Prop. Strategy #{strategyID}'].mean(), 5) for strategyID, table in data.items()]
         stds = [round(table[f'Prop. Strategy #{strategyID}'].std() / np.sqrt(length), 5) for strategyID,
                                                                                              table in data.items()]
-        var = list(range(len(means)))
+        var = list(range(1, len(means)+1))
 
         # Plot all the data on both axes
         ax.errorbar(var, means,
                     yerr=stds,
                     lw=0,
-                    ms=2,
+                    ms=1,
                     solid_capstyle='projecting',
-                    capsize=4,
-                    marker='o',
+                    capsize=1,
+                    marker='x',
                     elinewidth=2,
                     markeredgewidth=4,
                     label=f'{model}')
         ax2.errorbar(var, means,
                      yerr=stds,
                      lw=0,
-                     ms=2,
+                     ms=1,
                      solid_capstyle='projecting',
-                     capsize=4,
-                     marker='o',
+                     capsize=1,
+                     marker='x',
                      elinewidth=2,
                      markeredgewidth=4,
                      label=f'{model}')
         ax3.errorbar(var, means,
                      yerr=stds,
                      lw=0,
-                     ms=2,
+                     ms=1,
                      solid_capstyle='projecting',
-                     capsize=4,
-                     marker='o',
+                     capsize=1,
+                     marker='x',
                      elinewidth=2,
                      markeredgewidth=4,
                      label=f'{model}')
-    # Zoom in on intersting regions
+    # Zoom in on interesting regions
     ax.set_ylim(0.99, 1)
     ax2.set_ylim(0.7, 0.95)
-    ax3.set_ylim(0, 0.25)
+    ax3.set_ylim(-0.09, 0.1)
 
     # Remote spines between axes
     ax.spines['bottom'].set_visible(False)
@@ -105,11 +106,12 @@ if __name__ == '__main__':
     ax3.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
     ax3.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
 
-    ax.title.set_text('Average Final Strategy Proportion')
+    # ax.title.set_text('Average Final Strategy Proportion')
+    f.suptitle('TITLE', fontsize=10)
     f.text(0, 0.5, 'Strategy Proportion', va='center', rotation='vertical')
-    plt.xlabel('Strategy ID')
-    plt.legend(loc='lower right')
+    plt.xlabel('Strategy')
+    plt.legend(loc='center_baseline')
     plt.tight_layout()
 
-    plt.savefig('7A_leading4')
+    plt.savefig('7A_leading4_PNAS', dpi=100)
     # plt.show()
