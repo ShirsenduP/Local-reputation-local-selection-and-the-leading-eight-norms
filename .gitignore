@@ -1,6 +1,6 @@
 .vscode/
 __pycache__/
-env/
+venv/
 *.png
 *.log
 CodeEvolution/logs/
