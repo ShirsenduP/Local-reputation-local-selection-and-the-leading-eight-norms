@@ -35,7 +35,8 @@ class Experiment:
         """Given a variable and the range of values to be tested for that variable, generate a list of Config objects
         for each of those tests"""
         if self.variable is None or self.values is None:
-            raise ValueError("Parameters 'variable' and 'values' must not be None.")
+            raise ValueError(
+                "Parameters 'variable' and 'values' must not be None.")
 
         if self.variable == 'population':
             # Changing the initial state/population is an edge-case because of the multiple changes needed to be made
@@ -81,33 +82,40 @@ class Experiment:
          when multiple of the same parameterised run have different lengths of simulations. Cluster takes precedence
          over export."""
 
-        experimentName = self.networkType.name + "_" + self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
+        experimentName = self.networkType.name + "_" + \
+            self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
 
         # Only prepare LocalData area if working locally, if running on Pycharm console, it will throw an error but its
         # purely aesthetic so just ignore it
         try:
             if not cluster:
-                Results.initialiseOutputDirectory(experimentName)
+                # Results.initialiseOutputDirectory(experimentName)
                 _, columnWidth = os.popen('stty size', 'r').read().split()
                 nameLength = len(experimentName)
                 columnWidth = int(columnWidth)
-                print("\nRunning  ", experimentName, (columnWidth - nameLength - 11) * "=")
+                print("\nRunning  ", experimentName,
+                      (columnWidth - nameLength - 11) * "=")
         except ValueError:
             pass
+        except OSError as err:
+            logging.critical(f"Directory Error -> {err}")
 
         if recordFull:
-            raise NotImplementedError("Recording the full data releases data often incorrectly. Do not use.")
+            raise NotImplementedError(
+                "Recording the full data releases data often incorrectly. Do not use.")
 
         # run all tests in the experiment
         for exp in trange(len(self.experiments), leave=True):
             if display:
-                print(f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
+                print(
+                    f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
 
             # Run a single test with [1,inf) repeats
             singleTest = pd.DataFrame()
             for _ in trange(self.repeats, leave=False):
                 Strategy.reset()
-                singleRun = self.simulate(self.experiments[exp], self.networkType, displayFull)
+                singleRun = self.simulate(
+                    self.experiments[exp], self.networkType, displayFull)
                 singleTest = pd.concat([singleTest, singleRun], sort=False)
                 Strategy.reset()
 
@@ -118,20 +126,23 @@ class Experiment:
 
             # Export to different places if running locally/on a cluster
             if cluster:
-                Results.exportResultsToCsvCluster(experimentName, self.experiments[exp], singleTest, exp)
+                Results.exportResultsToCsvCluster(
+                    experimentName, self.experiments[exp], singleTest, exp)
             elif export:
-                Results.exportResultsToCsv(experimentName, self.experiments[exp], singleTest, exp)
+                Results.exportResultsToCsv(
+                    experimentName, self.experiments[exp], singleTest, exp)
 
         # Export config text file
         configs = self.showExperiments(asString=True)
-        Results.exportExperimentConfigs(configs, experimentName)
+        # Results.exportExperimentConfigs(configs, experimentName)
 
         try:
             if not cluster:
-                print("\nFinished ", experimentName, (columnWidth - nameLength - 11) * "=")
+                print("\nFinished ", experimentName,
+                      (columnWidth - nameLength - 11) * "=")
         except Exception:
             pass
-            #TODO: Vague Exception passing is probably not very good, should change
+            # TODO: Vague Exception passing is probably not very good, should change
 
     @staticmethod
     def assignNewDensitiesFromDegree(testsList):
@@ -148,7 +159,8 @@ class Experiment:
         """(BETA) Export a parameters file (.txt) for UCL clusters"""
 
         if None in [variable, values]:
-            raise ValueError("Parameters 'variable' and 'values' must not be None.")
+            raise ValueError(
+                "Parameters 'variable' and 'values' must not be None.")
 
         with open('params.txt', 'w') as f:
             counter = 0
@@ -179,7 +191,8 @@ class Experiment:
         # print(resultsMutations)
 
         # Combine LocalData
-        resultsFull = pd.concat([resultsCensus, resultsActions, resultsUtils], axis=1, sort=False)
+        resultsFull = pd.concat(
+            [resultsCensus, resultsActions, resultsUtils], axis=1, sort=False)
 
         if displayFull:
             print(resultsFull)
@@ -200,7 +213,8 @@ class Experiment:
         mainProp = proportion
         mutantProp = round(1 - proportion, 3)
         for i in strategies:
-            listOfStates.append((Population(ID=i, proportion=mainProp), Population(ID=mutantID, proportion=mutantProp)))
+            listOfStates.append((Population(ID=i, proportion=mainProp), Population(
+                ID=mutantID, proportion=mutantProp)))
         listOfStates = tuple(listOfStates)
         return listOfStates
 
@@ -214,7 +228,7 @@ class Experiment:
         strats = [round(strats[i], 3) for i in range(len(strats))]
         for i in strats:
             listOfStates.append((Population(ID=strategyID, proportion=i), Population(ID=mutantID,
-                                                                                     proportion=round(1-i,3))))
+                                                                                     proportion=round(1-i, 3))))
         listOfStates = tuple(listOfStates)
         return listOfStates
 
@@ -236,12 +250,13 @@ class Experiment:
             size = config.size
             sparseDensity = 2 * np.log(size)/size
             if config.density != sparseDensity:
-                logging.info(f'Changing density from {config.density} to {sparseDensity}.')
+                logging.info(
+                    f'Changing density from {config.density} to {sparseDensity}.')
                 config.density = sparseDensity
 
 
-## TODO: experiment details into config.txt, xvalues, xvariable name etc, can partially automate labelling of graphs too
-## TODO: create script to generate all the .py files and .sh files, just a forloop writing out a big f string with
+# TODO: experiment details into config.txt, xvalues, xvariable name etc, can partially automate labelling of graphs too
+# TODO: create script to generate all the .py files and .sh files, just a forloop writing out a big f string with
 # strategy ID codes
 if __name__ == '__main__':
     C = Config(initialState=State(0, 1, 8), degree=5)
@@ -255,4 +270,3 @@ if __name__ == '__main__':
         repeats=2)
     E.showExperiments()
     E.run(export=True)
-
