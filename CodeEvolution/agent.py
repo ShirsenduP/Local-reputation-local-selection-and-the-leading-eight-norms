@@ -31,11 +31,11 @@ class Agent:
                 logging.debug(f"Agent({agent.id}) has history {agent.history}")
                 # logging.info(f"A({self.id}) broadcast to {self.history}")
                 # logging.info("======================================")
-        #DONE: shouldn't delta be 1 when under global reputation for perfect recall?
-        #TODO: move this method to the reputation class under Global and Local reputation
-        #TODO: make new "ledger" in network to store everyone's most up to date reputation, check it doesn't have any
+        # DONE: shouldn't delta be 1 when under global reputation for perfect recall?
+        # TODO: move this method to the reputation class under Global and Local reputation
+        # TODO: make new "ledger" in network to store everyone's most up to date reputation, check it doesn't have any
         # downstream unintended effects later on
-        #TODO: then to get opponent's reputation, everyone just checks the ledger, so change the
+        # TODO: then to get opponent's reputation, everyone just checks the ledger, so change the
         # getOpponentsReputation method in reputation.py accordingly
 
     def updateUtility(self, payoff):
@@ -45,15 +45,19 @@ class Agent:
     def findBestLocalStrategy(self, copyTheBest):
         """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the
          strategies with maximum utility."""
-        neighbourUtilities = list(map(lambda x: x.currentUtility, self.neighbours))
+        neighbourUtilities = list(
+            map(lambda x: x.currentUtility, self.neighbours))
         if copyTheBest:
             # Find the strategy locally that is performing the best
             maxLocalUtility = max(neighbourUtilities)
-            indices = [i for i, x in enumerate(neighbourUtilities) if x == maxLocalUtility]
+            indices = [i for i, x in enumerate(
+                neighbourUtilities) if x == maxLocalUtility]
         else:
             # Find all the strategies from the neighbouring agent's who are fairing better than the focal agent
-            betterLocalUtilities = [util for util in neighbourUtilities if util > self.currentUtility]
-            indices = [i for i, x in enumerate(neighbourUtilities) if x == random.choice(betterLocalUtilities)]
+            betterLocalUtilities = [
+                util for util in neighbourUtilities if util > self.currentUtility]
+            indices = [i for i, x in enumerate(
+                neighbourUtilities) if x == random.choice(betterLocalUtilities)]
 
         # Choose randomly from shortlisted agents
         bestLocalStrategyID = random.choice(indices)
@@ -109,6 +113,7 @@ class GrGeAgent(GlobalEvolution, GlobalReputation, Agent):
         super().__init__(_id, _strategy)
         self.history = {}
 
+
 class LrGeAgent(GlobalEvolution, LocalReputation, Agent):
     """Agent class implementing Global Evolution mechanisms for the Local Reputation & Global Evolution Model. This
     class should not be directly instantiated."""
@@ -133,3 +138,5 @@ class GrLeAgent(LocalEvolution, GlobalReputation, Agent):
 
     def __int__(self, _id, _strategy):
         super().__init__(_id, _strategy)
+
+    # WARN wtf is going on here? Has this messed up any tests???
