@@ -2,7 +2,6 @@ from CodeEvolution.socialdilemna import PrisonersDilemma
 
 from collections import namedtuple
 import numpy as np
-import pickle
 
 Dilemma = namedtuple('Dilemma', ['type', 'benefit', 'cost'])
 State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])
@@ -65,12 +64,3 @@ class Config:
     def __repr__(self):
         return str(self.__dict__)
 
-
-if __name__ == "__main__":
-
-    C = Config(initialState=State(mainID=7, proportion=1, mutantID=9))
-    print(C)
-
-# TODO: Add specific config files with parameters for all the extra structures! So extract the size, degree, density,
-#  gamma, etc! or maybe just named tuples?
-#

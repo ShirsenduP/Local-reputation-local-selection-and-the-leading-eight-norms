@@ -47,7 +47,7 @@ class LocalReputation:
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
         accessible only to neighbours of that agent."""
 
-        # Choose neighbour of each agent (except the opponent of that agent)
+        # Choose neighbour of each agent (except each other if they are neighbours)
         agent2Neighbours = [agent.id for agent in agent2.neighbours]
         agent1Neighbours = [agent.id for agent in agent1.neighbours]
 

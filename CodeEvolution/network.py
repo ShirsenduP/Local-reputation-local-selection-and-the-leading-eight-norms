@@ -342,11 +342,8 @@ class Network:
     def chooseTwoAgents(self):
         agent1 = random.choice(self.agentList)
         agent2 = random.choice(self.agentList)
-        # print(agent2 == agent1)
         while agent2 == agent1:
-            # print(agent2 == agent1)
             agent2 = random.choice(self.agentList)
-            # print(agent2)
         return agent1, agent2
 
     def mutation(self, mutantStrategyID):
