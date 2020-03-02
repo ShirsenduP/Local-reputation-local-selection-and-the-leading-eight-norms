@@ -303,13 +303,6 @@ class Network:
         agent1.broadcastReputation(agent1NewRep, self.config.delta)
         agent2.broadcastReputation(agent2NewRep, self.config.delta)
 
-    def showHistory(self):
-        for agent in self.agentList:
-            s = f"History for agent {agent.id} \n"
-            s += agent.getHistory()
-            s += "\n"
-            print(s)
-
     def checkConvergence(self):
         """Check if the system has converged. """
 
@@ -394,6 +387,7 @@ class Network:
         return degreeCount
 
     def isRegular(self):
+        """Check if the network is regular. That is, every agent has the same number of neighbours."""
         if self.adjMatrix is None:
             raise Exception("Lattice has not yet been initialised.")
 
@@ -401,6 +395,13 @@ class Network:
         if np.any(agentDegrees != self.modeDegree):
             return False
         return True
+
+    def showHistory(self):
+        for agent in self.agentList:
+            s = f"History for agent {agent.id} \n"
+            s += agent.getHistory()
+            s += "\n"
+            print(s)
 
     def plotGraph(self):
         """Using the networkx package, plot the network"""
