@@ -18,8 +18,10 @@ class GlobalReputation:
         agent2NewReputation = self.socialNorm.assignReputation(agent2Reputation, agent1Reputation,
                                                                agent2Move)
 
-        agent1.updatePersonalReputation(agent1NewReputation)
-        agent2.updatePersonalReputation(agent2NewReputation)
+        # agent1.updatePersonalReputation(agent1NewReputation)
+        # agent2.updatePersonalReputation(agent2NewReputation)
+        agent1.currentReputation = agent1NewReputation
+        agent2.currentReputation = agent2NewReputation
 
     def updateAfterSocialDilemma(self, agent1, agent2, agent1OldRep, agent2OldRep, agent1Move, agent2Move):
         """(Global Reputation) This method calculates and updates the respective personal reputations of each agent
@@ -91,8 +93,10 @@ class LocalReputation:
         agent2PersonalReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1Reputation,
                                                                     agent2Move)
 
-        agent1.updatePersonalReputation(agent1PersonalReputation)
-        agent2.updatePersonalReputation(agent2PersonalReputation)
+        # agent1.updatePersonalReputation(agent1PersonalReputation)
+        # agent2.updatePersonalReputation(agent2PersonalReputation)
+        agent1.currentReputation = agent1PersonalReputation
+        agent2.currentReputation = agent2PersonalReputation
 
     def updateAfterSocialDilemma(self, agent1, agent2, agent1OldRep, agent2OldRep, agent1Move, agent2Move):
         """(Local Reputation) This method calculates and updates the neighbours of an agent with his new reputation.
@@ -111,7 +115,10 @@ history
         agent1NewRep = self.socialNorm.assignReputation(agent1.currentReputation, agent2OldRep, agent1Move)
         agent2NewRep = self.socialNorm.assignReputation(agent2.currentReputation, agent1OldRep, agent2Move)
 
-        agent1.updatePersonalReputation(agent1NewRep)
-        agent2.updatePersonalReputation(agent2NewRep)
+        # agent1.updatePersonalReputation(agent1NewRep)
+        # agent2.updatePersonalReputation(agent2NewRep)
+        agent1.currentReputation = agent1NewRep
+        agent2.currentReputation = agent2NewRep
+
         agent1.broadcastReputation(agent1NewRep, self.config.delta)
         agent2.broadcastReputation(agent2NewRep, self.config.delta)
