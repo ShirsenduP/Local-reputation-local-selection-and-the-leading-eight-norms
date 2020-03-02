@@ -64,12 +64,6 @@ class Agent:
 
         return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
 
-    def updatePersonalReputation(self, newRep):
-        """Update own reputation, only to be used for an agent's own reputation from their point of view in an
-        interaction."""
-        # self.currentReputation = newRep
-        raise NotImplementedError("agent.updatePersonalReputation(.) has been removed.")
-
     def summary(self):
         # s = "Summary of Network\n"
         s = f"Agent {self.id} is currently running strategy {self.currentStrategy} with current reputation " \

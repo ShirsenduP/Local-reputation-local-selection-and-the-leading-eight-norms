@@ -18,7 +18,11 @@ from CodeEvolution.strategy import Strategy
 
 class Network:
     """Base network class containing all the general functionality used in all models. This class should not be
-    directly instantiated. """
+    directly instantiated.
+
+    NB:
+    self.utilityMonitor -> index0 captures #OfInteractions of an agent with some strategy, index1 captures the total
+    cumulative payoff of all agents running that strategy."""
 
     def __init__(self, config=Config(), agentType=Agent):
         self.config = config
@@ -28,9 +32,7 @@ class Network:
         self.socialNorm = SocialNorm(config.socialNormID)
         self.results = Results(config)
         self.tempActions = {'C': 0, 'D': 0}
-        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]  # index0 captures
-        # #OfInteractions of an agent with some strategy, index1 captures the total cumulative payoff of all agents
-        # running that strategy
+        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
         self.currentPeriod = 0
         self.convergenceCheckIntervals = self.generateConvergenceCheckpoints()
         self.convergenceHistory = deque(3 * [None], 3)
@@ -92,42 +94,29 @@ class Network:
 
     def generate(self, agentType):
         """Generate a valid network."""
-        # try:
-        #     if self.config.density < self.getSparsityParameter():
-        #         raise Exception(
-        #             f"Density ({self.config.density} < {self.getSparsityParameter()}) too low for network to "
-        #             f"be connected. Exiting.")
-        # except TypeError as e:
-        #     logging.debug("Density is set as 'None'. {}".format(e))
-
         Strategy.reset()
         self.createNetwork(agentType)
-        # print(self)
-        attempts = 0
-        maxAttempts = 50
+        attempts, maxAttempts = 0, 50
         while self.getMinDegree() < 2 and attempts < maxAttempts:
             logging.debug(f'while: {self.getMinDegree()} < 2 or {attempts} < {maxAttempts}')
             attempts += 1
             logging.debug(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
-            # print(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
+
             # Reset network
             Strategy.reset()
             self.agentList = []
             self.createNetwork(agentType)
-            # print(self)
 
             invalidAgentCount = 0
             for agent in self.agentList:
                 if len(agent.neighbours) < 2:
                     invalidAgentCount += 1
-            # logging.error(f"{numberOfUnconnectedAgents} disconnected agents.")
             if invalidAgentCount > 0:
-                logging.info(f"{invalidAgentCount} invalid agents.")
+                logging.warning(f"{invalidAgentCount} invalid agents.")
 
             if attempts == maxAttempts:
                 logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
                 raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
-
 
     def generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
@@ -205,18 +194,14 @@ class Network:
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
             logging.info(f't={self.currentPeriod}')
-            # debugNetwork = str(self)
             logging.info(f"T = {self.currentPeriod} - census: {self.getCensus()}")
             self.resetUtility()
             self.resetTempActions()
             self.runSingleTimestep()
             self.scanStrategies()
-            # print(self)
-            # logging.debug(self)
             self.evolutionaryUpdate()
             self.mutation(self.config.mutant.ID)
             if self.currentPeriod in self.convergenceCheckIntervals:
-                # self.grabSnapshot()
                 self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
                 self.checkConvergence()
 
@@ -359,7 +344,7 @@ class Network:
         for agent in self.agentList:
             r = random.random()
             if r < probabilityOfMutation:
-                # print(f"agent {agent.id} mutation, {agent.currentStrategy.currentStrategyID} to {mutantStrategyID}")
+                logging.info(f"agent {agent.id} mutation, {agent.currentStrategy.currentStrategyID} to {mutantStrategyID}")
                 agent.currentStrategy.changeStrategy(mutantStrategyID)
                 if self.currentPeriod not in self.results.mutantTracker.keys():
                     self.results.mutantTracker[self.currentPeriod] = 1
@@ -383,10 +368,6 @@ class Network:
             r = random.random()
 
         self.results.updateActions(self.tempActions)
-
-    def grabSnapshot(self):
-        # self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
-        raise NotImplementedError("grabSnapshot method removed.")
 
     def getAgentWithID(self, id):
         """Return a reference to the agent object in the network with the same id # given."""
