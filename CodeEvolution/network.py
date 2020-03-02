@@ -216,7 +216,8 @@ class Network:
             self.evolutionaryUpdate()
             self.mutation(self.config.mutant.ID)
             if self.currentPeriod in self.convergenceCheckIntervals:
-                self.grabSnapshot()
+                # self.grabSnapshot()
+                self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
                 self.checkConvergence()
 
             if self.hasConverged or self.currentPeriod == self.config.maxPeriods - 1:
@@ -384,7 +385,8 @@ class Network:
         self.results.updateActions(self.tempActions)
 
     def grabSnapshot(self):
-        self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
+        # self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
+        raise NotImplementedError("grabSnapshot method removed.")
 
     def getAgentWithID(self, id):
         """Return a reference to the agent object in the network with the same id # given."""

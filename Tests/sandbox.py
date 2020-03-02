@@ -14,15 +14,15 @@ if __name__=="__main__":
     con = Config(
         initialState=State(0,1,8),
         size=10,
-        maxPeriods=10,
+        maxPeriods=10000,
         delta=1
     )
 
     net1 = GrGeERNetwork(con)
     net2 = LrGeERNetwork(con)
-
     net1.runSimulation()
-    print(net1.results)
-
-    net2.runSimulation()
-    print(net2.results)
+    print(net1.convergenceHistory)
+    # print(net1.results)
+    #
+    # net2.runSimulation()
+    # print(net2.results)
