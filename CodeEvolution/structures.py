@@ -22,7 +22,7 @@ class Structure:
         M = self.adjMatrix
         for i in range(self.config.size):
             for j in range(i + 1, self.config.size):
-                if int(M[i][j]) is 0:
+                if int(M[i][j]) == 0:
                     continue
                 else:
                     if self.agentList[j] not in self.agentList[i].neighbours:
@@ -128,7 +128,7 @@ class RighiCliques(Structure):
     def makeGraph(self, numberOfCliques):
         """Given the number of 4-cliques, generate the graph."""
 
-        if numberOfCliques % 2 is not 0:
+        if numberOfCliques % 2 != 0:
             raise ValueError(f'The number of cliques ({numberOfCliques} must be even.')
 
         def incrementCounter(counter):
