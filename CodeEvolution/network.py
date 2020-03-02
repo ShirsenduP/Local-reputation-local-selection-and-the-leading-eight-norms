@@ -274,8 +274,9 @@ class Network:
         self.updateMonitor(agent1, agent2, payoff1, payoff2)
 
         # Update agents personal utilities for (LOCAL) evolutionary update
-        agent1.updateUtility(payoff1)
-        agent2.updateUtility(payoff2)
+        agent1.currentUtility += payoff1
+        agent2.currentUtility += payoff2
+
 
         # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
         self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)

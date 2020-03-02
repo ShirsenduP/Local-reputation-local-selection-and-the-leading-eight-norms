@@ -38,10 +38,6 @@ class Agent:
         # TODO: then to get opponent's reputation, everyone just checks the ledger, so change the
         # getOpponentsReputation method in reputation.py accordingly
 
-    def updateUtility(self, payoff):
-        """Update the utility or cumulative payoff of an agent."""
-        self.currentUtility += payoff
-
     def findBestLocalStrategy(self, copyTheBest):
         """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the
          strategies with maximum utility."""
