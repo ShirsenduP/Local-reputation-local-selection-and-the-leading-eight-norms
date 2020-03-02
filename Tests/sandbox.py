@@ -27,4 +27,4 @@ if __name__=="__main__":
     net3.runSimulation()
     net4.runSimulation()
 
-    print(net4.results)
+    # print(net4.results)

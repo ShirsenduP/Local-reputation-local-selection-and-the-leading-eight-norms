@@ -193,8 +193,7 @@ class Network:
         system converges at pre-allocated randomly chosen convergence check intervals."""
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
-            logging.info(f't={self.currentPeriod}')
-            logging.info(f"T = {self.currentPeriod} - census: {self.getCensus()}")
+            logging.debug(f"T = {self.currentPeriod} - census: {self.getCensus()}")
             self.resetUtility()
             self.resetTempActions()
             self.runSingleTimestep()
