@@ -65,7 +65,6 @@ class Agent:
         return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
 
     def summary(self):
-        # s = "Summary of Network\n"
         s = f"Agent {self.id} is currently running strategy {self.currentStrategy} with current reputation " \
             f"{self.currentReputation}"
         return s
@@ -73,11 +72,6 @@ class Agent:
     def initialiseHistory(self):
         """Only keep track of interactions with your neighbours."""
         self.history = {}.fromkeys(self.neighbours)
-
-    # def recordInteraction(self, interaction):
-    #     """Remember the previous interaction with your neighbours (and no one else)."""
-    #     if interaction['Opponent'] in self.neighbours:
-    #         self.history[interaction['Opponent']] = interaction
 
     def getHistory(self):
         """Print to the console the reputations of his neighbours from his point of view."""
@@ -94,8 +88,7 @@ class Agent:
         raise NotImplementedError
 
     def __str__(self):
-        s = "("
-        s += f"Agent {self.id}, id={self.currentStrategy.currentStrategyID},"
+        s = f"(Agent {self.id}, id={self.currentStrategy.currentStrategyID},"
         s += f" with neighbours {self.getNeighboursUtilities()}"
         return s
 
