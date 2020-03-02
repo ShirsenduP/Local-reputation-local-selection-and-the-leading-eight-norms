@@ -401,7 +401,7 @@ class Network:
         self.socialNorm = None
         self.currentPeriod = 0
         self.results = None
-        self.resetTempActions()
+        self.tempActions = {'C': 0, 'D': 0}
         self.hasConverged = False
         # Strategy.reset()
         for agent in self.agentList:
