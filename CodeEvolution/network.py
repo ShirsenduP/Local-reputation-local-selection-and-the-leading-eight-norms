@@ -34,7 +34,7 @@ class Network:
         self.tempActions = {'C': 0, 'D': 0}
         self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
         self.currentPeriod = 0
-        self.convergenceCheckIntervals = self.generateConvergenceCheckpoints()
+        self.convergenceCheckIntervals = self._generateConvergenceCheckpoints()
         self.convergenceHistory = deque(3 * [None], 3)
         self.hasConverged = False
         self.dilemma = config.socialDilemma
@@ -118,15 +118,6 @@ class Network:
                 logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
                 raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
 
-    def generateConvergenceCheckpoints(self):
-        """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
-        the system checks for convergence. No convergence checks occur before a quarter of the simulation has
-        progressed. """
-        maxPeriods = self.config.maxPeriods
-        checkpoints = random.sample(range(int(maxPeriods / 4), maxPeriods), int(maxPeriods / 100))
-        checkpoints.sort()
-        return checkpoints
-
     def getMinDegree(self):
         """Return the minimum degree out of all agents within the network"""
         minDegree = np.inf
@@ -154,16 +145,6 @@ class Network:
                 logging.critical("Unconnected Network")
                 return False
         return True
-
-    def __del__(self):
-        self.socialNorm = None
-        self.currentPeriod = 0
-        self.results = None
-        self.resetTempActions()
-        self.hasConverged = False
-        # Strategy.reset()
-        for agent in self.agentList:
-            del agent.currentStrategy
 
     def resetTempActions(self):
         """Reset the cooperation/defection counter to zero. To be used at the end of each time-period after actions have
@@ -408,8 +389,27 @@ class Network:
         nx.draw(self.nxGraph)
         plt.show()
 
+    def _generateConvergenceCheckpoints(self):
+        """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
+        the system checks for convergence. No convergence checks occur before a quarter of the simulation has
+        progressed. """
+        maxPeriods = self.config.maxPeriods
+        checkpoints = random.sample(range(int(maxPeriods / 4), maxPeriods), int(maxPeriods / 100))
+        checkpoints.sort()
+        return checkpoints
+
     def __str__(self):
         s = ""
         for agent in self.agentList:
             s += str(agent) + "\n"
         return s
+
+    def __del__(self):
+        self.socialNorm = None
+        self.currentPeriod = 0
+        self.results = None
+        self.resetTempActions()
+        self.hasConverged = False
+        # Strategy.reset()
+        for agent in self.agentList:
+            del agent.currentStrategy
