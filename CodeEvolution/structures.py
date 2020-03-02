@@ -115,7 +115,7 @@ class RighiCliques(Structure):
     """Implements the 4-clique structure asdadjasdjaisdajdisada."""
 
     def createNetwork(self, agentType):
-        pass
+        raise NotImplementedError
         # density = self.config.density
         # size = self.config.size
         # self.nxGraph = nx.fast_gnp_random_graph(size, density)

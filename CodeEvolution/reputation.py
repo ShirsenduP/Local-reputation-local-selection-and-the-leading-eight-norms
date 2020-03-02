@@ -82,13 +82,17 @@ class LocalReputation:
         """Given the agents, their reputations, and their moves, update their personal reputations (the reputation they
         use for themselves for all of their interactions)."""
 
-        agent1PersonalReputation = self.socialNorm.assignReputation(agent1.currentReputation, agent2Reputation,
-                                                                    agent1Move)
-        agent2PersonalReputation = self.socialNorm.assignReputation(agent2.currentReputation, agent1Reputation,
-                                                                    agent2Move)
+        agent1PersonalReputation = self.socialNorm.assignReputation(
+            agent1.currentReputation,
+            agent2Reputation,
+            agent1Move
+        )
+        agent2PersonalReputation = self.socialNorm.assignReputation(
+            agent2.currentReputation,
+            agent1Reputation,
+            agent2Move
+        )
 
-        # agent1.updatePersonalReputation(agent1PersonalReputation)
-        # agent2.updatePersonalReputation(agent2PersonalReputation)
         agent1.currentReputation = agent1PersonalReputation
         agent2.currentReputation = agent2PersonalReputation
 
@@ -109,8 +113,6 @@ history
         agent1NewRep = self.socialNorm.assignReputation(agent1.currentReputation, agent2OldRep, agent1Move)
         agent2NewRep = self.socialNorm.assignReputation(agent2.currentReputation, agent1OldRep, agent2Move)
 
-        # agent1.updatePersonalReputation(agent1NewRep)
-        # agent2.updatePersonalReputation(agent2NewRep)
         agent1.currentReputation = agent1NewRep
         agent2.currentReputation = agent2NewRep
 

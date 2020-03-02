@@ -95,7 +95,6 @@ class GrGeAgent(GlobalEvolution, GlobalReputation, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
-        self.history = {}
 
 
 class LrGeAgent(GlobalEvolution, LocalReputation, Agent):
@@ -111,7 +110,7 @@ class LrLeAgent(LocalEvolution, LocalReputation, Agent):
     """Agent class implementing Local Evolution mechanisms for the Local Reputation & Local Evolution Model. This
         class should not be directly instantiated."""
 
-    def __int__(self, _id, _strategy):
+    def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
         self.history = {}  # get LAST partner
 
@@ -120,7 +119,7 @@ class GrLeAgent(LocalEvolution, GlobalReputation, Agent):
     """Agent class implementing Local Evolution mechanisms for the Global Reputation & Local Evolution Model. This
         class should not be directly instantiated."""
 
-    def __int__(self, _id, _strategy):
+    def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
     # WARN wtf is going on here? Has this messed up any tests???
