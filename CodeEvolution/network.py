@@ -45,12 +45,6 @@ class Network:
         self.nxGraph = None
         self.modeDegree = None
 
-    def plotGraph(self):
-        arr = self.toNumpyArray()
-        G = nx.from_numpy_array(arr)
-        plt.subplot()
-        nx.draw(G, with_labels=True)
-        plt.show()
 
     def toNumpyArray(self):
         """Return a numpy adjacency matrix representing this network object."""
@@ -353,11 +347,12 @@ class Network:
             s += "\n"
             print(s)
 
-    def plotGraph(self):
-        """Using the networkx package, plot the network"""
-        plt.subplot()
-        nx.draw(self.nxGraph)
-        plt.show()
+    def getPlot(self):
+        """Using the networkx package, return a matplotlib axes ready to be plotted."""
+
+        arr = self.adjMatrix if self.nxGraph is None else self.toNumpyArray()
+        G = nx.from_numpy_array(arr)
+        nx.draw(G, with_labels=True)
 
     def _generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when

@@ -15,16 +15,44 @@ if __name__=="__main__":
         initialState=State(0,1,8),
         size=10,
         maxPeriods=100,
-        delta=1
+        delta=1,
+        sparseDensity=True
     )
 
-    net1 = GrGeERNetwork(con)
-    net2 = LrGeERNetwork(con)
+    print(con)
+
+    fig, ax = plt.subplots(2,2)
+
     net3 = GrLeERNetwork(con)
+    plt.sca(ax[0,0])
+    net3.getPlot()
+    plt.title("grle")
+
+    net2 = LrGeERNetwork(con)
+    plt.sca(ax[0,1])
+    net2.getPlot()
+    plt.title("lrge")
+
     net4 = LrLeERNetwork(con)
-    net1.runSimulation()
-    net2.runSimulation()
-    net3.runSimulation()
-    net4.runSimulation()
+    plt.sca(ax[1,0])
+    net4.getPlot()
+    plt.title("lrle")
+
+    net1 = GrGeERNetwork(con)
+    plt.sca(ax[1, 1])
+    net1.getPlot()
+    plt.title("grge")
+
+    plt.show()
+
+
+
+
+
+    # net1.runSimulation()
+    # net2.runSimulation()
+    # net3.runSimulation()
+    # net4.runSimulation()
 
     # print(net4.results)
+
