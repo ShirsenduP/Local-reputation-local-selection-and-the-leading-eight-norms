@@ -15,7 +15,7 @@ from CodeEvolution.Experiment import Experiment
 
 class TestBroadcast:
 
-    # Set seed for reproducability
+    # Set seed for reproducibility
     seed = 1  # Seed originally set to be 1
     random.seed(seed)
     np.random.seed(seed)
