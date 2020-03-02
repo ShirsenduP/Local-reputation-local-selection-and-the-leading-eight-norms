@@ -146,13 +146,6 @@ class Network:
                 return False
         return True
 
-    def resetTempActions(self):
-        """Reset the cooperation/defection counter to zero. To be used at the end of each time-period after actions have
-         been recorded."""
-
-        for action in self.tempActions:
-            self.tempActions[action] = 0
-
     def scanStrategies(self):
         """Update the LocalData with the proportions of all strategies at any given time."""
 
@@ -176,7 +169,7 @@ class Network:
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
             logging.debug(f"T = {self.currentPeriod} - census: {self.getCensus()}")
             self.resetUtility()
-            self.resetTempActions()
+            self.tempActions = {'C': 0, 'D': 0}
             self.runSingleTimestep()
             self.scanStrategies()
             self.evolutionaryUpdate()
