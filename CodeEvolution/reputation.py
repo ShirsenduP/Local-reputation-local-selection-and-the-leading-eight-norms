@@ -13,13 +13,17 @@ class GlobalReputation:
         """Assign reputations following an interaction with each agent's globally known reputation and not the
         calculated reputation as default."""
 
-        agent1NewReputation = self.socialNorm.assignReputation(agent1Reputation, agent2Reputation,
-                                                               agent1Move)
-        agent2NewReputation = self.socialNorm.assignReputation(agent2Reputation, agent1Reputation,
-                                                               agent2Move)
+        agent1NewReputation = self.socialNorm.assignReputation(
+            agent1Reputation,
+            agent2Reputation,
+            agent1Move
+        )
+        agent2NewReputation = self.socialNorm.assignReputation(
+            agent2Reputation,
+            agent1Reputation,
+            agent2Move
+        )
 
-        # agent1.updatePersonalReputation(agent1NewReputation)
-        # agent2.updatePersonalReputation(agent2NewReputation)
         agent1.currentReputation = agent1NewReputation
         agent2.currentReputation = agent2NewReputation
 
@@ -32,16 +36,6 @@ class GlobalReputation:
         Network.getOpponentsReputations line defined in the Global Reputation class. These two reputations are directly
         the reputations seen by the agents themselves and everyone in the population."""
         pass
-        # agent
-        # agent1NewRep = self.socialNorm.assignReputation(agent1OldRep, agent2OldRep, agent1Move)
-        # agent2NewRep = self.socialNorm.assignReputation(agent2OldRep, agent1OldRep, agent2Move)
-        #
-        # agent1.updatePersonalReputation(agent1NewRep)
-        # agent2.updatePersonalReputation(agent2NewRep)
-        # # agent1.broadcastReputation(agent1NewRep, self.config.delta)
-        # # agent2.broadcastReputation(agent2NewRep, self.config.delta)
-        # self.ledger[agent1] = agent1NewRep
-        # self.ledger[agent2] = agent2NewRep
 
 
 class LocalReputation:

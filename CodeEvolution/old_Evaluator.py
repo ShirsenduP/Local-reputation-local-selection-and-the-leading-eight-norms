@@ -30,7 +30,7 @@ class Evaluator:
         #         index += 1
         #
         # return dataDict
-        raise NotImplementedError("Evaluator.py methods have been removed.")
+        raise NotImplementedError("old_Evaluator.py methods have been removed.")
 
     @staticmethod
     def show_result_dir():
@@ -41,7 +41,7 @@ class Evaluator:
         # print("Results Directory\n".upper())
         # for test in resultsPath:
         #     print(test)
-        raise NotImplementedError("Evaluator.py methods have been removed.")
+        raise NotImplementedError("old_Evaluator.py methods have been removed.")
 
     @staticmethod
     def getStrategyLabels():
@@ -49,7 +49,7 @@ class Evaluator:
         # for i in range(len(labelForGraphs)):
         #     labelForGraphs[i] = "$s_{" + str(labelForGraphs[i]) + "}$"
         # return labelForGraphs
-        raise NotImplementedError("Evaluator.py methods have been removed.")
+        raise NotImplementedError("old_Evaluator.py methods have been removed.")
 
     @staticmethod
     def getProportionOfStable(data, threshold=0.75):
@@ -74,7 +74,7 @@ class Evaluator:
         #     output.append(proportionStable)
         #
         # return output
-        raise NotImplementedError("Evaluator.py methods have been removed.")
+        raise NotImplementedError("old_Evaluator.py methods have been removed.")
 
     @staticmethod
     def plotAllStrategies(title, dataPath, mutantID, save=False):
@@ -100,7 +100,7 @@ class Evaluator:
         #     plt.savefig(resultsDir)
         # else:
         #     plt.show()
-        raise NotImplementedError("Evaluator.py methods have been removed.")
+        raise NotImplementedError("old_Evaluator.py methods have been removed.")
 
     @staticmethod
     def plotAllStrategiesSummary(title, dataPath, mutantID, save=False):
@@ -131,7 +131,7 @@ class Evaluator:
         #     plt.savefig(resultsDir)
         # else:
         #     plt.show()
-        raise NotImplementedError("Evaluator.py methods have been removed.")
+        raise NotImplementedError("old_Evaluator.py methods have been removed.")
 
 if __name__ == "__main__":
     pass
