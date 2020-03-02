@@ -150,7 +150,7 @@ class Network:
         """Update the LocalData with the proportions of all strategies at any given time."""
 
         # Update LocalData with census
-        census = self.getCensus(proportions=True)
+        census = self._getCensus(proportions=True)
         self.results.strategyProportions[self.currentPeriod] = census
 
         interactionsDict = self.utilityMonitor[0]
@@ -167,7 +167,7 @@ class Network:
         system converges at pre-allocated randomly chosen convergence check intervals."""
         self.scanStrategies()
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
-            logging.debug(f"T = {self.currentPeriod} - census: {self.getCensus()}")
+            logging.debug(f"T = {self.currentPeriod} - census: {self._getCensus()}")
             self.resetUtility()
             self.tempActions = {'C': 0, 'D': 0}
             self.runSingleTimestep()
@@ -175,7 +175,7 @@ class Network:
             self.evolutionaryUpdate()
             self.mutation(self.config.mutant.ID)
             if self.currentPeriod in self.convergenceCheckIntervals:
-                self.convergenceHistory.appendleft((self.currentPeriod, self.getCensus()))
+                self.convergenceHistory.appendleft((self.currentPeriod, self._getCensus()))
                 self.checkConvergence()
 
             if self.hasConverged or self.currentPeriod == self.config.maxPeriods - 1:
@@ -200,19 +200,6 @@ class Network:
         mainPop = [mainID] * mainProp
         mutantPop = [mutantID] * mutantProp
         return mainPop + mutantPop
-
-    def getCensus(self, proportions=False):
-        """Return a dictionary where the key-value pairs are the strategy IDs and the number of agents running that
-        strategy. Optionally return the proportions of strategies run by the agents in the population instead."""
-
-        censusCopy = copy.deepcopy(Strategy.census)
-        if not proportions:
-            return censusCopy
-        else:
-            size = self.config.size
-            for key, _ in censusCopy.items():
-                censusCopy[key] /= size
-            return censusCopy
 
     def getOpponentsReputation(self, agent1, agent2):
         """Must be implemented through the relevant network type. Can be Global or Local."""
@@ -359,16 +346,6 @@ class Network:
         degreeCount = collections.Counter(degreeSequence)
         return degreeCount
 
-    def isRegular(self):
-        """Check if the network is regular. That is, every agent has the same number of neighbours."""
-        if self.adjMatrix is None:
-            raise Exception("Lattice has not yet been initialised.")
-
-        agentDegrees = self.adjMatrix.sum(axis=0)
-        if np.any(agentDegrees != self.modeDegree):
-            return False
-        return True
-
     def showHistory(self):
         for agent in self.agentList:
             s = f"History for agent {agent.id} \n"
@@ -390,6 +367,29 @@ class Network:
         checkpoints = random.sample(range(int(maxPeriods / 4), maxPeriods), int(maxPeriods / 100))
         checkpoints.sort()
         return checkpoints
+
+    def _getCensus(self, proportions=False):
+        """Return a dictionary where the key-value pairs are the strategy IDs and the number of agents running that
+        strategy. Optionally return the proportions of strategies run by the agents in the population instead."""
+
+        censusCopy = copy.deepcopy(Strategy.census)
+        if not proportions:
+            return censusCopy
+        else:
+            size = self.config.size
+            for key, _ in censusCopy.items():
+                censusCopy[key] /= size
+            return censusCopy
+
+    def _isRegular(self):
+        """Check if the network is regular. That is, every agent has the same number of neighbours."""
+        if self.adjMatrix is None:
+            raise Exception("Lattice has not yet been initialised.")
+
+        agentDegrees = self.adjMatrix.sum(axis=0)
+        if np.any(agentDegrees != self.modeDegree):
+            return False
+        return True
 
     def __str__(self):
         s = ""
