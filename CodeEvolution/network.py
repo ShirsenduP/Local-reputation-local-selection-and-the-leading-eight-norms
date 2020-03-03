@@ -348,7 +348,17 @@ class Network:
             print(s)
 
     def getPlot(self):
-        """Using the networkx package, return a matplotlib axes ready to be plotted."""
+        """Using the networkx package, return a matplotlib axes ready to be plotted.
+
+        Example Usage:
+            import matplotlib.pyplot as plt
+            network = GrGeERNetwork(con)
+            fig, ax = plt.subplots()
+            plt.sca(ax)
+            network.getPlot()
+            plt.show()
+
+        """
 
         arr = self.adjMatrix if self.nxGraph is None else self.toNumpyArray()
         G = nx.from_numpy_array(arr)
