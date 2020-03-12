@@ -28,7 +28,7 @@ class Network:
         self.config = config
         self.name = "Network"
         self.mainStratIDs = (config.population.ID, config.mutant.ID)
-        self.agentList = []
+        self.agentList = []  # TODO: Change this to a dictionary so you can look up an agent directly
         self.socialNorm = SocialNorm(config.socialNormID)
         self.results = Results(config)
         self.tempActions = {'C': 0, 'D': 0}
@@ -38,61 +38,228 @@ class Network:
         self.convergenceHistory = deque(3 * [None], 3)
         self.hasConverged = False
         self.dilemma = config.socialDilemma
-        logging.debug(f"Network Parameters: \t{self.__dict__}")
 
         # Networkx Attributes
         self.adjMatrix = None
         self.nxGraph = None
         self.modeDegree = None
 
-
-    def toNumpyArray(self):
-        """Return a numpy adjacency matrix representing this network object."""
-
-        if len(self.agentList) == 0:
-            raise Exception("Network has not yet been created.")
-
-        n = self.config.size
-        adjacencyArray = np.zeros(shape=(n, n), dtype=int)
-
-        for agent in self.agentList:
-            for neighbour in agent.neighbours:
-                adjacencyArray[agent.id][neighbour.id] = 1
-
-        return adjacencyArray
-
-    def getActualDensity(self):
-        """Return the actual density of the generated network."""
-        # Number of actual connections / number of potential connections
-
-        actualConnections = 0
-        for agent in self.agentList:
-            # Add the number of connections of every single agent
-            actualConnections += len(agent.neighbours)
-        # Each connection is counted twice so divide
-        actualConnections /= 2
-
-        n = self.config.size
-        potentialConnections = 0.5 * n * (n - 1)
-
-        return actualConnections / potentialConnections
-
-    def getSparsityParameter(self):
-        """Return the minimum probability p for the G(n,p) Erdos-Renyi Random Network model for the network to be
-        connected."""
-        return 2 * np.log(self.config.size) / self.config.size
-
     def createNetwork(self, agentType):
         """Method (of some network structure) must be implemented in all sub-classes."""
+        raise NotImplementedError("Check structures.py for the implementations.")
+
+    def evolutionaryUpdate(self, alpha=10):
+        """Must be implemented through the relevant network type."""
+        raise NotImplementedError("Check evolution.py for the implementations.")
+
+    def getOpponentsReputation(self, agent1, agent2):
+        """Must be implemented through the relevant network type. Can be Global or Local."""
+        raise NotImplementedError("Check reputation.py for the implementations.")
+
+    def updateAfterSocialDilemma(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        """Defined in GlobalReputation/LocalReputation classes."""
         raise NotImplementedError
 
-    def generate(self, agentType):
+    def runSimulation(self):
+        """Run full simulation for upto total number of simulations defined in the config object' or up until the
+        system converges at pre-allocated randomly chosen convergence check intervals."""
+        self._updateCensusAndAvgPayoffs()
+        while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
+            logging.debug(f"T = {self.currentPeriod} - census: {self._getCensus()}")
+            self._resetUtility()
+            self.tempActions = {'C': 0, 'D': 0}
+            self.runSingleTimestep()
+            self._updateCensusAndAvgPayoffs()
+            self.evolutionaryUpdate()
+            self.mutate(self.config.mutant.ID)
+            if self.currentPeriod in self.convergenceCheckIntervals:
+                self.convergenceHistory.appendleft((self.currentPeriod, self._getCensus()))
+                self._checkConvergence()
+
+            if self.hasConverged or self.currentPeriod == self.config.maxPeriods - 1:
+                self.results.convergedAt = self.currentPeriod
+                break
+            else:
+                self.currentPeriod += 1
+
+    def playSocialDilemma(self):
+
+        # Two agents chosen randomly from the population
+        agent1, agent2 = self.chooseAgents()
+        agent1ID = agent1.Strategy.ID
+        agent2ID = agent2.Strategy.ID
+
+        # Get their reputations, two methods, globally available rep, or locally available rep
+        agent1Reputation, agent2Reputation = self.getOpponentsReputation(agent1, agent2)
+
+        # Each agent calculates their move according to their behavioural strategy
+        agent1Move = agent1.Strategy.chooseAction(agent1Reputation, agent2Reputation)
+        agent2Move = agent2.Strategy.chooseAction(agent2Reputation, agent1Reputation)
+        self.tempActions[agent1Move] += 1
+        self.tempActions[agent2Move] += 1
+
+        # Calculate each agent's payoff
+        payoff1, payoff2 = self.dilemma.playGame(agent1Move, agent2Move)
+
+        # Update the utility tracker and interaction counter of each strategy
+        self.utilityMonitor[0][agent1ID] += 1
+        self.utilityMonitor[1][agent1ID] += payoff1
+        self.utilityMonitor[0][agent2ID] += 1
+        self.utilityMonitor[1][agent2ID] += payoff2
+
+        # Update agents personal utilities for (LOCAL) evolutionary update
+        agent1.currentUtility += payoff1
+        agent2.currentUtility += payoff2
+
+        # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+        # self.updateAfterSocialDilemma(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+
+    def runSingleTimestep(self):
+        """Run one single time-step with multiple interactions between randomly selected agents"""
+        self.playSocialDilemma()
+        while random.random() < self.config.omega:
+            self.playSocialDilemma()
+
+        self.results.updateActions(self.tempActions)
+
+    def chooseAgents(self):
+        agent1 = random.choice(self.agentList)
+        agent2 = random.choice(self.agentList)
+        while agent2 == agent1:
+            agent2 = random.choice(self.agentList)
+        return agent1, agent2
+
+    def mutate(self, mutantStrategyID):
+        """Each agent has probability of (alpha/n) of becoming a mutant in any time period where alpha is the
+        expected number of mutants added per time-step."""
+
+        # Skip if there will be no mutate
+        if self.config.mutationProbability == 0:
+            return
+
+        probabilityOfMutation = self.config.mutationProbability / self.config.size
+        for agent in self.agentList:
+            r = random.random()
+            if r < probabilityOfMutation:
+                logging.info(f"agent {agent.id} mutate, {agent.Strategy.ID} to {mutantStrategyID}")
+                agent.Strategy.changeStrategy(mutantStrategyID)
+                if self.currentPeriod not in self.results.mutantTracker.keys():
+                    self.results.mutantTracker[self.currentPeriod] = 1
+                else:
+                    self.results.mutantTracker[self.currentPeriod] += 1
+
+        # If no mutants added, append 0 to mutantTracker
+        if self.currentPeriod not in self.results.mutantTracker.keys():
+            self.results.mutantTracker[self.currentPeriod] = 0
+
+    def getPlot(self):
+        """Using the networkx package, return a matplotlib axes ready to be plotted.
+
+        Example Usage:
+            import matplotlib.pyplot as plt
+            network = GrGeERNetwork(con)
+            fig, ax = plt.subplots()
+            plt.sca(ax)
+            network.getPlot()
+            plt.show()
+
+        """
+
+        arr = self.adjMatrix if self.nxGraph is None else self._toNumpyArray()
+        G = nx.from_numpy_array(arr)
+        nx.draw(G, with_labels=True)
+
+    def _getClusteringCoefficient(self):
+        """Return the average clustering coefficient of a network."""
+        try:
+            coeff = nx.average_clustering(self.nxGraph)
+            raise coeff
+        except AttributeError:
+            raise NotImplementedError("Average clustering coefficient only available for graphs generated from "
+                                      "networkx with a nx.Graph object attribute.")
+
+    def _getDegreeDistribution(self):
+        """Return a degree distribution of the graph as a dictionary where the keys are the range of possible
+        degrees, and the values are the number of agents with that many neighbours."""
+
+        degreeSequence = sorted([d for n, d in self.nxGraph.degree()], reverse=True)
+        degreeCount = collections.Counter(degreeSequence)
+        return degreeCount
+
+    def _getMinDegree(self):
+        """Return the minimum degree out of all agents within the network"""
+        minDegree = np.inf
+        for agent in self.agentList:
+            if len(agent.neighbours) < minDegree:
+                minDegree = len(agent.neighbours)
+        return minDegree
+
+    def _showHistory(self):
+        for agent in self.agentList:
+            s = f"History for agent {agent.id} \n"
+            s += agent.getHistory()
+            s += "\n"
+            print(s)
+
+    def _hasMinTwoDegree(self):
+        """Check if each agent on the network has a minimum of two neighbours."""
+        if len(self.agentList) == 0:
+            return False
+
+        for agent in self.agentList:
+            if len(agent.neighbours) < 2:
+                return False
+        return True
+
+    def _isConnected(self):
+        if len(self.agentList) == 0:
+            logging.critical("Network not initialised")
+            return False
+        for agent in self.agentList:
+            if len(agent.neighbours) == 0:
+                logging.critical("Unconnected Network")
+                return False
+        return True
+
+    def _checkConvergence(self):
+        """Check if the system has converged. """
+
+        if None in self.convergenceHistory:
+            return
+
+        history = [snapshot[1] for snapshot in self.convergenceHistory]
+        mainID = self.mainStratIDs[0]
+        epsilon = self.config.mutationProbability
+
+        if abs(history[0][mainID] - history[1][mainID]) < 2 * epsilon and \
+                abs(history[0][mainID] - history[2][mainID]) < 2 * epsilon:
+            self.hasConverged = True
+            self.results.convergedAt = self.currentPeriod
+            logging.info(f"CONVERGENCE CHECKPOINT {self.convergenceHistory}")
+
+    def _getListOfStrategyIDs(self):
+        """Return a list where each element represents the strategyID of an agent."""
+
+        populationSize = self.config.size
+        mainID = self.config.population.ID
+        mutantID = self.config.mutant.ID
+        mainProp = int(self.config.population.proportion * populationSize)
+        mutantProp = int(self.config.mutant.proportion * populationSize)
+
+        if mainProp + mutantProp != populationSize:
+            raise Exception("Initial State is unbalanced wrt to the size of the network giving non-integer numbers of "
+                            "agents running a strategy.")
+
+        return [mainID] * mainProp + [mutantID] * mutantProp
+
+    def _generate(self, agentType):
         """Generate a valid network."""
         Strategy.reset()
         self.createNetwork(agentType)
         attempts, maxAttempts = 0, 50
-        while self.getMinDegree() < 2 and attempts < maxAttempts:
-            logging.debug(f'while: {self.getMinDegree()} < 2 or {attempts} < {maxAttempts}')
+        while self._getMinDegree() < 2 and attempts < maxAttempts:
+            logging.debug(f'while: {self._getMinDegree()} < 2 or {attempts} < {maxAttempts}')
             attempts += 1
             logging.debug(f"{self.name} Network creation attempt #{attempts}/{maxAttempts}")
 
@@ -112,35 +279,7 @@ class Network:
                 logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
                 raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
 
-    def getMinDegree(self):
-        """Return the minimum degree out of all agents within the network"""
-        minDegree = np.inf
-        for agent in self.agentList:
-            if len(agent.neighbours) < minDegree:
-                minDegree = len(agent.neighbours)
-        return minDegree
-
-    def hasMinTwoDegree(self):
-        """Check if each agent on the network has a minimum of two neighbours."""
-        if len(self.agentList) == 0:
-            return False
-
-        for agent in self.agentList:
-            if len(agent.neighbours) < 2:
-                return False
-        return True
-
-    def isConnected(self):
-        if len(self.agentList) == 0:
-            logging.critical("Unconnected Network")
-            return False
-        for agent in self.agentList:
-            if len(agent.neighbours) == 0:
-                logging.critical("Unconnected Network")
-                return False
-        return True
-
-    def scanStrategies(self):
+    def _updateCensusAndAvgPayoffs(self):
         """Update the LocalData with the proportions of all strategies at any given time."""
 
         # Update LocalData with census
@@ -156,222 +295,41 @@ class Network:
                 averageUtilities[key] = payoffDict[key] / interactionsDict[key]
         self.results.utilities[self.currentPeriod] = averageUtilities
 
-    def runSimulation(self):
-        """Run full simulation for upto total number of simulations defined in the config object' or up until the
-        system converges at pre-allocated randomly chosen convergence check intervals."""
-        self.scanStrategies()
-        while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
-            logging.debug(f"T = {self.currentPeriod} - census: {self._getCensus()}")
-            self.resetUtility()
-            self.tempActions = {'C': 0, 'D': 0}
-            self.runSingleTimestep()
-            self.scanStrategies()
-            self.evolutionaryUpdate()
-            self.mutation(self.config.mutant.ID)
-            if self.currentPeriod in self.convergenceCheckIntervals:
-                self.convergenceHistory.appendleft((self.currentPeriod, self._getCensus()))
-                self.checkConvergence()
-
-            if self.hasConverged or self.currentPeriod == self.config.maxPeriods - 1:
-                self.results.convergedAt = self.currentPeriod
-                break
-            else:
-                self.currentPeriod += 1
-
-    def getStrategyCounts(self):
-        """Return a list where each element represents the strategyID of an agent."""
-
-        populationSize = self.config.size
-        mainID = self.config.population.ID
-        mutantID = self.config.mutant.ID
-        mainProp = int(self.config.population.proportion * populationSize)
-        mutantProp = int(self.config.mutant.proportion * populationSize)
-
-        if mainProp + mutantProp != populationSize:
-            raise Exception("Initial State is unbalanced wrt to the size of the network giving non-integer numbers of "
-                            "agents running a strategy.")
-
-        mainPop = [mainID] * mainProp
-        mutantPop = [mutantID] * mutantProp
-        return mainPop + mutantPop
-
-    def getOpponentsReputation(self, agent1, agent2):
-        """Must be implemented through the relevant network type. Can be Global or Local."""
-        raise NotImplementedError
-
-    def updateMonitor(self, agent1, agent2, payoff1, payoff2):
-        """Track the utilities of each strategy as well as the number of interactions undertaken by an agent running
-        a strategy."""
-        agent1ID = agent1.currentStrategy.currentStrategyID
-        agent2ID = agent2.currentStrategy.currentStrategyID
-        self.utilityMonitor[0][agent1ID] += 1
-        self.utilityMonitor[1][agent1ID] += payoff1
-        self.utilityMonitor[0][agent2ID] += 1
-        self.utilityMonitor[1][agent2ID] += payoff2
-
-    def playSocialDilemma(self):
-
-        # Two agents chosen randomly from the population
-        agent1, agent2 = self.chooseTwoAgents()
-
-        # Get their reputations, two methods, globally available rep, or locally available rep
-        agent1Reputation, agent2Reputation = self.getOpponentsReputation(agent1, agent2)
-
-        # Each agent calculates their move according to their behavioural strategy
-        agent1Move = agent1.currentStrategy.chooseAction(agent1Reputation, agent2Reputation)
-        agent2Move = agent2.currentStrategy.chooseAction(agent2Reputation, agent1Reputation)
-        self.tempActions[agent1Move] += 1
-        self.tempActions[agent2Move] += 1
-
-        # Calculate each agent's payoff
-        payoff1, payoff2 = self.dilemma.playGame(agent1Move, agent2Move)
-        self.updateMonitor(agent1, agent2, payoff1, payoff2)
-
-        # Update agents personal utilities for (LOCAL) evolutionary update
-        agent1.currentUtility += payoff1
-        agent2.currentUtility += payoff2
-
-
-        # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        # self.updateAfterSocialDilemma(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-
-    def updateAfterSocialDilemma(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-        """Defined in GlobalReputation/LocalReputation classes."""
-        raise NotImplementedError
-
-    def resetUtility(self):
-        """Reset the utility of each agent in the population. To be used at the end of every timestep."""
-        for agent in self.agentList:
-            agent.currentUtility = 0
-        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
-        logging.debug(f"(t={self.currentPeriod})Network utility monitor, and agent utility trackers reset.")
-
-    def updateInteractions(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-        """Update the local information, broadcast information about each agent's reputations to their respective
-        neighbours."""
-
-        agent1NewRep = self.socialNorm.assignReputation(agent1Reputation, agent2Reputation, agent1Move)
-        agent2NewRep = self.socialNorm.assignReputation(agent2Reputation, agent1Reputation, agent2Move)
-
-        agent1.broadcastReputation(agent1NewRep, self.config.delta)
-        agent2.broadcastReputation(agent2NewRep, self.config.delta)
-
-    def checkConvergence(self):
-        """Check if the system has converged. """
-
-        if None in self.convergenceHistory:
-            return
-
-        history = [snapshot[1] for snapshot in self.convergenceHistory]
-        mainID = self.mainStratIDs[0]
-        epsilon = self.config.mutationProbability
-
-        if abs(history[0][mainID] - history[1][mainID]) < 2 * epsilon and \
-                abs(history[0][mainID] - history[2][mainID]) < 2 * epsilon:
-            self.hasConverged = True
-            self.results.convergedAt = self.currentPeriod
-            logging.info(f"CONVERGENCE CHECKPOINT {self.convergenceHistory}")
-
-    def chooseTwoAgents(self):
-        agent1 = random.choice(self.agentList)
-        agent2 = random.choice(self.agentList)
-        while agent2 == agent1:
-            agent2 = random.choice(self.agentList)
-        return agent1, agent2
-
-    def mutation(self, mutantStrategyID):
-        """Each agent has probability of (alpha/n) of becoming a mutant in any time period where alpha is the
-        expected number of mutants added per time-step."""
-
-        # Skip if there will be no mutation
-        if self.config.mutationProbability == 0:
-            return
-
-        probabilityOfMutation = self.config.mutationProbability / self.config.size
-        for agent in self.agentList:
-            r = random.random()
-            if r < probabilityOfMutation:
-                logging.info(f"agent {agent.id} mutation, {agent.currentStrategy.currentStrategyID} to {mutantStrategyID}")
-                agent.currentStrategy.changeStrategy(mutantStrategyID)
-                if self.currentPeriod not in self.results.mutantTracker.keys():
-                    self.results.mutantTracker[self.currentPeriod] = 1
-                else:
-                    self.results.mutantTracker[self.currentPeriod] += 1
-
-        # If no mutants added, append 0 to mutantTracker
-        if self.currentPeriod not in self.results.mutantTracker.keys():
-            self.results.mutantTracker[self.currentPeriod] = 0
-
-    def evolutionaryUpdate(self, alpha=10):
-        """Must be implemented through the relevant network type."""
-        raise NotImplementedError
-
-    def runSingleTimestep(self):
-        """Run one single time-step with multiple interactions between randomly selected agents"""
-        self.playSocialDilemma()
-        r = random.random()
-        while r < self.config.omega:
-            self.playSocialDilemma()
-            r = random.random()
-
-        self.results.updateActions(self.tempActions)
-
-    def getAgentWithID(self, id):
-        """Return a reference to the agent object in the network with the same id # given."""
-        for agent in self.agentList:
-            if agent.id == id:
-                return agent
-
-    def getClusteringCoefficient(self):
-        """Return the average clustering coefficient of a network."""
-        try:
-            coeff = nx.average_clustering(self.nxGraph)
-            raise coeff
-        except AttributeError:
-            raise NotImplementedError("Average clustering coefficient only available for graphs generated from "
-                                      "networkx with a nx.Graph object attribute.")
-
-    def getDegreeDistribution(self):
-        """Return a degree distribution of the graph as a dictionary where the keys are the range of possible
-        degrees, and the values are the number of agents with that many neighbours."""
-
-        degreeSequence = sorted([d for n, d in self.nxGraph.degree()], reverse=True)
-        degreeCount = collections.Counter(degreeSequence)
-        return degreeCount
-
-    def showHistory(self):
-        for agent in self.agentList:
-            s = f"History for agent {agent.id} \n"
-            s += agent.getHistory()
-            s += "\n"
-            print(s)
-
-    def getPlot(self):
-        """Using the networkx package, return a matplotlib axes ready to be plotted.
-
-        Example Usage:
-            import matplotlib.pyplot as plt
-            network = GrGeERNetwork(con)
-            fig, ax = plt.subplots()
-            plt.sca(ax)
-            network.getPlot()
-            plt.show()
-
-        """
-
-        arr = self.adjMatrix if self.nxGraph is None else self.toNumpyArray()
-        G = nx.from_numpy_array(arr)
-        nx.draw(G, with_labels=True)
-
     def _generateConvergenceCheckpoints(self):
-        """Given the configuration file for the simulation, generate a sorted list of time-steps which dictate when
+        """Given the configuration file for the simulation, _generate a sorted list of time-steps which dictate when
         the system checks for convergence. No convergence checks occur before a quarter of the simulation has
         progressed. """
         maxPeriods = self.config.maxPeriods
         checkpoints = random.sample(range(int(maxPeriods / 4), maxPeriods), int(maxPeriods / 100))
         checkpoints.sort()
         return checkpoints
+
+    def _getActualDensity(self):
+        """Return the actual density of the generated network."""
+        # Number of actual connections / number of potential connections
+
+        actualConnections = 0
+        for agent in self.agentList:
+            # Add the number of connections of every single agent
+            actualConnections += len(agent.neighbours)
+        # Each connection is counted twice so divide
+        actualConnections /= 2
+
+        n = self.config.size
+        potentialConnections = 0.5 * n * (n - 1)
+
+        return actualConnections / potentialConnections
+
+    def _getAgentWithID(self, id):
+        """Return a reference to the agent object in the network with the same id # given."""
+        for agent in self.agentList:
+            if agent.id == id:
+                return agent
+
+    def _getSparsityParameter(self):
+        """Return the minimum probability p for the G(n,p) Erdos-Renyi Random Network model for the network to be
+        connected."""
+        return 2 * np.log(self.config.size) / self.config.size
 
     def _getCensus(self, proportions=False):
         """Return a dictionary where the key-value pairs are the strategy IDs and the number of agents running that
@@ -385,6 +343,21 @@ class Network:
             for key, _ in censusCopy.items():
                 censusCopy[key] /= size
             return censusCopy
+
+    def _toNumpyArray(self):
+        """Return a numpy adjacency matrix representing this network object."""
+
+        if len(self.agentList) == 0:
+            raise Exception("Network has not yet been created.")
+
+        n = self.config.size
+        adjacencyArray = np.zeros(shape=(n, n), dtype=int)
+
+        for agent in self.agentList:
+            for neighbour in agent.neighbours:
+                adjacencyArray[agent.id][neighbour.id] = 1
+
+        return adjacencyArray
 
     def _isRegular(self):
         """Check if the network is regular. That is, every agent has the same number of neighbours."""
@@ -402,6 +375,13 @@ class Network:
             s += str(agent) + "\n"
         return s
 
+    def _resetUtility(self):
+        """Reset the utility of each agent in the population. To be used at the end of every timestep."""
+        for agent in self.agentList:
+            agent.currentUtility = 0
+        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
+        logging.debug(f"(t={self.currentPeriod})Network utility monitor, and agent utility trackers reset.")
+
     def __del__(self):
         self.socialNorm = None
         self.currentPeriod = 0
@@ -410,4 +390,4 @@ class Network:
         self.hasConverged = False
         # Strategy.reset()
         for agent in self.agentList:
-            del agent.currentStrategy
+            del agent.Strategy

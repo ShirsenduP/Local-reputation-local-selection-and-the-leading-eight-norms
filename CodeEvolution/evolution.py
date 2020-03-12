@@ -42,8 +42,8 @@ class GlobalEvolution:
             r = random.random()
             if r < strategyUtils[bestStrategy]:
                 logging.debug(
-                    f"Agent {agent.id} switched from {agent.currentStrategy.currentStrategyID} to {bestStrategy}")
-                agent.currentStrategy.changeStrategy(bestStrategy)
+                    f"Agent {agent.id} switched from {agent.Strategy.ID} to {bestStrategy}")
+                agent.Strategy.changeStrategy(bestStrategy)
 
     def updateStrategy(self, updateProbability, copyTheBest=True):
         """Overwrite the default update strategy method which implements local learning. Strategy updates occur in the
@@ -76,6 +76,6 @@ class LocalEvolution:
         r = random.random()
         if r < updateProbability:
             newStrategyID = self.findBestLocalStrategy(copyTheBest)
-            if newStrategyID == self.currentStrategy.currentStrategyID:
+            if newStrategyID == self.Strategy.ID:
                 return
-            self.currentStrategy.changeStrategy(newStrategyID)
+            self.Strategy.changeStrategy(newStrategyID)

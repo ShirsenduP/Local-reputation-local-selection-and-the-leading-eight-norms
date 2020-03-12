@@ -12,7 +12,7 @@ class Structure:
 
     def networkFromAdjacencyMatrix(self, agentType):
         # Create agents
-        strategyDistribution = self.getStrategyCounts()
+        strategyDistribution = self._getListOfStrategyIDs()
         for i in range(self.config.size):
             randomStrategyID = random.choice(strategyDistribution)
             strategyDistribution.remove(randomStrategyID)
@@ -101,7 +101,7 @@ class WattsStrogatz(Structure):
     """Returns a random graph according to the Watts-Strogatz Small World model."""
 
     def createNetwork(self, agentType):
-        """Using networkx algorithm, generate a Newmann-Watts-Strogratz Small World network where n agents are
+        """Using networkx algorithm, _generate a Newmann-Watts-Strogratz Small World network where n agents are
         connected in a ring topology to their k nearest neighbours with probability p."""
         k, p = self.config.smallWorld
         self.nxGraph = nx.newman_watts_strogatz_graph(self.config.size, k, p)
@@ -126,7 +126,7 @@ class RighiCliques(Structure):
 
 
     def makeGraph(self, numberOfCliques):
-        """Given the number of 4-cliques, generate the graph."""
+        """Given the number of 4-cliques, _generate the graph."""
 
         if numberOfCliques % 2 != 0:
             raise ValueError(f'The number of cliques ({numberOfCliques} must be even.')

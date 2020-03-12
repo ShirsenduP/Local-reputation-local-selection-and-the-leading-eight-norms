@@ -15,11 +15,11 @@ class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     def __init__(self, _config=None):
         config = _config
         config.density = 1  # Overwrite the density of any network run on GrGe to be fully connected
-        if config.delta is not 1:
+        if config.delta != 1:
             config.delta = 1
-            logging.warn("Delta (probability of successful reputation broadcast) is not 1, there will be errors!")
+            logging.warning("Delta (probability of successful reputation broadcast) is not 1, there will be errors!")
         super().__init__(config)
-        self.generate(agentType=GrGeAgent)
+        self._generate(agentType=GrGeAgent)
         populationReputations = [agent.currentReputation for agent in self.agentList]
         # self.ledger = dict(zip(self.agentList, populationReputations))
 
@@ -31,7 +31,7 @@ class LrGeERNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrGeAgent)
+        self._generate(agentType=LrGeAgent)
 
 
 class LrLeERNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
@@ -41,7 +41,7 @@ class LrLeERNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrLeAgent)
+        self._generate(agentType=LrLeAgent)
 
 
 class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
@@ -51,7 +51,7 @@ class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=GrLeAgent)
+        self._generate(agentType=GrLeAgent)
 
 
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
@@ -61,7 +61,7 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrGeAgent)
+        self._generate(agentType=LrGeAgent)
 
 
 class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
@@ -71,7 +71,7 @@ class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrGeAgent)
+        self._generate(agentType=LrGeAgent)
 
 
 class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
@@ -81,4 +81,4 @@ class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
 
     def __init__(self, _config=None):
         super().__init__(_config)
-        self.generate(agentType=LrGeAgent)
+        self._generate(agentType=LrGeAgent)

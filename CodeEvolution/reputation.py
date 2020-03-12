@@ -27,17 +27,6 @@ class GlobalReputation:
         agent1.currentReputation = agent1NewReputation
         agent2.currentReputation = agent2NewReputation
 
-    def updateAfterSocialDilemma(self, agent1, agent2, agent1OldRep, agent2OldRep, agent1Move, agent2Move):
-        """(Global Reputation) This method calculates and updates the respective personal reputations of each agent
-        given their previous reputations and their moves.
-
-        NOTE:
-        The reputations here 'agent1OldRep' and 'agent2OldRep are given within Network.playSocialDilemma: the
-        Network.getOpponentsReputations line defined in the Global Reputation class. These two reputations are directly
-        the reputations seen by the agents themselves and everyone in the population."""
-        pass
-
-
 class LocalReputation:
     def getOpponentsReputation(self, agent1, agent2):
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
@@ -59,8 +48,8 @@ class LocalReputation:
         agent2NeighbourID = random.choice(agent2Neighbours)
         agent1NeighbourID = random.choice(agent1Neighbours)
 
-        agent2Neighbour = self.getAgentWithID(agent2NeighbourID)
-        agent1Neighbour = self.getAgentWithID(agent1NeighbourID)
+        agent2Neighbour = self._getAgentWithID(agent2NeighbourID)
+        agent1Neighbour = self._getAgentWithID(agent1NeighbourID)
 
         if agent2Neighbour == agent1 or agent1Neighbour == agent2:
             logging.critical(f"An agent is considering himself as a neighbour of his opponent. This is NOT ALLOWED!")
@@ -95,26 +84,3 @@ class LocalReputation:
 
         agent1.currentReputation = agent1PersonalReputation
         agent2.currentReputation = agent2PersonalReputation
-
-    def updateAfterSocialDilemma(self, agent1, agent2, agent1OldRep, agent2OldRep, agent1Move, agent2Move):
-        """(Local Reputation) This method calculates and updates the neighbours of an agent with his new reputation.
-
-        NOTE:
-        The reputations here 'agent1OldRep' and 'agent2OldRep are given within Network.playSocialDilemma: the
-        Network.getOpponentsReputations line assigned by the Local Reputation class.
-
-        From agent1's POV, he knows his personal reputation (agent1.currentReputation), and his opponent's reputation
-        through his neighbour (agent2OldRep), therefore his new reputation for himself and all of his neighbours is
-        calculated with these values.
-history
-        From agent2's POV, he knows his personal rep(agent2.currentReputation) and his neighbours (agent1OldRep).
-        This is what his new reputation will be based on, saved for his own knowledge and sent to his neighbours."""
-
-        agent1NewRep = self.socialNorm.assignReputation(agent1.currentReputation, agent2OldRep, agent1Move)
-        agent2NewRep = self.socialNorm.assignReputation(agent2.currentReputation, agent1OldRep, agent2Move)
-
-        agent1.currentReputation = agent1NewRep
-        agent2.currentReputation = agent2NewRep
-
-        agent1.broadcastReputation(agent1NewRep, self.config.delta)
-        agent2.broadcastReputation(agent2NewRep, self.config.delta)

@@ -32,7 +32,7 @@ class Experiment:
         self.generateConfigs()
 
     def generateConfigs(self):
-        """Given a variable and the range of values to be tested for that variable, generate a list of Config objects
+        """Given a variable and the range of values to be tested for that variable, _generate a list of Config objects
         for each of those tests"""
         if self.variable is None or self.values is None:
             raise ValueError(
@@ -58,7 +58,7 @@ class Experiment:
                 setattr(tests[i], self.variable, self.values[i])
 
         # If degree is something that is being tests, assign the new density
-        if self.default.degree is not None or self.variable is 'degree':
+        if self.default.degree is not None or self.variable == 'degree':
             self.assignNewDensitiesFromDegree(tests)
 
         self.experiments = tuple(tests)
@@ -256,7 +256,7 @@ class Experiment:
 
 
 # TODO: experiment details into config.txt, xvalues, xvariable name etc, can partially automate labelling of graphs too
-# TODO: create script to generate all the .py files and .sh files, just a forloop writing out a big f string with
+# TODO: create script to _generate all the .py files and .sh files, just a forloop writing out a big f string with
 # strategy ID codes
 if __name__ == '__main__':
     C = Config(initialState=State(0, 1, 8), degree=5)
