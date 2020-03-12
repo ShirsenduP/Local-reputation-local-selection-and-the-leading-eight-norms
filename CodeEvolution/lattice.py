@@ -10,12 +10,13 @@ class Lattice(Network):
     """Create and run simulations with various types of regular lattices."""
 
     def __init__(self, _config=Config()):
-        super(Network).__init__(_config)
-        self.name = None
-        self.adjMatrix = None
-        self.nxGraph = None
-        self.modeDegree = None
-        logging.warn("Ignoring density value in config object for regular lattice!")
+        raise NotImplementedError("Deprecated. All models should be defined in structures.py")
+        # super(Network).__init__(_config)
+        # self.name = None
+        # self.adjMatrix = None
+        # self.nxGraph = None
+        # self.modeDegree = None
+        # logging.warn("Ignoring density value in config object for regular lattice!")
 
     def makeLattice(self, dimensions=[2, 3, 4]):
         """Using the networkx algorithms, get the adjacency matrix for a grid network found at:
