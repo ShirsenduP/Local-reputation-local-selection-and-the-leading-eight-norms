@@ -32,6 +32,8 @@ class LocalReputation:
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
         accessible only to neighbours of that agent."""
 
+        # TODO: Simplify this method, its over-complicated
+
         # Choose neighbour of each agent (except each other if they are neighbours)
         agent2Neighbours = [agent.id for agent in agent2.neighbours]
         agent1Neighbours = [agent.id for agent in agent1.neighbours]
@@ -59,7 +61,7 @@ class LocalReputation:
         agent1Reputation = agent1Neighbour.history[agent1]
 
         # If opponent has had no previous interaction, his neighbours will not have any relevant information,
-        # hence assign reputation randomly.
+        # hence assign reputation randomly. TODO: Is an agent's history reset between time-steps?
         if agent2Reputation is None:
             agent2Reputation = random.randint(0, 1)
         if agent1Reputation is None:

@@ -109,7 +109,6 @@ class Network:
 
         # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
         self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-        # self.updateAfterSocialDilemma(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 
     def runSingleTimestep(self):
         """Run one single time-step with multiple interactions between randomly selected agents"""
