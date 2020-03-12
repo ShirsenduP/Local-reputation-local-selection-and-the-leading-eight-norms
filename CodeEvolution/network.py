@@ -386,3 +386,4 @@ class Network:
         # Strategy.reset()
         for agent in self.agentList:
             del agent.Strategy
+        # TODO: Combine all deletion methods into one place, check that nothing is being left over as when i was running the last tests, the time taken to run each following experiment took longer and longer!
