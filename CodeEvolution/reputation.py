@@ -32,29 +32,11 @@ class LocalReputation:
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
         accessible only to neighbours of that agent."""
 
-        # TODO: Simplify this method, its over-complicated
+        agent1Neighbour = random.choice(agent1.neighbours)
+        agent2Neighbour = random.choice(agent2.neighbours)
 
-        # Choose neighbour of each agent (except each other if they are neighbours)
-        agent2Neighbours = [agent.id for agent in agent2.neighbours]
-        agent1Neighbours = [agent.id for agent in agent1.neighbours]
-
-        if agent2.id in agent1Neighbours:
-            logging.debug("before: {}".format(agent1Neighbours))
-            agent1Neighbours.remove(agent2.id)
-            logging.debug("after: {}".format(agent1Neighbours))
-        if agent1.id in agent2Neighbours:
-            logging.debug("before: {}".format(agent2Neighbours))
-            agent2Neighbours.remove(agent1.id)
-            logging.debug("after: {}".format(agent2Neighbours))
-
-        agent2NeighbourID = random.choice(agent2Neighbours)
-        agent1NeighbourID = random.choice(agent1Neighbours)
-
-        agent2Neighbour = self._getAgentWithID(agent2NeighbourID)
-        agent1Neighbour = self._getAgentWithID(agent1NeighbourID)
-
-        if agent2Neighbour == agent1 or agent1Neighbour == agent2:
-            logging.critical(f"An agent is considering himself as a neighbour of his opponent. This is NOT ALLOWED!")
+        while agent2Neighbour is agent1:
+            agent2Neighbour = random.choice(agent2.neighbours)
 
         # Calculate agents' reputations using social norm, if no history, assign random reputation
         agent2Reputation = agent2Neighbour.history[agent2]
