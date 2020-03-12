@@ -56,10 +56,6 @@ class Network:
         """Must be implemented through the relevant network type. Can be Global or Local."""
         raise NotImplementedError("Check reputation.py for the implementations.")
 
-    def updateAfterSocialDilemma(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
-        """Defined in GlobalReputation/LocalReputation classes."""
-        raise NotImplementedError
-
     def runSimulation(self):
         """Run full simulation for upto total number of simulations defined in the config object' or up until the
         system converges at pre-allocated randomly chosen convergence check intervals."""
