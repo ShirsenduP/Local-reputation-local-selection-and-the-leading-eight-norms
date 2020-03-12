@@ -13,7 +13,7 @@ from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 
 
-class TestBroadcast:
+class TestNetwork:
 
     # Set seed for reproducibility
     seed = 1  # Seed originally set to be 1
@@ -31,16 +31,16 @@ class TestBroadcast:
 
     def setup_method(self):
         """Create preconfigured network on which each method is tested with deterministic results."""
-        self.network = GrGeERNetwork(TestBroadcast.config)
+        self.network = GrGeERNetwork(TestNetwork.config)
 
     def test_get_opponent_reputation(self):
         """Test the base global reputation mechanism of accessing an agent's public reputation with no restriction"""
 
         # Setup GrGe ER Network
-        self.network = GrGeERNetwork(TestBroadcast.config)
+        self.network = GrGeERNetwork(TestNetwork.config)
 
         # Check reputations
-        agent1, agent2 = self.network.chooseTwoAgents()
+        agent1, agent2 = self.network.chooseAgents()
         agent1_rep, agent2_rep = self.network.getOpponentsReputation(agent1, agent2) # 1, 0
         assert agent1_rep == agent1.currentReputation
         assert agent2_rep == agent2.currentReputation
@@ -54,8 +54,9 @@ class TestBroadcast:
         assert new_agent1_rep == agent1.currentReputation
         assert new_agent2_rep == agent2.currentReputation
 
+    def test_networkFromAdjacencyMatrix(self):
+        """Test the generation of a Network Object when given an adjacency matrix"""
+        assert(1==1)
 
-
-
-
-
+    def test_networkDensity(self):
+        """Make sure that the specified config.densities is close enough to the actual network density"""
