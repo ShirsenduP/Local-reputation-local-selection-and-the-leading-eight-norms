@@ -68,3 +68,11 @@ class LocalReputation:
 
         agent1.currentReputation = agent1PersonalReputation
         agent2.currentReputation = agent2PersonalReputation
+
+        # Broadcast each agent's new reputation to their neighbours with probability delta
+        for nbr in agent1.neighbours:
+            if random.random() < self.config.delta:
+                nbr.history[agent1] = agent1PersonalReputation
+        for nbr in agent2.neighbours:
+            if random.random() < self.config.delta:
+                nbr.history[agent2] = agent2PersonalReputation

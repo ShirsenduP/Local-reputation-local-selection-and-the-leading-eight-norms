@@ -19,25 +19,6 @@ class Agent:
         self.currentUtility = 0
         self.neighbours = []
 
-    def broadcastReputation(self, newReputation, delta):
-        """(Global reputation) - no need to broadcast reputations to neighbours since any agent can access any other
-        agent's most recent reputation directly. """
-        for agent in self.neighbours:
-            r = random.random()
-            if r < delta:
-                # logging.info("======================================")
-                logging.debug(f"Agent({agent.id}) has history {agent.history}")
-                agent.history[self] = newReputation
-                logging.debug(f"Agent({agent.id}) has history {agent.history}")
-                # logging.info(f"A({self.id}) broadcast to {self.history}")
-                # logging.info("======================================")
-        # DONE: shouldn't delta be 1 when under global reputation for perfect recall?
-        # TODO: move this method to the reputation class under Global and Local reputation
-        # TODO: make new "ledger" in network to store everyone's most up to date reputation, check it doesn't have any
-        # downstream unintended effects later on
-        # TODO: then to get opponent's reputation, everyone just checks the ledger, so change the
-        # getOpponentsReputation method in reputation.py accordingly
-
     def findBestLocalStrategy(self, copyTheBest):
         """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the
          strategies with maximum utility."""
