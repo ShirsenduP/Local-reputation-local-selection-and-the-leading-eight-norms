@@ -14,7 +14,7 @@ class Agent:
 
     def __init__(self, _id, _strategy):
         self.id = _id
-        self.currentStrategy = Strategy(_strategy)
+        self.Strategy = Strategy(_strategy)
         self.currentReputation = random.choice(Agent.reputation)
         self.currentUtility = 0
         self.neighbours = []
@@ -58,10 +58,10 @@ class Agent:
         # Choose randomly from shortlisted agents
         bestLocalStrategyID = random.choice(indices)
 
-        return self.neighbours[bestLocalStrategyID].currentStrategy.currentStrategyID
+        return self.neighbours[bestLocalStrategyID].Strategy.ID
 
     def summary(self):
-        s = f"Agent {self.id} is currently running strategy {self.currentStrategy} with current reputation " \
+        s = f"Agent {self.id} is currently running strategy {self.Strategy} with current reputation " \
             f"{self.currentReputation}"
         return s
 
@@ -78,13 +78,20 @@ class Agent:
 
     def getNeighboursUtilities(self):
         """Return a list of the utilities of every neighbour of the focal agent."""
-        return [(agent.id, agent.currentStrategy.currentStrategyID, agent.currentUtility) for agent in self.neighbours]
+        return [(agent.id, agent.Strategy.ID, agent.currentUtility) for agent in self.neighbours]
 
     def updateStrategy(self, updateProbability, copyTheBest=True):
         raise NotImplementedError
 
+    # def __eq__(self, other):
+    #     """Check if two agents are the same."""
+    #     if self.id == other.id:
+    #         return True
+    #     else:
+    #         return False
+
     def __str__(self):
-        s = f"(Agent {self.id}, id={self.currentStrategy.currentStrategyID},"
+        s = f"(Agent {self.id}, id={self.Strategy.ID},"
         s += f" with neighbours {self.getNeighboursUtilities()}"
         return s
 

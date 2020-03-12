@@ -19,7 +19,7 @@ class Strategy:
 
     def __init__(self, strategyID):
         Strategy.totalCountOfStrategies += 1
-        self.currentStrategyID = strategyID
+        self.ID = strategyID
         self.currentStrategy = dict((key, value) for key, value in zip(Strategy.allStates, Strategy.allOutcomes[strategyID]))
         Strategy.updateCensus(strategyID, None)
 
@@ -28,17 +28,9 @@ class Strategy:
         return self.currentStrategy[stateKey]
 
     def changeStrategy(self, newStrategyID):
-        Strategy.updateCensus(newStrategyID, self.currentStrategyID)
-        self.currentStrategyID = newStrategyID
+        Strategy.updateCensus(newStrategyID, self.ID)
+        self.ID = newStrategyID
         self.currentStrategy = dict((key, value) for key, value in zip(self.allStates, self.allOutcomes[newStrategyID]))
-
-    # @classmethod
-    # def updateCensus(cls, newStrategyID, oldStrategyID=None):
-    #     Strategy.census[newStrategyID] += 1
-    #     if oldStrategyID != None:
-    #         Strategy.census[oldStrategyID] -= 1
-    #     if sum(Strategy.census.values()) != Strategy.totalCountOfStrategies:
-    #         raise Exception("Number of strategies in census is greater than number of agents")
 
     @classmethod
     def updateCensus(cls, newID, oldID):
@@ -64,7 +56,7 @@ class Strategy:
         Strategy.totalCountOfStrategies = 0
 
     def __str__(self):
-        return f"{self.currentStrategyID} - {self.currentStrategy}"
+        return f"{self.ID} - {self.currentStrategy}"
 
 
 if __name__ == "__main__":
