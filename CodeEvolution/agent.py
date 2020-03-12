@@ -41,35 +41,14 @@ class Agent:
 
         return self.neighbours[bestLocalStrategyID].Strategy.ID
 
-    def summary(self):
-        s = f"Agent {self.id} is currently running strategy {self.Strategy} with current reputation " \
-            f"{self.currentReputation}"
-        return s
-
     def initialiseHistory(self):
         """Only keep track of interactions with your neighbours."""
         self.history = {}.fromkeys(self.neighbours)
 
-    def getHistory(self):
-        """Print to the console the reputations of his neighbours from his point of view."""
-        s = ""
-        for neighbour in self.neighbours:
-            s += f"Last interaction with neighbour {neighbour.id} was {self.history[neighbour]}\n"
-        return s
 
     def getNeighboursUtilities(self):
         """Return a list of the utilities of every neighbour of the focal agent."""
         return [(agent.id, agent.Strategy.ID, agent.currentUtility) for agent in self.neighbours]
-
-    def updateStrategy(self, updateProbability, copyTheBest=True):
-        raise NotImplementedError
-
-    # def __eq__(self, other):
-    #     """Check if two agents are the same."""
-    #     if self.id == other.id:
-    #         return True
-    #     else:
-    #         return False
 
     def __str__(self):
         s = f"(Agent {self.id}, id={self.Strategy.ID},"

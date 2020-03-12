@@ -27,7 +27,9 @@ class GlobalReputation:
         agent1.currentReputation = agent1NewReputation
         agent2.currentReputation = agent2NewReputation
 
+
 class LocalReputation:
+
     def getOpponentsReputation(self, agent1, agent2):
         """(Local reputation - return the reputations of the two randomly chosen agents. The reputation of any agent is
         accessible only to neighbours of that agent."""
