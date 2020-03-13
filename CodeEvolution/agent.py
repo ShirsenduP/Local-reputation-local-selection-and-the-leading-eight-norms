@@ -41,10 +41,6 @@ class Agent:
 
         return self.neighbours[bestLocalStrategyID].Strategy.ID
 
-    def initialiseHistory(self):
-        """Only keep track of interactions with your neighbours."""
-        self.history = {}.fromkeys(self.neighbours)
-
 
     def getNeighboursUtilities(self):
         """Return a list of the utilities of every neighbour of the focal agent."""
@@ -89,4 +85,3 @@ class GrLeAgent(LocalEvolution, GlobalReputation, Agent):
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
 
-    # WARN wtf is going on here? Has this messed up any tests???

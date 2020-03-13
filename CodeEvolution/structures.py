@@ -29,8 +29,9 @@ class Structure:
                         self.agentList[i].neighbours.append(self.agentList[j])
                         self.agentList[j].neighbours.append(self.agentList[i])
 
+        # Initialise each agent's record of their neighbours' reputations
         for agent in self.agentList:
-            agent.initialiseHistory()
+            agent.history = {}.fromkeys(agent.neighbours)
 
         agentDegrees = self.adjMatrix.sum(axis=0)
         self.modeDegree = stats.mode(agentDegrees)[0][0]
