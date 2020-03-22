@@ -13,46 +13,50 @@ from CodeEvolution.Experiment import Experiment
 if __name__=="__main__":
     con = Config(
         initialState=State(0,1,8),
-        size=10,
-        maxPeriods=100,
+        size=300,
+        maxPeriods=2000,
         delta=1,
         sparseDensity=True
     )
-
-    print(con)
-
-    fig, ax = plt.subplots(2,2)
-
+    #
+    # fig, ax = plt.subplots(2,2)
+    #
     net3 = GrLeERNetwork(con)
-    plt.sca(ax[0,0])
-    net3.getPlot()
-    plt.title("grle")
-
+    # plt.sca(ax[0,0])
+    # net3.getPlot()
+    # plt.title("grle")
+    #
     net2 = LrGeERNetwork(con)
-    plt.sca(ax[0,1])
-    net2.getPlot()
-    plt.title("lrge")
-
+    # plt.sca(ax[0,1])
+    # net2.getPlot()
+    # plt.title("lrge")
+    #
     net4 = LrLeERNetwork(con)
-    plt.sca(ax[1,0])
-    net4.getPlot()
-    plt.title("lrle")
-
+    # plt.sca(ax[1,0])
+    # net4.getPlot()
+    # plt.title("lrle")
+    #
     net1 = GrGeERNetwork(con)
-    plt.sca(ax[1, 1])
-    net1.getPlot()
-    plt.title("grge")
+    # plt.sca(ax[1, 1])
+    # net1.getPlot()
+    # plt.title("grge")
 
-    plt.show()
+    # plt.show()
 
+    net1.runSimulation()
+    net2.runSimulation()
+    net3.runSimulation()
+    net4.runSimulation()
 
+    E = Experiment(
+        networkType=LrGeERNetwork,
+        variable='density',
+        values=[0.6, 0.8],
+        defaultConfig=Config(
+            size=10,
+            delta=1
+        ),
+        repeats=3
+    )
 
-
-
-    # net1.runSimulation()
-    # net2.runSimulation()
-    # net3.runSimulation()
-    # net4.runSimulation()
-
-    # print(net4.results)
-
+    E.run(display=True)
