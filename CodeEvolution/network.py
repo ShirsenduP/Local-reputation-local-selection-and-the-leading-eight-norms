@@ -5,6 +5,7 @@ import logging
 
 import networkx as nx
 import numpy as np
+import pandas as pd
 
 from collections import deque
 from matplotlib import pyplot as plt
@@ -77,6 +78,29 @@ class Network:
                 break
             else:
                 self.currentPeriod += 1
+
+        # Clean up results
+        self.results.actions = pd.DataFrame(self.results.actions).rename(
+            columns={
+                'C': 'Prop. of Cooperators',
+                'D': 'Prop. of Defectors'}
+        )
+        self.results.strategyProportions = pd.DataFrame(self.results.strategyProportions).transpose().fillna(0)
+        self.results.strategyProportions = self.results.strategyProportions.add_prefix('Prop. Strategy #')
+        self.results.utilities = pd.DataFrame(self.results.utilities).transpose().add_prefix('Average Util. Strategy #')
+
+        final_result = pd.concat([self.results.strategyProportions,
+                                  self.results.actions,
+                                  self.results.utilities],
+                                 axis=1,
+                                 sort=False)
+
+        final_result.index.names = ['Tmax']
+        result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
+        result_at_tmax['# of Mutants Added'] = sum(self.results.mutantTracker.values())
+
+        return result_at_tmax
+
 
     def playSocialDilemma(self):
 

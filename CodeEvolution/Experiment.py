@@ -85,64 +85,39 @@ class Experiment:
         experimentName = self.networkType.name + "_" + \
             self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
 
-        # Only prepare LocalData area if working locally, if running on Pycharm console, it will throw an error but its
-        # purely aesthetic so just ignore it
-        try:
-            if not cluster:
-                # Results.initialiseOutputDirectory(experimentName)
-                _, columnWidth = os.popen('stty size', 'r').read().split()
-                nameLength = len(experimentName)
-                columnWidth = int(columnWidth)
-                print("\nRunning  ", experimentName,
-                      (columnWidth - nameLength - 11) * "=")
-        except ValueError:
-            pass
-        except OSError as err:
-            logging.critical(f"Directory Error -> {err}")
-
-        if recordFull:
-            raise NotImplementedError(
-                "Recording the full data releases data often incorrectly. Do not use.")
-
         # run all tests in the experiment
-        for exp in trange(len(self.experiments), leave=True):
-            if display:
-                print(
-                    f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
+        for exp in trange(len(self.experiments)):
+            # if display:
+            #     print(
+            #         f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
 
             # Run a single test with [1,inf) repeats
-            singleTest = pd.DataFrame()
-            for _ in trange(self.repeats, leave=False):
+            single_Test = pd.DataFrame()
+            for _ in range(self.repeats):
                 Strategy.reset()
-                singleRun = self.simulate(
-                    self.experiments[exp], self.networkType, displayFull)
-                singleTest = pd.concat([singleTest, singleRun], sort=False)
+                N = self.networkType(self.experiments[exp])
+                single_Run = N.runSimulation()
+                single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
                 Strategy.reset()
-
-            if display:
-                print()
-                print(singleTest)
-                print()
+            single_Test = single_Test.transpose()
 
             # Export to different places if running locally/on a cluster
             if cluster:
                 Results.exportResultsToCsvCluster(
-                    experimentName, self.experiments[exp], singleTest, exp)
+                    experimentName, self.experiments[exp], single_Test, exp)
             elif export:
                 Results.exportResultsToCsv(
-                    experimentName, self.experiments[exp], singleTest, exp)
+                    experimentName, self.experiments[exp], single_Test, exp)
+
+
+        if display:
+            print()
+            print(single_Test)
+            print()
 
         # Export config text file
         configs = self.showExperiments(asString=True)
-        # Results.exportExperimentConfigs(configs, experimentName)
 
-        try:
-            if not cluster:
-                print("\nFinished ", experimentName,
-                      (columnWidth - nameLength - 11) * "=")
-        except Exception:
-            pass
-            # TODO: Vague Exception passing is probably not very good, should change
 
     @staticmethod
     def assignNewDensitiesFromDegree(testsList):
@@ -173,37 +148,6 @@ class Experiment:
                     counter += 1
 
         logging.info(f"Parameter file generated in {os.getcwd()}.")
-
-    @staticmethod
-    def simulate(m_exp, networkType, displayFull):
-        """Perform a single run of any given test and export LocalData as a dataframe with one row with the final
-        LocalData of the run."""
-
-        # Run simulation
-        N = networkType(m_exp)
-        N.runSimulation()
-
-        # Export LocalData in pandas DataFrames
-        resultsActions = N.results.exportActions()
-        resultsCensus = N.results.exportCensus()
-        resultsUtils = N.results.exportUtilities()
-        resultsMutations = N.results.exportMutations().sum()
-        # print(resultsMutations)
-
-        # Combine LocalData
-        resultsFull = pd.concat(
-            [resultsCensus, resultsActions, resultsUtils], axis=1, sort=False)
-
-        if displayFull:
-            print(resultsFull)
-
-        # Housekeeping: rename index
-        resultsFull.index.names = ['Tmax']
-
-        # Get only final time-step information and total number of mutants added
-        resultsAtTmax = resultsFull.tail(1).copy()
-        resultsAtTmax['# of Mutants Added'] = resultsMutations
-        return resultsAtTmax
 
     @staticmethod
     def generatePopulationList(strategies=tuple(range(8)), proportion=0.9, mutantID=8):

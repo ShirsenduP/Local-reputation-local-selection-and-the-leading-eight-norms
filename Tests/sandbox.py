@@ -2,6 +2,7 @@ import random
 import logging
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 import CodeEvolution
@@ -10,11 +11,13 @@ from CodeEvolution.agent import GrGeAgent
 from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 
+pd.set_option("display.max_rows", None, "display.max_columns", None)
+
 if __name__=="__main__":
     con = Config(
-        initialState=State(0,1,8),
-        size=300,
-        maxPeriods=2000,
+        initialState=State(3,1,8),
+        size=100,
+        maxPeriods=100,
         delta=1,
         sparseDensity=True
     )
@@ -43,10 +46,10 @@ if __name__=="__main__":
 
     # plt.show()
 
-    net1.runSimulation()
-    net2.runSimulation()
-    net3.runSimulation()
-    net4.runSimulation()
+    # net1.runSimulation()
+    # net2.runSimulation()
+    # net3.runSimulation()
+    # net4.runSimulation()
 
     E = Experiment(
         networkType=LrGeERNetwork,

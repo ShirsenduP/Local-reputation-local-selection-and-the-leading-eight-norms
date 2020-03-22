@@ -23,28 +23,6 @@ class Results:
             proportionAction = actions[key] / sum(actions.values())
             self.actions[key].append(proportionAction)
 
-    def exportUtilities(self):
-        # utils = self.removeZeros(self.utilities)
-        utils = pd.DataFrame(self.utilities).transpose()
-        utils = utils.add_prefix('Average Util. Strategy #')
-        return utils
-
-    def exportActions(self):
-        actions = pd.DataFrame(self.actions)
-        actions = actions.rename(columns={'C': 'Prop. of Cooperators', 'D': 'Prop. of Defectors'})
-        return actions
-
-    def exportCensus(self):
-        # census = self.removeZeros(self.strategyProportions)
-        census = pd.DataFrame(self.strategyProportions).transpose()
-        census = census.add_prefix('Prop. Strategy #')
-        return census
-
-    def exportMutations(self):
-        mutations = pd.Series(self.mutantTracker)
-        mutations = mutations.rename("# of Mutants Added")
-        return mutations
-
     @staticmethod
     def removeZeros(data):
         """Given a dictionary where each key is a time-step, and each corresponding value is another dictionary where the
