@@ -21,7 +21,7 @@ class Experiment:
     """This class generates a series of Config objects to run for a single experiment. Define a 'default' experiment,
      then choose (a SINGLE) variable to be varied, then add the list of values the variable will cycle through."""
 
-    def __init__(self, networkType, variable=None, values=None, defaultConfig=Config(), repeats=100):
+    def __init__(self, networkType, description, variable=None, values=None, defaultConfig=Config(), repeats=100):
         self.networkType = networkType
         self.default = defaultConfig
         self.variable = variable
@@ -30,8 +30,46 @@ class Experiment:
         self.repeats = repeats
         if defaultConfig.degree is not None:
             defaultConfig.density = None
-
+        self.description = description
         self.generateConfigs()
+
+    def run(self, export=False):
+        """Run and export LocalData for an experiment. This by default exports only the final state of the simulation,
+        so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
+        'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
+         when multiple of the same parameterised run have different lengths of simulations. Cluster takes precedence
+         over export."""
+
+        experimentName = self.variable
+        results = pd.DataFrame()
+
+        # run all tests in the experiment
+        for exp in trange(len(self.experiments)):
+
+            single_Test = pd.DataFrame()
+            for _ in range(self.repeats):
+                Strategy.reset()
+                N = self.networkType(self.experiments[exp])
+                single_Run = N.runSimulation()
+                single_Run[self.variable] = self.values[exp]
+                single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
+                Strategy.reset()
+            single_Test = single_Test.transpose()
+            results = pd.concat([results, single_Test], axis=0, sort=False)
+
+        if export:
+            # Export Results DataFrame to csv
+            results.to_csv(experimentName+'.csv', index=True, header=True)
+
+            # Export experiment configs to txt file
+            with open(f"{self.variable}.txt", "w+") as f:
+                f.write(self.description)
+                f.write(10*"=="+2*"\n")
+                for config in self.experiments:
+                    f.write(json.dumps(config.__dict__, cls=MyEncoder))
+                    f.write(2*"\n")
+        else:
+            return results
 
     def generateConfigs(self):
         """Given a variable and the range of values to be tested for that variable, _generate a list of Config objects
@@ -64,7 +102,6 @@ class Experiment:
             self.assignNewDensitiesFromDegree(tests)
 
         self.experiments = tuple(tests)
-        # print(self.experiments)
 
     def showExperiments(self, asString=False):
         """Print to the console a condensed list of all the config files in the object's experiment list."""
@@ -77,42 +114,6 @@ class Experiment:
         else:
             print(s)
 
-    def run(self, export=False):
-        """Run and export LocalData for an experiment. This by default exports only the final state of the simulation,
-        so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
-        'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
-         when multiple of the same parameterised run have different lengths of simulations. Cluster takes precedence
-         over export."""
-
-        experimentName = self.variable
-        results = pd.DataFrame()
-
-        # run all tests in the experiment
-        for exp in trange(len(self.experiments)):
-
-            single_Test = pd.DataFrame()
-            for _ in range(self.repeats):
-                Strategy.reset()
-                N = self.networkType(self.experiments[exp])
-                single_Run = N.runSimulation()
-                single_Run[self.variable] = self.values[exp]
-                single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
-                Strategy.reset()
-            single_Test = single_Test.transpose()
-            results = pd.concat([results, single_Test], axis=0, sort=False)
-
-        if export:
-            # Export Results DataFrame to csv
-            results.to_csv(experimentName+'.csv', index=True, header=True)
-
-            # Export experiment configs to txt file
-            with open(f"{self.variable}.txt", "w+") as f:
-                for config in self.experiments:
-                    f.write(json.dumps(config.__dict__, cls=MyEncoder))
-                    f.write("\n")
-        else:
-            return results
-
     @staticmethod
     def assignNewDensitiesFromDegree(testsList):
         """Given a list of config objects, overwrite densities of networks given the degree for a d-regular graph."""
@@ -122,26 +123,6 @@ class Experiment:
             exp.density = actualDensity
             s += f"{actualDensity}"
             logging.debug(s)
-
-    @staticmethod
-    def generateParameterFile(defaultConfig, variable, values, repeats):
-        """(BETA) Export a parameters file (.txt) for UCL clusters"""
-
-        if None in [variable, values]:
-            raise ValueError(
-                "Parameters 'variable' and 'values' must not be None.")
-
-        with open('params.txt', 'w') as f:
-            counter = 0
-            for exp in range(len(values)):
-                for rep in range(repeats):
-                    args = f"{counter:04d} "  # Simulation ID
-                    args += str(variable) + " "
-                    args += str(values[exp]) + "\n"
-                    f.write(args)
-                    counter += 1
-
-        logging.info(f"Parameter file generated in {os.getcwd()}.")
 
     @staticmethod
     def generatePopulationList(strategies=tuple(range(8)), proportion=0.9, mutantID=8):
@@ -193,7 +174,6 @@ class Experiment:
                 config.density = sparseDensity
 
 
-# TODO: experiment details into config.txt, xvalues, xvariable name etc, can partially automate labelling of graphs too
 # TODO: create script to _generate all the .py files and .sh files, just a forloop writing out a big f string with
 # strategy ID codes
 if __name__ == '__main__':

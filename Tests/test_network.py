@@ -10,7 +10,7 @@ import CodeEvolution
 from CodeEvolution.models import GrGeERNetwork
 from CodeEvolution.agent import GrGeAgent
 from CodeEvolution.config import Config, State
-from CodeEvolution.Experiment import Experiment
+from CodeEvolution.experiment import Experiment
 
 
 class TestNetwork:

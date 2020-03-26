@@ -1,18 +1,20 @@
-import random
-import logging
-
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
-import CodeEvolution
 from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork, GrLeERNetwork, LrLeERNetwork
-from CodeEvolution.agent import GrGeAgent
 from CodeEvolution.config import Config, State
-from CodeEvolution.Experiment import Experiment
+from CodeEvolution.experiment import Experiment
 
 pd.set_option("display.max_rows", None, "display.max_columns", None)
 pd.set_option('display.width', 320)
+
+desc = """
+Experiment #TEST
+
+Thisd asdjaoidsaoisdaiodaisdsjdia djisd isd aisjd asdjia dsj
+asd osdj asofj aisf jisdj aidojfiasjf asjdiaosfjia fiasodasid 
+asjdoasdja ifjsof ajsif jfiaosf jiasj igoajsf iaosj aiodj asidjaosi
+
+"""
 
 if __name__=="__main__":
 
@@ -24,6 +26,7 @@ if __name__=="__main__":
         mutationProbability=0.1
     )
     E = Experiment(
+        description=desc,
         networkType=LrGeERNetwork,
         variable='delta',
         values=[0.25, 0.5, 0.75],
@@ -31,7 +34,7 @@ if __name__=="__main__":
         repeats=2
     )
 
-    results = E.run(export=False)
+    results = E.run(export=True)
 
     print(results)
 
