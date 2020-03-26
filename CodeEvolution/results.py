@@ -25,22 +25,7 @@ class Results:
 
     @staticmethod
     def removeZeros(data):
-        """Given a dictionary where each key is a time-step, and each corresponding value is another dictionary where the
-        keys and values are the strategies and their average utilities, find the strategies that are not at the start
-        of the simulation (as only two strategies are ever in play) and remove them from all time-steps."""
-        emptyKeys = []
-        nonEmptyKeys = []
-        for key, value in data[0].items():
-            if value == 0:
-                emptyKeys.append(key)
-            else:
-                nonEmptyKeys.append(key)
-
-        for key, value in data.items():
-            for emptyKey in emptyKeys:
-                data[key].pop(emptyKey, None)
-
-        return data
+        return NotImplementedError("removeZeros(data) function is removed")
 
     @classmethod
     def averageOverIterations(cls, iterations):
