@@ -29,10 +29,9 @@ class Network:
         self.config = config
         self.name = "Network"
         self.mainStratIDs = (config.population.ID, config.mutant.ID)
-        self.agentList = []  # TODO: Change this to a dictionary so you can look up an agent directly
+        self.agentList = []
         self.socialNorm = SocialNorm(config.socialNormID)
         self.results = Results(config)
-        self.tempActions = {'C': 0, 'D': 0}
         self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
         self.currentPeriod = 0
         self.convergenceCheckIntervals = self._generateConvergenceCheckpoints()
@@ -64,7 +63,6 @@ class Network:
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
             logging.debug(f"T = {self.currentPeriod} - census: {self._getCensus()}")
             self._resetUtility()
-            self.tempActions = {'C': 0, 'D': 0}
             self.runSingleTimestep()
             self._updateCensusAndAvgPayoffs()
             self.evolutionaryUpdate()
@@ -79,6 +77,7 @@ class Network:
             else:
                 self.currentPeriod += 1
 
+        ##################
         # Clean up results
         self.results.actions = pd.DataFrame(self.results.actions).rename(
             columns={
@@ -88,13 +87,11 @@ class Network:
         self.results.strategyProportions = pd.DataFrame(self.results.strategyProportions).transpose().fillna(0)
         self.results.strategyProportions = self.results.strategyProportions.add_prefix('Prop. Strategy #')
         self.results.utilities = pd.DataFrame(self.results.utilities).transpose().add_prefix('Average Util. Strategy #')
-
         final_result = pd.concat([self.results.strategyProportions,
                                   self.results.actions,
                                   self.results.utilities],
                                  axis=1,
                                  sort=False)
-
         final_result.index.names = ['Tmax']
         result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
         result_at_tmax['# of Mutants Added'] = sum(self.results.mutantTracker.values())
@@ -131,7 +128,6 @@ class Network:
         agent1.currentUtility += payoff1
         agent2.currentUtility += payoff2
 
-        # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
         self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 
         return agent1Move, agent2Move
@@ -143,6 +139,7 @@ class Network:
         while random.random() < self.config.omega:
             self.playSocialDilemma(temp_actions)
 
+        # Save proportions of cooperations and defections in the time-step
         interaction_counter = sum(temp_actions.values())
         self.results.actions['C'].append(temp_actions['C']/interaction_counter)
         self.results.actions['D'].append(temp_actions['D']/interaction_counter)
@@ -410,7 +407,6 @@ class Network:
         self.socialNorm = None
         self.currentPeriod = 0
         self.results = None
-        self.tempActions = {'C': 0, 'D': 0}
         self.hasConverged = False
         # Strategy.reset()
         for agent in self.agentList:
