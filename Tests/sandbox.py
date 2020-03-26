@@ -12,54 +12,28 @@ from CodeEvolution.config import Config, State
 from CodeEvolution.Experiment import Experiment
 
 pd.set_option("display.max_rows", None, "display.max_columns", None)
+pd.set_option('display.width', 320)
 
 if __name__=="__main__":
+
     con = Config(
-        initialState=State(3,1,8),
-        size=100,
-        maxPeriods=100,
+        initialState=State(0,0.5,7),
+        size=300,
+        maxPeriods=2000,
         delta=1,
-        sparseDensity=True
+        sparseDensity=True,
+        mutationProbability=0
     )
-    #
-    # fig, ax = plt.subplots(2,2)
-    #
-    net3 = GrLeERNetwork(con)
-    # plt.sca(ax[0,0])
-    # net3.getPlot()
-    # plt.title("grle")
-    #
-    net2 = LrGeERNetwork(con)
-    # plt.sca(ax[0,1])
-    # net2.getPlot()
-    # plt.title("lrge")
-    #
-    net4 = LrLeERNetwork(con)
-    # plt.sca(ax[1,0])
-    # net4.getPlot()
-    # plt.title("lrle")
-    #
-    net1 = GrGeERNetwork(con)
-    # plt.sca(ax[1, 1])
-    # net1.getPlot()
-    # plt.title("grge")
-
-    # plt.show()
-
-    # net1.runSimulation()
-    # net2.runSimulation()
-    # net3.runSimulation()
-    # net4.runSimulation()
-
     E = Experiment(
         networkType=LrGeERNetwork,
         variable='density',
-        values=[0.6, 0.8],
+        values=[0.3, 0.4],
         defaultConfig=Config(
-            size=10,
+            size=50,
             delta=1
         ),
-        repeats=3
+        repeats=2
     )
 
-    E.run(display=True)
+    results = E.run(export=True)
+
