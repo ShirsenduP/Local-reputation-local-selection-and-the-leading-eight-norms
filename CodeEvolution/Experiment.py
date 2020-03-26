@@ -6,6 +6,7 @@ import copy
 import numpy as np
 import pandas as pd
 from tqdm import trange
+import json
 
 from CodeEvolution.strategy import Strategy
 from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork, LrLeERNetwork, LrGeRRLNetwork
@@ -13,6 +14,7 @@ from CodeEvolution.config import Config
 from CodeEvolution.config import Population, State
 from CodeEvolution.results import Results
 from CodeEvolution.structures import RandomRegularLattice
+from CodeEvolution.socialdilemna import MyEncoder
 
 
 class Experiment:
@@ -75,49 +77,39 @@ class Experiment:
         else:
             print(s)
 
-    def run(self, export=False, display=False, recordFull=False, displayFull=False, cluster=False):
+    def run(self, export=False):
         """Run and export LocalData for an experiment. This by default exports only the final state of the simulation,
         so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
          when multiple of the same parameterised run have different lengths of simulations. Cluster takes precedence
          over export."""
 
-        experimentName = self.networkType.name + "_" + \
-            self.variable + "_" + time.strftime("%Y-%m-%d %H:%M:%S")
+        experimentName = self.variable
+        results = pd.DataFrame()
 
         # run all tests in the experiment
         for exp in trange(len(self.experiments)):
-            # if display:
-            #     print(
-            #         f"\nExperiment {exp} with {self.variable} at {self.values[exp]}")
 
-            # Run a single test with [1,inf) repeats
             single_Test = pd.DataFrame()
             for _ in range(self.repeats):
                 Strategy.reset()
                 N = self.networkType(self.experiments[exp])
                 single_Run = N.runSimulation()
+                single_Run[self.variable] = self.values[exp]
                 single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
                 Strategy.reset()
+            # TODO: just make the dataframe the right way from the start in N.runSimulation()
             single_Test = single_Test.transpose()
+            results = pd.concat([results, single_Test], axis=0, sort=False)
 
-            # Export to different places if running locally/on a cluster
-            if cluster:
-                Results.exportResultsToCsvCluster(
-                    experimentName, self.experiments[exp], single_Test, exp)
-            elif export:
-                Results.exportResultsToCsv(
-                    experimentName, self.experiments[exp], single_Test, exp)
-
-
-        if display:
-            print()
-            print(single_Test)
-            print()
-
-        # Export config text file
-        configs = self.showExperiments(asString=True)
-
+            if export:
+                results.to_csv(experimentName+'.csv', index=True, header=True)
+                with open(f"{self.variable}.txt", "w+") as f:
+                    for config in self.experiments:
+                        f.write(json.dumps(config.__dict__, cls=MyEncoder))
+                        f.write("\n")
+            else:
+                return results
 
     @staticmethod
     def assignNewDensitiesFromDegree(testsList):

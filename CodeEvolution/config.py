@@ -3,14 +3,27 @@ from CodeEvolution.socialdilemna import PrisonersDilemma
 from collections import namedtuple
 import numpy as np
 
+import yaml
+
 Dilemma = namedtuple('Dilemma', ['type', 'benefit', 'cost'])
-State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])
+# State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])
 Population = namedtuple('Population', ['ID', 'proportion'])
 
+class State:
+    def __init__(self, mainID, proportion, mutantID):
+        self.mainID = mainID
+        self.proportion = proportion
+        self.mutantID = mutantID
 
-class Config:
+    def __repr__(self):
+        return f"{self.__class__.__name__}(" \
+               f"mainID={self.mainID}, " \
+               f"proportion={self.proportion}, " \
+               f"mutantID={self.mutantID})"
+
+class Config(yaml.YAMLObject):
     """Configuration file describing a single parametrization of a simulation """
-
+    yaml_tag = u'!Config'
     def __init__(self,
                  initialState: State = State(
                      mainID=0, proportion=0.9, mutantID=8),
@@ -63,4 +76,20 @@ class Config:
 
     def __repr__(self):
         return str(self.__dict__)
+
+    # def __repr__(self):
+    #     s = f"{self.__class__.__name__}("
+    #     s += f"size={self.size},"
+    #     s += f"state={}
+    #     s += f"Social Norm ID = {self.socialNormID},\n"
+    #     s += f"Social Dilemma = {self.socialDilemma.__class__.__name__}(benefit={self.socialDilemma.benefit}, cost={self.socialDilemma.cost}),\n"
+    #     s += f"Omega = {self.omega},\n"
+    #     s += f"Max Periods = {self.maxPeriods},\n"
+    #     s += f"Update Probability = {self.updateProbability},\n"
+    #     s += f"Delta = {self.delta},\n"
+    #     s += f"Mutation Probability = {self.mutationProbability},\n"
+    #     s += f"Degree = {self.degree},\n"
+    #     s += f"Attachment = {self.attachment},\n"
+    #     s += f"Small World = {self.smallWorld}"
+    #     return s
 
