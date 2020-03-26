@@ -42,7 +42,6 @@ class ErdosRenyi(Structure):
 
     def createNetwork(self, agentType):
         """Generate an Erdos-Renyi random graph with density as specified in the configuration class (configBuilder)."""
-
         density = self.config.density
         size = self.config.size
         self.nxGraph = nx.fast_gnp_random_graph(size, density)

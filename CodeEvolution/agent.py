@@ -47,8 +47,8 @@ class Agent:
         return [(agent.id, agent.Strategy.ID, agent.currentUtility) for agent in self.neighbours]
 
     def __str__(self):
-        s = f"(Agent {self.id}, id={self.Strategy.ID},"
-        s += f" with neighbours {self.getNeighboursUtilities()}"
+        s = f"Agent {self.id}, strategy={self.Strategy.ID},"
+        s += f" with {len(self.neighbours)} neighbours"
         return s
 
 

@@ -98,12 +98,14 @@ class Experiment:
                 single_Run[self.variable] = self.values[exp]
                 single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
                 Strategy.reset()
-            # TODO: just make the dataframe the right way from the start in N.runSimulation()
             single_Test = single_Test.transpose()
             results = pd.concat([results, single_Test], axis=0, sort=False)
 
         if export:
+            # Export Results DataFrame to csv
             results.to_csv(experimentName+'.csv', index=True, header=True)
+
+            # Export experiment configs to txt file
             with open(f"{self.variable}.txt", "w+") as f:
                 for config in self.experiments:
                     f.write(json.dumps(config.__dict__, cls=MyEncoder))

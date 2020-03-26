@@ -17,23 +17,21 @@ pd.set_option('display.width', 320)
 if __name__=="__main__":
 
     con = Config(
-        initialState=State(0,0.5,7),
+        initialState=State(0,0.5,8),
         size=300,
         maxPeriods=2000,
-        delta=1,
         sparseDensity=True,
-        mutationProbability=0
+        mutationProbability=0.1
     )
     E = Experiment(
         networkType=LrGeERNetwork,
-        variable='density',
-        values=[0.3, 0.4],
-        defaultConfig=Config(
-            size=50,
-            delta=1
-        ),
+        variable='delta',
+        values=[0.25, 0.5, 0.75],
+        defaultConfig=con,
         repeats=2
     )
 
-    results = E.run(export=True)
+    results = E.run(export=False)
+
+    print(results)
 

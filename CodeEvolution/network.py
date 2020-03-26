@@ -31,13 +31,12 @@ class Network:
         self.mainStratIDs = (config.population.ID, config.mutant.ID)
         self.agentList = []
         self.socialNorm = SocialNorm(config.socialNormID)
+        self.dilemma = config.socialDilemma
         self.results = Results(config)
-        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
         self.currentPeriod = 0
         self.convergenceCheckIntervals = self._generateConvergenceCheckpoints()
         self.convergenceHistory = deque(3 * [None], 3)
         self.hasConverged = False
-        self.dilemma = config.socialDilemma
 
         # Networkx Attributes
         self.adjMatrix = None
@@ -56,17 +55,21 @@ class Network:
         """Must be implemented through the relevant network type. Can be Global or Local."""
         raise NotImplementedError("Check reputation.py for the implementations.")
 
+    def updateReputation(self, agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move):
+        """Must be implemented through the relent network type."""
+        raise NotImplementedError("Check reputation.py for the implementations.")
+
     def runSimulation(self):
         """Run full simulation for upto total number of simulations defined in the config object' or up until the
         system converges at pre-allocated randomly chosen convergence check intervals."""
-        self._updateCensusAndAvgPayoffs()
+
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
             logging.debug(f"T = {self.currentPeriod} - census: {self._getCensus()}")
-            self._resetUtility()
             self.runSingleTimestep()
-            self._updateCensusAndAvgPayoffs()
             self.evolutionaryUpdate()
             self.mutate(self.config.mutant.ID)
+
+            # Check for convergence
             if self.currentPeriod in self.convergenceCheckIntervals:
                 self.convergenceHistory.appendleft((self.currentPeriod, self._getCensus()))
                 self._checkConvergence()
@@ -98,8 +101,7 @@ class Network:
 
         return result_at_tmax
 
-
-    def playSocialDilemma(self, tempActions):
+    def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter):
 
         # Two agents chosen randomly from the population
         agent1, agent2 = self.chooseAgents()
@@ -118,31 +120,51 @@ class Network:
         # Calculate each agent's payoff
         payoff1, payoff2 = self.dilemma.playGame(agent1Move, agent2Move)
 
+        # Update the agent's reputations both personally and globally/locally depending on reputation.py
+        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
+
         # Update the utility tracker and interaction counter of each strategy
-        self.utilityMonitor[0][agent1ID] += 1
-        self.utilityMonitor[1][agent1ID] += payoff1
-        self.utilityMonitor[0][agent2ID] += 1
-        self.utilityMonitor[1][agent2ID] += payoff2
+        temp_utilities[agent1.Strategy.ID] += payoff1
+        temp_utilities[agent2.Strategy.ID] += payoff2
+        temp_strategy_interaction_counter[agent1.Strategy.ID] += 1
+        temp_strategy_interaction_counter[agent2.Strategy.ID] += 1
 
         # Update agents personal utilities for (LOCAL) evolutionary update
         agent1.currentUtility += payoff1
         agent2.currentUtility += payoff2
 
-        self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
-
-        return agent1Move, agent2Move
 
     def runSingleTimestep(self):
         """Run one single time-step with multiple interactions between randomly selected agents"""
+
+        # Temp variables to store actions/utilities of the agents
         temp_actions = {'C': 0, 'D': 0}
-        self.playSocialDilemma(temp_actions)
+        temp_utilities = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
+        temp_strategy_interaction_counter = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
+
+        # Play repeated social dilemmas
+        self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter)
         while random.random() < self.config.omega:
-            self.playSocialDilemma(temp_actions)
+            self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter)
 
         # Save proportions of cooperations and defections in the time-step
-        interaction_counter = sum(temp_actions.values())
-        self.results.actions['C'].append(temp_actions['C']/interaction_counter)
-        self.results.actions['D'].append(temp_actions['D']/interaction_counter)
+        coop_defect_counter = sum(temp_actions.values())
+        self.results.actions['C'].append(temp_actions['C']/coop_defect_counter)
+        self.results.actions['D'].append(temp_actions['D']/coop_defect_counter)
+
+        # Save the average utility of each strategy
+        avg_utilities = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
+        for strategy in temp_utilities.keys():
+            if temp_strategy_interaction_counter[strategy] == 0 and temp_utilities[strategy] == 0:
+                avg_utilities[strategy] = 0
+            else:
+                avg_utilities[strategy] = temp_utilities[strategy]/temp_strategy_interaction_counter[strategy]
+        self.results.utilities[self.currentPeriod] = avg_utilities
+
+        # Save the proportions of strategies in the population
+        self.results.strategyProportions[self.currentPeriod] = self._getCensus(proportions=True)
+
+        self._resetAllAgentUtilities()
 
     def chooseAgents(self):
         agent1 = random.choice(self.agentList)
@@ -300,22 +322,6 @@ class Network:
                 logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
                 raise Exception(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
 
-    def _updateCensusAndAvgPayoffs(self):
-        """Update the LocalData with the proportions of all strategies at any given time."""
-
-        # Update LocalData with census
-        census = self._getCensus(proportions=True)
-        self.results.strategyProportions[self.currentPeriod] = census
-
-        interactionsDict = self.utilityMonitor[0]
-        payoffDict = self.utilityMonitor[1]
-        averageUtilities = {}.fromkeys(self.mainStratIDs, 0)
-
-        for key, _ in averageUtilities.items():
-            if interactionsDict[key]:
-                averageUtilities[key] = payoffDict[key] / interactionsDict[key]
-        self.results.utilities[self.currentPeriod] = averageUtilities
-
     def _generateConvergenceCheckpoints(self):
         """Given the configuration file for the simulation, _generate a sorted list of time-steps which dictate when
         the system checks for convergence. No convergence checks occur before a quarter of the simulation has
@@ -396,11 +402,11 @@ class Network:
             s += str(agent) + "\n"
         return s
 
-    def _resetUtility(self):
+    def _resetAllAgentUtilities(self):
         """Reset the utility of each agent in the population. To be used at the end of every timestep."""
         for agent in self.agentList:
             agent.currentUtility = 0
-        self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
+        # self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
         logging.debug(f"(t={self.currentPeriod})Network utility monitor, and agent utility trackers reset.")
 
     def __del__(self):
