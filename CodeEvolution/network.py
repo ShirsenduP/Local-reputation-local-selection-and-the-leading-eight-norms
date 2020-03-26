@@ -102,7 +102,7 @@ class Network:
         return result_at_tmax
 
 
-    def playSocialDilemma(self):
+    def playSocialDilemma(self, tempActions):
 
         # Two agents chosen randomly from the population
         agent1, agent2 = self.chooseAgents()
@@ -115,8 +115,8 @@ class Network:
         # Each agent calculates their move according to their behavioural strategy
         agent1Move = agent1.Strategy.chooseAction(agent1Reputation, agent2Reputation)
         agent2Move = agent2.Strategy.chooseAction(agent2Reputation, agent1Reputation)
-        self.tempActions[agent1Move] += 1
-        self.tempActions[agent2Move] += 1
+        tempActions[agent1Move] += 1
+        tempActions[agent2Move] += 1
 
         # Calculate each agent's payoff
         payoff1, payoff2 = self.dilemma.playGame(agent1Move, agent2Move)
@@ -134,13 +134,18 @@ class Network:
         # self.updateInteractions(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
         self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 
+        return agent1Move, agent2Move
+
     def runSingleTimestep(self):
         """Run one single time-step with multiple interactions between randomly selected agents"""
-        self.playSocialDilemma()
+        temp_actions = {'C': 0, 'D': 0}
+        self.playSocialDilemma(temp_actions)
         while random.random() < self.config.omega:
-            self.playSocialDilemma()
+            self.playSocialDilemma(temp_actions)
 
-        self.results.updateActions(self.tempActions)
+        interaction_counter = sum(temp_actions.values())
+        self.results.actions['C'].append(temp_actions['C']/interaction_counter)
+        self.results.actions['D'].append(temp_actions['D']/interaction_counter)
 
     def chooseAgents(self):
         agent1 = random.choice(self.agentList)

@@ -102,14 +102,14 @@ class Experiment:
             single_Test = single_Test.transpose()
             results = pd.concat([results, single_Test], axis=0, sort=False)
 
-            if export:
-                results.to_csv(experimentName+'.csv', index=True, header=True)
-                with open(f"{self.variable}.txt", "w+") as f:
-                    for config in self.experiments:
-                        f.write(json.dumps(config.__dict__, cls=MyEncoder))
-                        f.write("\n")
-            else:
-                return results
+        if export:
+            results.to_csv(experimentName+'.csv', index=True, header=True)
+            with open(f"{self.variable}.txt", "w+") as f:
+                for config in self.experiments:
+                    f.write(json.dumps(config.__dict__, cls=MyEncoder))
+                    f.write("\n")
+        else:
+            return results
 
     @staticmethod
     def assignNewDensitiesFromDegree(testsList):
