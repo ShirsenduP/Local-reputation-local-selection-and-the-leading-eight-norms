@@ -3,8 +3,6 @@ from CodeEvolution.socialdilemna import PrisonersDilemma
 from collections import namedtuple
 import numpy as np
 
-import yaml
-
 Dilemma = namedtuple('Dilemma', ['type', 'benefit', 'cost'])
 # State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])
 Population = namedtuple('Population', ['ID', 'proportion'])
