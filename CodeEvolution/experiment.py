@@ -33,14 +33,18 @@ class Experiment:
         self.description = description
         self.generateConfigs()
 
-    def run(self, export=False):
+    def run(self, export=False, expName=None):
         """Run and export LocalData for an experiment. This by default exports only the final state of the simulation,
         so the proportions of cooperators/defectors, the final proportions of each strategy. With the optional flag
         'recordFull', every time-step is recorded and then averaged. THIS IS NOT YET FULLY FUNCTIONAL as issues occur
          when multiple of the same parameterised run have different lengths of simulations. Cluster takes precedence
          over export."""
 
-        experimentName = self.variable
+        if expName:
+            experimentName = expName
+        else:
+            experimentName = self.variable
+
         results = pd.DataFrame()
 
         # run all tests in the experiment

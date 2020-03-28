@@ -1,0 +1,36 @@
+!!python/object:CodeEvolution.config.Config
+attachment: null
+degree: null
+delta: 0.5
+density: 1
+maxPeriods: 2000
+mutant: !!python/object/new:CodeEvolution.config.Population
+- 8
+- 0.1
+mutationProbability: 0.1
+omega: 0.99
+population: !!python/object/new:CodeEvolution.config.Population
+- 0
+- 0.9
+size: 500
+smallWorld: null
+socialDilemma: !!python/object:CodeEvolution.socialdilemna.PrisonersDilemma
+  benefit: 2
+  cost: 1
+  name: PrisonersDilemma
+  payoff1:
+    C:
+      C: 1
+      D: -1
+    D:
+      C: 2
+      D: 0
+  payoff2:
+    C:
+      C: 1
+      D: 2
+    D:
+      C: -1
+      D: 0
+socialNormID: 0
+updateProbability: 0.1

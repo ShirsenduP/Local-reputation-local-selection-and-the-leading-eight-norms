@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import CodeEvolution
-from CodeEvolution.models import GrGeERNetwork
+from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork
 from CodeEvolution.agent import GrGeAgent
 from CodeEvolution.config import Config, State
 from CodeEvolution.experiment import Experiment
@@ -53,6 +53,23 @@ class TestNetwork:
         new_agent1_rep, new_agent2_rep = self.network.getOpponentsReputation(agent1, agent2) # 0, 1
         assert new_agent1_rep == agent1.currentReputation
         assert new_agent2_rep == agent2.currentReputation
+
+    def test_correct_network_generation(self):
+
+        # force network generation with density too low
+        with pytest.raises(Exception):
+            config = Config(size=100, densities=0.01)
+            N = LrGeERNetwork(config)
+
+        # force network generation with too few agents
+        with pytest.raises(Exception):
+            config = Config(size=1)
+            N = LrGeERNetwork(config)
+
+        # force network generation with uneven strategy proportions
+        with pytest.raises(Exception):
+            config = Config(size=10, initialState=State(0, 0.05, 8))
+            N = LrGeERNetwork(config)
 
     def test_networkFromAdjacencyMatrix(self):
         """Test the generation of a Network Object when given an adjacency matrix"""
