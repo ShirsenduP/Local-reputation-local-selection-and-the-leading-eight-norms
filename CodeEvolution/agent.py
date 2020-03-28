@@ -19,7 +19,7 @@ class Agent:
         self.currentUtility = 0
         self.neighbours = []
 
-    def findBestLocalStrategy(self, copyTheBest):
+    def findBestLocalStrategy(self, copyTheBest=None):
         """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the
          strategies with maximum utility."""
         neighbourUtilities = list(
