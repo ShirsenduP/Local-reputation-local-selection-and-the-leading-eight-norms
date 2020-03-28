@@ -46,8 +46,6 @@ class GlobalEvolution:
                 agent.Strategy.changeStrategy(bestStrategy)
 
 
-
-
 class LocalEvolution:
     """This class supplies the local evolutionary mechanisms to any subclass that inherits from it. This class should
     not be directly instantiated."""
@@ -60,11 +58,18 @@ class LocalEvolution:
         #  update. Don't think this affects primary results, but only the speed of evolution, can accellerate the
         #  speed of evolution of a profitable strategy
 
+        # Find each agent's new strategy
+        strategy_mapping = {}.fromkeys(self.agentList)
         for agent in self.agentList:
             if random.random() < self.config.updateProbability:
-                newStrategyID = agent.findBestLocalStrategy(copyTheBest=True)
-                if newStrategyID == agent.Strategy.ID:
-                    continue
-                else:
-                    agent.Strategy.changeStrategy(newStrategyID)
+                strategy_mapping[agent] = agent.findBestLocalStrategy(copyTheBest=True)
+
+        # Agent's actually change their strategy
+        for agent in strategy_mapping.keys():
+            if agent.Strategy.ID == strategy_mapping[agent]:
+                continue
+            else:
+                agent.Strategy.changeStrategy(strategy_mapping[agent])
+
+
 
