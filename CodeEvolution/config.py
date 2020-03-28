@@ -19,7 +19,7 @@ class State:
                f"proportion={self.proportion}, " \
                f"mutantID={self.mutantID})"
 
-class Config(yaml.YAMLObject):
+class Config:
     """Configuration file describing a single parametrization of a simulation """
     yaml_tag = u'!Config'
     def __init__(self,
