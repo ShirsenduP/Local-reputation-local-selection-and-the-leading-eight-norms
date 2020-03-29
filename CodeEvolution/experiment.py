@@ -66,7 +66,7 @@ class Experiment:
             results.to_csv(experimentName+'.csv', index=True, header=True)
 
             # Export experiment configs to txt file
-            with open(f"{self.variable}.txt", "w+") as f:
+            with open(f"{experimentName}.txt", "w+") as f:
                 f.write(self.description)
                 f.write(10*"=="+2*"\n")
                 for config in self.experiments:
