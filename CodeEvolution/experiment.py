@@ -12,7 +12,6 @@ from CodeEvolution.strategy import Strategy
 from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork, LrLeERNetwork, LrGeRRLNetwork
 from CodeEvolution.config import Config
 from CodeEvolution.config import Population, State
-from CodeEvolution.results import Results
 from CodeEvolution.structures import RandomRegularLattice
 from CodeEvolution.socialdilemna import MyEncoder
 

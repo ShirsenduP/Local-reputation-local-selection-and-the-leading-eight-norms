@@ -41,10 +41,16 @@ class Agent:
 
         return self.neighbours[bestLocalStrategyID].Strategy.ID
 
-
     def getNeighboursUtilities(self):
         """Return a list of the utilities of every neighbour of the focal agent."""
         return [(agent.id, agent.Strategy.ID, agent.currentUtility) for agent in self.neighbours]
+
+    def __del__(self):
+        del self.id
+        self.Strategy = None
+        del self.currentReputation
+        del self.currentUtility
+        del self.neighbours
 
     def __str__(self):
         s = f"Agent {self.id}, strategy={self.Strategy.ID},"

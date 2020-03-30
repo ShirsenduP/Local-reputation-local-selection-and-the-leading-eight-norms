@@ -61,15 +61,15 @@ class TestNetwork:
             config = Config(size=100, densities=0.01)
             N = LrGeERNetwork(config)
 
-        # force network generation with too few agents
-        with pytest.raises(Exception):
-            config = Config(size=1)
-            N = LrGeERNetwork(config)
-
-        # force network generation with uneven strategy proportions
-        with pytest.raises(Exception):
-            config = Config(size=10, initialState=State(0, 0.05, 8))
-            N = LrGeERNetwork(config)
+        # # force network generation with too few agents
+        # with pytest.raises(Exception):
+        #     config = Config(size=1)
+        #     N = LrGeERNetwork(config)
+        #
+        # # force network generation with uneven strategy proportions
+        # with pytest.raises(Exception):
+        #     config = Config(size=10, initialState=State(0, 0.05, 8))
+        #     N = LrGeERNetwork(config)
 
     def test_networkFromAdjacencyMatrix(self):
         """Test the generation of a Network Object when given an adjacency matrix"""

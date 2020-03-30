@@ -12,9 +12,19 @@ from matplotlib import pyplot as plt
 
 from CodeEvolution.agent import Agent
 from CodeEvolution.config import Config
-from CodeEvolution.results import Results
 from CodeEvolution.socialnorm import SocialNorm
 from CodeEvolution.strategy import Strategy
+
+
+class Results:
+
+    def __init__(self, config):
+        self.strategies = {config.population.ID, config.mutant.ID}
+        self.actions = {'C': [], 'D': []}
+        self.strategyProportions = {}
+        self.utilities = {}
+        self.convergedAt = None
+        self.mutantTracker = {}
 
 
 class Network:
