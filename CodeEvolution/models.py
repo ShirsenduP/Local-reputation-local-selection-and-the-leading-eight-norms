@@ -20,8 +20,6 @@ class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
             logging.warning("Delta (probability of successful reputation broadcast) is not 1, there will be errors!")
         super().__init__(config)
         self._generate(agentType=GrGeAgent)
-        populationReputations = [agent.currentReputation for agent in self.agentList]
-        # self.ledger = dict(zip(self.agentList, populationReputations))
 
 
 class LrGeERNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):

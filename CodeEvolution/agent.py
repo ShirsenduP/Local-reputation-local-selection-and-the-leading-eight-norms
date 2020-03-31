@@ -19,32 +19,6 @@ class Agent:
         self.currentUtility = 0
         self.neighbours = []
 
-    def findBestLocalStrategy(self, copyTheBest=None):
-        """Find the strategy of your best/better performing neighbour. If there are multiple, choose randomly of the
-         strategies with maximum utility."""
-        neighbourUtilities = list(
-            map(lambda x: x.currentUtility, self.neighbours))
-        if copyTheBest:
-            # Find the strategy locally that is performing the best
-            maxLocalUtility = max(neighbourUtilities)
-            indices = [i for i, x in enumerate(
-                neighbourUtilities) if x == maxLocalUtility]
-        else:
-            # Find all the strategies from the neighbouring agent's who are fairing better than the focal agent
-            betterLocalUtilities = [
-                util for util in neighbourUtilities if util > self.currentUtility]
-            indices = [i for i, x in enumerate(
-                neighbourUtilities) if x == random.choice(betterLocalUtilities)]
-
-        # Choose randomly from shortlisted agents
-        bestLocalStrategyID = random.choice(indices)
-
-        return self.neighbours[bestLocalStrategyID].Strategy.ID
-
-    def getNeighboursUtilities(self):
-        """Return a list of the utilities of every neighbour of the focal agent."""
-        return [(agent.id, agent.Strategy.ID, agent.currentUtility) for agent in self.neighbours]
-
     def __del__(self):
         del self.id
         self.Strategy = None
