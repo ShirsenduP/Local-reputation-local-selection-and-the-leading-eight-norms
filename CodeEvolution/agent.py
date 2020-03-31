@@ -18,10 +18,10 @@ class Agent:
         self.currentReputation = random.choice(Agent.reputation)
         self.currentUtility = 0
         self.neighbours = []
+        self.history = {}  # get LAST partner
 
     def __del__(self):
         del self.id
-        self.Strategy = None
         del self.currentReputation
         del self.currentUtility
         del self.neighbours
@@ -46,7 +46,6 @@ class LrGeAgent(GlobalEvolution, LocalReputation, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
-        self.history = {}  # get LAST partner
 
 
 class LrLeAgent(LocalEvolution, LocalReputation, Agent):
@@ -55,7 +54,6 @@ class LrLeAgent(LocalEvolution, LocalReputation, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
-        self.history = {}  # get LAST partner
 
 
 class GrLeAgent(LocalEvolution, GlobalReputation, Agent):

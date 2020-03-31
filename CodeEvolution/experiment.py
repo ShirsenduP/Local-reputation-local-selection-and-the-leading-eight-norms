@@ -51,12 +51,10 @@ class Experiment:
 
             single_Test = pd.DataFrame()
             for _ in range(self.repeats):
-                Strategy.reset()
                 N = self.networkType(self.experiments[exp])
                 single_Run = N.runSimulation()
                 single_Run[self.variable] = self.values[exp]
                 single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
-                Strategy.reset()
             single_Test = single_Test.transpose()
             results = pd.concat([results, single_Test], axis=0, sort=False)
 

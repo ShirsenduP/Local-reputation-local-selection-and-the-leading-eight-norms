@@ -15,11 +15,12 @@ if __name__ == "__main__":
         size=250,
         initialState=State(2, 1, 8),
         mutationProbability=0.1,
-        delta=1)
+        delta=1,
+        maxPeriods=500)
 
     variable = 'size'
-    values = list(range(10, 52, 2))
-    # values = [400]
+    # values = list(range(10, 52, 2))
+    values = [400]
 
     E = Experiment(
         networkType=GrGeERNetwork,
@@ -27,20 +28,20 @@ if __name__ == "__main__":
         variable=variable,
         values=values,
         defaultConfig=C,
-        repeats=10
+        repeats=2
     )
 
     df = E.run(export=False, expName="s2_GrGe_Size")
 
     print(df)
-
-    # df = pd.read_csv("s2_GrGe_Size.csv")
-    means = df.groupby('size').mean()['Prop. of Cooperators']
-    sems = df.groupby('size').sem()['Prop. of Cooperators']
-
-    plt.subplot()
-    # plt.plot(means['Prop. of Cooperators'])
-    plt.errorbar(values, means, yerr=sems)
-    plt.ylabel("Proportion of Cooperation")
-    plt.xlabel("Size of Population")
-    plt.show()
+    #
+    # # df = pd.read_csv("s2_GrGe_Size.csv")
+    # means = df.groupby('size').mean()['Prop. of Cooperators']
+    # sems = df.groupby('size').sem()['Prop. of Cooperators']
+    #
+    # plt.subplot()
+    # # plt.plot(means['Prop. of Cooperators'])
+    # plt.errorbar(values, means, yerr=sems)
+    # plt.ylabel("Proportion of Cooperation")
+    # plt.xlabel("Size of Population")
+    # plt.show()

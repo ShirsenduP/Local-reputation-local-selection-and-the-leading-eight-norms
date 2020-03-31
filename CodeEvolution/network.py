@@ -86,6 +86,7 @@ class Network:
 
             if self.hasConverged or self.currentPeriod == self.config.maxPeriods - 1:
                 self.results.convergedAt = self.currentPeriod
+                Strategy.reset()
                 break
             else:
                 self.currentPeriod += 1
@@ -134,10 +135,10 @@ class Network:
         self.updateReputation(agent1, agent2, agent1Reputation, agent2Reputation, agent1Move, agent2Move)
 
         # Update the utility tracker and interaction counter of each strategy
-        temp_utilities[agent1.Strategy.ID] += payoff1
-        temp_utilities[agent2.Strategy.ID] += payoff2
-        temp_strategy_interaction_counter[agent1.Strategy.ID] += 1
-        temp_strategy_interaction_counter[agent2.Strategy.ID] += 1
+        temp_utilities[agent1ID] += payoff1
+        temp_utilities[agent2ID] += payoff2
+        temp_strategy_interaction_counter[agent1ID] += 1
+        temp_strategy_interaction_counter[agent2ID] += 1
 
         # Update agents personal utilities for (LOCAL) evolutionary update
         agent1.currentUtility += payoff1
@@ -174,7 +175,8 @@ class Network:
         # Save the proportions of strategies in the population
         self.results.strategyProportions[self.currentPeriod] = self._getCensus(proportions=True)
 
-        self._resetAllAgentUtilities()
+        # Reset the agents' utilities (and histories in the case of Local Reputation)
+        self._resetAllAgents()
 
     def chooseAgents(self):
         agent1 = random.choice(self.agentList)
@@ -412,19 +414,16 @@ class Network:
             s += str(agent) + "\n"
         return s
 
-    def _resetAllAgentUtilities(self):
-        """Reset the utility of each agent in the population. To be used at the end of every timestep."""
+    def _resetAllAgents(self):
+        """Reset the utility and history of each agent in the population. To be used at the end of every timestep."""
         for agent in self.agentList:
             agent.currentUtility = 0
-        # self.utilityMonitor = [{}.fromkeys(self.mainStratIDs, 0), {}.fromkeys(self.mainStratIDs, 0)]
-        logging.debug(f"(t={self.currentPeriod})Network utility monitor, and agent utility trackers reset.")
+            agent.history = {}.fromkeys(agent.neighbours)
 
     def __del__(self):
         self.socialNorm = None
         self.currentPeriod = 0
         self.results = None
         self.hasConverged = False
-        # Strategy.reset()
-        for agent in self.agentList:
-            del agent.Strategy
-        # TODO: Combine all deletion methods into one place, check that nothing is being left over as when i was running the last tests, the time taken to run each following experiment took longer and longer!
+        # for agent in self.agentList:
+        #     del agent.Strategy
