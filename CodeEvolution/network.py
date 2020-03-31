@@ -418,12 +418,11 @@ class Network:
         """Reset the utility and history of each agent in the population. To be used at the end of every timestep."""
         for agent in self.agentList:
             agent.currentUtility = 0
-            agent.history = {}.fromkeys(agent.neighbours)
+            # TODO: Do agent histories HAVE to be reset between time-steps?
+            agent.history = {}.fromkeys(agent.neighbours)   # Very heavy function
 
     def __del__(self):
         self.socialNorm = None
         self.currentPeriod = 0
         self.results = None
         self.hasConverged = False
-        # for agent in self.agentList:
-        #     del agent.Strategy

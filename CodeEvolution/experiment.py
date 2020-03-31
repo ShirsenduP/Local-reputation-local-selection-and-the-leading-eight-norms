@@ -173,19 +173,3 @@ class Experiment:
                 logging.info(
                     f'Changing density from {config.density} to {sparseDensity}.')
                 config.density = sparseDensity
-
-
-# TODO: create script to _generate all the .py files and .sh files, just a forloop writing out a big f string with
-# strategy ID codes
-if __name__ == '__main__':
-    C = Config(initialState=State(0, 1, 8), degree=5)
-    # pops = Experiment.generatePopulationList(proportion=1, mutantID=8)
-    # degs = [2, 3, 4, 5, 6]
-    E = Experiment(
-        networkType=LrGeRRLNetwork,
-        variable='size',
-        values=[100, 200],
-        defaultConfig=C,
-        repeats=2)
-    E.showExperiments()
-    E.run(export=True)

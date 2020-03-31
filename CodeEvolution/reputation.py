@@ -45,7 +45,7 @@ class LocalReputation:
         agent1Reputation = agent1Neighbour.history[agent1]
 
         # If opponent has had no previous interaction, his neighbours will not have any relevant information,
-        # hence assign reputation randomly. TODO: Is an agent's history reset between time-steps?
+        # hence assign reputation randomly.
         if agent2Reputation is None:
             agent2Reputation = random.randint(0, 1)
         if agent1Reputation is None:
