@@ -20,12 +20,6 @@ class Agent:
         self.neighbours = []
         self.history = {}  # get LAST partner
 
-    def __del__(self):
-        del self.id
-        del self.currentReputation
-        del self.currentUtility
-        del self.neighbours
-
     def __str__(self):
         s = f"Agent {self.id}, strategy={self.Strategy.ID},"
         s += f" with {len(self.neighbours)} neighbours"
