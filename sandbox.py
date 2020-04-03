@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # values = [600]
 
     E = Experiment(
-        networkType=LrGeERNetwork,
+        networkType=LrLeERNetwork,
         description="Effect of size of population on the Leading 8 under Ohtsuki and Isawa",
         variable=variable,
         values=values,

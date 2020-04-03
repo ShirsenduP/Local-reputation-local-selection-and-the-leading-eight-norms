@@ -90,7 +90,11 @@ class LocalEvolution:
         strategy_mapping = {}.fromkeys(self.agentList)
         for agent in self.agentList:
             if random.random() < self.config.updateProbability:
+                # Update strategy
                 strategy_mapping[agent] = agent.findBestLocalStrategy(copyTheBest=True)
+            else:
+                # Stick with same strategy
+                strategy_mapping[agent] = agent.Strategy.ID
 
         # Agent's actually change their strategy
         for agent in strategy_mapping.keys():
