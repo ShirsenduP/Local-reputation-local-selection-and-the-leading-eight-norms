@@ -12,36 +12,36 @@ pd.set_option('display.max_columns', 320)
 if __name__ == "__main__":
 
     C = Config(
-        size=550,
-        initialState=State(3, 1, 8),
+        size=300,
+        initialState=State(0, 1, 8),
         mutationProbability=0.1,
         delta=1,
-        maxPeriods=5000)
+        maxPeriods=2000)
 
-    variable = 'size'
-    values = list(range(10, 500, 50))
-    # values = [600]
+    variable = 'population'
+    strats = range(8)
+    values = Experiment.generateSinglePopulationProportionList(2, 8)
 
     E = Experiment(
-        networkType=LrLeERNetwork,
+        networkType=GrGeERNetwork,
         description="Effect of size of population on the Leading 8 under Ohtsuki and Isawa",
         variable=variable,
         values=values,
         defaultConfig=C,
-        repeats=6
+        repeats=3
     )
 
     df = E.run(export=False, expName="s2_GrGe_Size")
-    # TODO: Why does Group II suddenly work now on GrGe at large N?
-    print(df)
-    #
-    # # df = pd.read_csv("s2_GrGe_Size.csv")
-    means = df.groupby('size').mean()['Prop. of Cooperators']
-    sems = df.groupby('size').sem()['Prop. of Cooperators']
 
+    # # df = pd.read_csv("s2_GrGe_Size.csv")
+    means = df.groupby('Mutant Initial Prop.').mean()
+    sems = df.groupby('Mutant Initial Prop.').sem()
     plt.subplot()
-    # plt.plot(means['Prop. of Cooperators'])
-    plt.errorbar(values, means, yerr=sems)
+    plt.errorbar(x=np.arange(1, 0, -0.25), y=means['Prop. of Cooperators'], yerr=sems['Prop. of Cooperators'])
     plt.ylabel("Proportion of Cooperation")
     plt.xlabel("Size of Population")
     plt.show()
+    #
+    # # N = LrGeERNetwork(C)
+    # df = N.runSimulation()
+    # print(type(df))

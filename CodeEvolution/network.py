@@ -99,17 +99,29 @@ class Network:
                 'D': 'Prop. of Defectors'}
         )
         self.results.strategyProportions = pd.DataFrame(self.results.strategyProportions).transpose().fillna(0)
-        self.results.strategyProportions = self.results.strategyProportions.add_prefix('Prop. Strategy #')
-        self.results.utilities = pd.DataFrame(self.results.utilities).transpose().add_prefix('Average Util. Strategy #')
+        self.results.strategyProportions.rename(
+            inplace=True,
+            columns={self.mainStratIDs[0]: 'Main Prop.',
+                     self.mainStratIDs[1]: 'Mutant Prop.'})
+        self.results.utilities = pd.DataFrame(self.results.utilities).transpose()
+        self.results.utilities.rename(
+            inplace=True,
+            columns={self.mainStratIDs[0]: 'Avg. Main Util.',
+                     self.mainStratIDs[1]: 'Avg. Mutant Util.'}
+        )
         final_result = pd.concat([self.results.strategyProportions,
                                   self.results.actions,
                                   self.results.utilities],
                                  axis=1,
                                  sort=False)
-        final_result.index.names = ['Tmax']
         result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
-        result_at_tmax['# of Mutants Added'] = sum(self.results.mutantTracker.values())
-
+        result_at_tmax['Mutants Added'] = sum(self.results.mutantTracker.values())
+        # result_at_tmax['Tmax'] = result_at_tmax.name
+        result_at_tmax['Main'] = self.mainStratIDs[0]
+        result_at_tmax['Main Initial Prop.'] = self.config.population.proportion
+        result_at_tmax['Mutant'] = self.mainStratIDs[1]
+        result_at_tmax['Mutant Initial Prop.'] = self.config.mutant.proportion
+        # result_at_tmax.name = 'Simulation'
         return result_at_tmax
 
     def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter):

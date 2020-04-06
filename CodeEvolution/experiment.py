@@ -44,16 +44,22 @@ class Experiment:
         else:
             experimentName = self.variable
 
-        results = pd.DataFrame()
+        results = pd.DataFrame(dtype='float64')
 
         # run all tests in the experiment
         for exp in trange(len(self.experiments)):
 
-            single_Test = pd.DataFrame()
+            single_Test = pd.DataFrame(dtype='float64')
             for _ in range(self.repeats):
+                # Run a single simulation
                 N = self.networkType(self.experiments[exp])
                 single_Run = N.runSimulation()
-                single_Run[self.variable] = self.values[exp]
+
+                # If population is being tested, the self.variable is unnecessary
+                if self.variable != 'population':
+                    single_Run[self.variable] = self.values[exp]
+
+                # Add the simulation onto dataframe of completed sims
                 single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
             single_Test = single_Test.transpose()
             results = pd.concat([results, single_Test], axis=0, sort=False)
@@ -144,7 +150,7 @@ class Experiment:
         proportions between it and the mutant strategy. Have to double check with population size to see if some
         decimal proportions lead to a non-integer number of agents with that strategy."""
         listOfStates = []
-        strats = np.arange(1, 0, -0.05)
+        strats = np.arange(1, 0, -0.25)
         strats = [round(strats[i], 3) for i in range(len(strats))]
         for i in strats:
             listOfStates.append((Population(ID=strategyID, proportion=i), Population(ID=mutantID,

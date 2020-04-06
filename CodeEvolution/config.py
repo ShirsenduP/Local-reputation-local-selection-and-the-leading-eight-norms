@@ -7,6 +7,7 @@ Dilemma = namedtuple('Dilemma', ['type', 'benefit', 'cost'])
 # State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])
 Population = namedtuple('Population', ['ID', 'proportion'])
 
+
 class State:
     def __init__(self, mainID, proportion, mutantID):
         self.mainID = mainID
