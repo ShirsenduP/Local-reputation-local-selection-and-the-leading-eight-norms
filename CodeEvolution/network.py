@@ -117,9 +117,9 @@ class Network:
         result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
         result_at_tmax['Mutants Added'] = sum(self.results.mutantTracker.values())
         # result_at_tmax['Tmax'] = result_at_tmax.name
-        result_at_tmax['Main'] = self.mainStratIDs[0]
+        result_at_tmax['Main ID'] = self.mainStratIDs[0]
         result_at_tmax['Main Initial Prop.'] = self.config.population.proportion
-        result_at_tmax['Mutant'] = self.mainStratIDs[1]
+        result_at_tmax['Mutant ID'] = self.mainStratIDs[1]
         result_at_tmax['Mutant Initial Prop.'] = self.config.mutant.proportion
         # result_at_tmax.name = 'Simulation'
         return result_at_tmax
@@ -340,7 +340,7 @@ class Network:
                 if len(agent.neighbours) < 2:
                     invalidAgentCount += 1
             if invalidAgentCount > 0:
-                logging.warning(f"{invalidAgentCount} invalid agents.")
+                logging.debug(f"{invalidAgentCount} invalid agents.")
 
             if attempts == maxAttempts:
                 logging.critical(f"{self.name} Network creation failed {maxAttempts} times. Exiting!")
@@ -430,8 +430,9 @@ class Network:
         """Reset the utility and history of each agent in the population. To be used at the end of every timestep."""
         for agent in self.agentList:
             agent.currentUtility = 0
-            # TODO: Do agent histories HAVE to be reset between time-steps?
-            agent.history = {}.fromkeys(agent.neighbours)   # Very heavy function
+
+            # We do NOT erase agent memories of their neighbours' reputations
+            # agent.history = {}.fromkeys(agent.neighbours)   # Very heavy function
 
     def __del__(self):
         self.socialNorm = None
