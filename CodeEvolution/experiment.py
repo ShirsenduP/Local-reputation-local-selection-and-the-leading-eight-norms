@@ -75,6 +75,7 @@ class Experiment:
                 for config in self.experiments:
                     f.write(json.dumps(config.__dict__, cls=MyEncoder))
                     f.write(2*"\n")
+            return results
         else:
             return results
 
