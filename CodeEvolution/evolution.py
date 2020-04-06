@@ -18,6 +18,28 @@ class GlobalEvolution:
         # find strategy with highest utility
         bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
 
+        # check for strategies with negative utility
+        # for strategy, utility in strategyUtils.items():
+        #     if utility < 0:
+        #         strategyUtils[strategy] = 0
+
+        # if total utility is zero, no evolutionary update
+        # totalUtil = sum(strategyUtils.values())
+        # if totalUtil == 0:
+        #     logging.debug(
+        #         f"\tupdate skipped because we have {strategyUtils.values()}")
+        #     return
+
+        # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
+        # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
+        # for strategy, _ in strategyUtils.items():
+        #     # strategyUtils[strategy] /= (totalUtil * alpha)
+        #     # strategyUtils[strategy] /= (totalUtil * 10)
+        #     strategyUtils[strategy] /= (totalUtil * self.config.size)
+        # print(strategyUtils)
+        # logging.debug(
+        #     f"\tt = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
+
         for agent in self.agentList:
             if random.random() < self.config.updateProbability:
                 logging.debug(
