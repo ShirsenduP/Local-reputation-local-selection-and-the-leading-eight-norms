@@ -41,7 +41,7 @@ class GlobalEvolution:
         #     f"\tt = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
 
         for agent in self.agentList:
-            if random.random() < self.config.updateProbability:
+            if random.random() < self.config.alpha:
                 logging.debug(
                     f"Agent {agent.id} switched from {agent.Strategy.ID} to {bestStrategy}")
                 agent.Strategy.changeStrategy(bestStrategy)
@@ -89,7 +89,7 @@ class LocalEvolution:
         # Find each agent's new strategy
         strategy_mapping = {}.fromkeys(self.agentList)
         for agent in self.agentList:
-            if random.random() < self.config.updateProbability:
+            if random.random() < self.config.alpha:
                 # Update strategy
                 strategy_mapping[agent] = agent.findBestLocalStrategy(copyTheBest=True)
             else:

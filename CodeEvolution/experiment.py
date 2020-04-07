@@ -151,7 +151,7 @@ class Experiment:
         proportions between it and the mutant strategy. Have to double check with population size to see if some
         decimal proportions lead to a non-integer number of agents with that strategy."""
         listOfStates = []
-        strats = np.arange(1, 0, -0.25)
+        strats = np.arange(1, 0, -0.04)
         strats = [round(strats[i], 3) for i in range(len(strats))]
         for i in strats:
             listOfStates.append((Population(ID=strategyID, proportion=i), Population(ID=mutantID,

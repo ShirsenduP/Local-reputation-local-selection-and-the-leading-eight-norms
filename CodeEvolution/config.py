@@ -25,17 +25,17 @@ class Config:
     yaml_tag = u'!Config'
     def __init__(self,
                  initialState: State = State(
-                     mainID=0, proportion=0.9, mutantID=8),
-                 size: int = 500,
-                 densities: float = 1,
+                     mainID=0, proportion=1, mutantID=8),
+                 size: int = 300,
+                 densities: float = None,
                  socialDilemma: Dilemma = Dilemma(
                      type='PD', benefit=2, cost=1),
                  omegas: float = 0.99,
                  maxPeriods: int = 2000,
-                 updateProbability: float = 0.1,
-                 delta: float = 0.5,
+                 alpha: float = 0.1,
+                 delta: float = 1,
                  mutationProbability: float = 0.1,
-                 sparseDensity: bool = False,
+                 sparseDensity: bool = True,
                  degree: int = None,
                  attachment: int = None,
                  smallWorld: tuple = None) -> None:
@@ -51,7 +51,7 @@ class Config:
             socialDilemma.benefit, socialDilemma.cost)
         self.omega = omegas
         self.maxPeriods = maxPeriods
-        self.updateProbability = updateProbability
+        self.alpha = alpha
         self.delta = delta
         self.mutationProbability = mutationProbability
         if sparseDensity:
@@ -84,7 +84,7 @@ class Config:
     #     s += f"Social Dilemma = {self.socialDilemma.__class__.__name__}(benefit={self.socialDilemma.benefit}, cost={self.socialDilemma.cost}),\n"
     #     s += f"Omega = {self.omega},\n"
     #     s += f"Max Periods = {self.maxPeriods},\n"
-    #     s += f"Update Probability = {self.updateProbability},\n"
+    #     s += f"Update Probability = {self.alpha},\n"
     #     s += f"Delta = {self.delta},\n"
     #     s += f"Mutation Probability = {self.mutationProbability},\n"
     #     s += f"Degree = {self.degree},\n"
