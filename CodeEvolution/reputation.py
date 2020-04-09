@@ -39,6 +39,8 @@ class LocalReputation:
 
         while agent2Neighbour is agent1:
             agent2Neighbour = random.choice(agent2.neighbours)
+        while agent1Neighbour is agent2:
+            agent1Neighbour = random.choice(agent1.neighbours)
 
         # Calculate agents' reputations using social norm, if no history, assign random reputation
         agent2Reputation = agent2Neighbour.history[agent2]
