@@ -14,7 +14,9 @@ class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
 
     def __init__(self, _config=None):
         config = _config
-        config.density = 1  # Overwrite the density of any network run on GrGe to be fully connected
+        if config.density != 1:
+            logging.warning(f'Changing GrGeER Network density from {config.density} to 1')
+            config.density = 1  # Overwrite the density of any network run on GrGe to be fully connected
         if config.delta != 1:
             config.delta = 1
             logging.warning("Delta (probability of successful reputation broadcast) is not 1, there will be errors!")
