@@ -60,18 +60,15 @@ class LocalReputation:
         use for themselves for all of their interactions)."""
 
         agent1PersonalReputation = self.socialNorm.assignReputation(
-            agent1.currentReputation,
+            agent1Reputation,
             agent2Reputation,
             agent1Move
         )
         agent2PersonalReputation = self.socialNorm.assignReputation(
-            agent2.currentReputation,
+            agent2Reputation,
             agent1Reputation,
             agent2Move
         )
-
-        agent1.currentReputation = agent1PersonalReputation
-        agent2.currentReputation = agent2PersonalReputation
 
         # Broadcast each agent's new reputation to their neighbours with probability delta
         for nbr in agent1.neighbours:

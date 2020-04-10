@@ -187,7 +187,7 @@ class Network:
         # Save the proportions of strategies in the population
         self.results.strategyProportions[self.currentPeriod] = self._getCensus(proportions=True)
 
-        # Reset the agents' utilities (and histories in the case of Local Reputation)
+        # Reset the agents' utilities
         self._resetAllAgents()
 
     def chooseAgents(self):
