@@ -14,3 +14,7 @@ CodeEvolution/test.py
 CodeEvolution.egg-info/
 build/
 dist/
+Test1/
+Test2/
+sandbox.py
+sandbox2.py
