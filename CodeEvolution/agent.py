@@ -21,8 +21,10 @@ class Agent:
         self.history = {}  # get LAST partner
 
     def __str__(self):
-        s = f"Agent {self.id}, strategy={self.Strategy.ID},"
-        s += f" with {len(self.neighbours)} neighbours"
+        s = f"A{self.id}(s={self.Strategy.ID}, "
+        s += f"r={self.currentReputation}, "
+        s += f"u={self.currentUtility}, "
+        s += f"d={len(self.neighbours)})"
         return s
 
 
