@@ -90,6 +90,7 @@ class Network:
                 break
             else:
                 self.currentPeriod += 1
+                self._resetAllAgents()
 
         ##################
         # Clean up results
@@ -187,8 +188,8 @@ class Network:
         # Save the proportions of strategies in the population
         self.results.strategyProportions[self.currentPeriod] = self._getCensus(proportions=True)
 
-        # Reset the agents' utilities
-        self._resetAllAgents()
+        # # Reset the agents' utilities
+        # self._resetAllAgents()
 
     def chooseAgents(self):
         agent1 = random.choice(self.agentList)
