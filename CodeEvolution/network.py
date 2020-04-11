@@ -84,6 +84,7 @@ class Network:
                 self.convergenceHistory.appendleft((self.currentPeriod, self._getCensus()))
                 self._checkConvergence()
 
+            # If converged/Tmax reached, exit simulation
             if self.hasConverged or self.currentPeriod == self.config.maxPeriods - 1:
                 self.results.convergedAt = self.currentPeriod
                 Strategy.reset()
@@ -188,8 +189,6 @@ class Network:
         # Save the proportions of strategies in the population
         self.results.strategyProportions[self.currentPeriod] = self._getCensus(proportions=True)
 
-        # # Reset the agents' utilities
-        # self._resetAllAgents()
 
     def chooseAgents(self):
         agent1 = random.choice(self.agentList)
@@ -432,8 +431,6 @@ class Network:
         for agent in self.agentList:
             agent.currentUtility = 0
 
-            # We do NOT erase agent memories of their neighbours' reputations
-            # agent.history = {}.fromkeys(agent.neighbours)   # Very heavy function
 
     def __del__(self):
         self.socialNorm = None
