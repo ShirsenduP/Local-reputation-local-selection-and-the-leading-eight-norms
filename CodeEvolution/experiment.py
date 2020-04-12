@@ -65,8 +65,8 @@ class Experiment:
             single_Test = single_Test.transpose()
             results = pd.concat([results, single_Test], axis=0, sort=False)
 
-        # Create the index for the set of experiments
-        results.index = range(6)
+        # Overwrite the index for the set of experiments
+        results.index = range(len(results.index))
 
         if export:
             # Export Results DataFrame to csv
