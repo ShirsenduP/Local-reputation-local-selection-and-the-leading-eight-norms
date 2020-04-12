@@ -61,8 +61,12 @@ class Experiment:
 
                 # Add the simulation onto dataframe of completed sims
                 single_Test = pd.concat([single_Test, single_Run], axis=1, sort=False)
+
             single_Test = single_Test.transpose()
             results = pd.concat([results, single_Test], axis=0, sort=False)
+
+        # Create the index for the set of experiments
+        results.index = range(6)
 
         if export:
             # Export Results DataFrame to csv
@@ -71,7 +75,7 @@ class Experiment:
             # Export experiment configs to txt file
             with open(f"{experimentName}.txt", "w+") as f:
                 f.write(self.description)
-                f.write(10*"=="+2*"\n")
+                f.write("\n"+10*"=="+2*"\n")
                 for config in self.experiments:
                     f.write(json.dumps(config.__dict__, cls=MyEncoder))
                     f.write(2*"\n")

@@ -127,10 +127,11 @@ class Network:
         final_result['Mutant Initial Prop.'] = self.config.mutant.proportion
 
         if fullSeries:
+            print(final_result.index)
             return final_result
         else:
             result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
-            result_at_tmax['T'] = self.results.convergedAt
+            result_at_tmax['Tmax'] = self.results.convergedAt
             result_at_tmax['Mutants Added'] = sum(self.results.mutantTracker)
             return result_at_tmax
 
