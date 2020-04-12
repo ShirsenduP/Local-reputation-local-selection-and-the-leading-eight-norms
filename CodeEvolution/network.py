@@ -112,21 +112,27 @@ class Network:
             columns={self.mainStratIDs[0]: 'Avg. Main Util.',
                      self.mainStratIDs[1]: 'Avg. Mutant Util.'}
         )
+        self.results.mutantTracker = pd.Series(self.results.mutantTracker, name='Mutants Added')
         self.results.interactionTracker = pd.DataFrame(self.results.interactionTracker).transpose()
         final_result = pd.concat([self.results.strategyProportions,
                                   self.results.actions,
                                   self.results.utilities,
-                                  self.results.interactionTracker],
+                                  self.results.interactionTracker,
+                                  self.results.mutantTracker],
                                  axis=1,
                                  sort=False)
-        result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
-        result_at_tmax['Mutants Added'] = sum(self.results.mutantTracker.values())
-        # result_at_tmax['Tmax'] = result_at_tmax.name
-        result_at_tmax['Main ID'] = self.mainStratIDs[0]
-        result_at_tmax['Main Initial Prop.'] = self.config.population.proportion
-        result_at_tmax['Mutant ID'] = self.mainStratIDs[1]
-        result_at_tmax['Mutant Initial Prop.'] = self.config.mutant.proportion
-        return result_at_tmax
+        final_result['Main ID'] = self.mainStratIDs[0]
+        final_result['Main Initial Prop.'] = self.config.population.proportion
+        final_result['Mutant ID'] = self.mainStratIDs[1]
+        final_result['Mutant Initial Prop.'] = self.config.mutant.proportion
+
+        if fullSeries:
+            return final_result
+        else:
+            result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
+            result_at_tmax['T'] = self.results.convergedAt
+            result_at_tmax['Mutants Added'] = sum(self.results.mutantTracker)
+            return result_at_tmax
 
     def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions):
 
