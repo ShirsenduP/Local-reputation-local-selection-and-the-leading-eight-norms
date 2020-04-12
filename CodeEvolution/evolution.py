@@ -15,13 +15,20 @@ class GlobalEvolution:
             self.results.utilities[self.currentPeriod])
         logging.debug(f"\tStrategyUtils: {strategyUtils}")
 
-        # find strategy with highest utility
-        bestStrategy = max(strategyUtils, key=lambda key: strategyUtils[key])
+        if strategyUtils[self.mainStratIDs[0]] > strategyUtils[self.mainStratIDs[1]]:
+            # main strategy is better than mutant strategy
+            bestStrategy = self.mainStratIDs[0]
+            worseStrategy = self.mainStratIDs[1]
+        else:
+            # mutant strategy is better than main strategy
+            bestStrategy = self.mainStratIDs[1]
+            worseStrategy = self.mainStratIDs[0]
 
-        # check for strategies with negative utility
-        for strategy, utility in strategyUtils.items():
-            if utility < 0:
-                strategyUtils[strategy] = 0
+        # check if the worse strategy is negative, if it is, set it to 0
+        # even if the better strategy is negative, it is still preferable
+        # the probability here is still valid, alpha*u(better)/u(better) for u(better) < 0
+        if strategyUtils[worseStrategy] <= 0:
+            strategyUtils[worseStrategy] = 0
 
         # if total utility is zero, no evolutionary update
         totalUtil = sum(strategyUtils.values())
@@ -30,18 +37,22 @@ class GlobalEvolution:
                 f"\tupdate skipped because we have {strategyUtils.values()}")
             return
 
-        # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
-        # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
-        for strategy, _ in strategyUtils.items():
-            # strategyUtils[strategy] /= (totalUtil * alpha)
-            strategyUtils[strategy] /= (totalUtil * 10)
-            # strategyUtils[strategy] /= (totalUtil * self.config.size)
-        # print(strategyUtils)
+        # strategies i and j, u(i) > u(j)
+        # probability(switch to i) = [u(i)-u(j)] / [u(i)+u(j)]
+        updateProbabilityToBetterStrategy = self.config.alpha*(strategyUtils[bestStrategy]-strategyUtils[worseStrategy])/totalUtil
+
+        # # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
+        # # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
+        # for strategy, _ in strategyUtils.items():
+        #     # strategyUtils[strategy] /= (totalUtil * alpha)
+        #     strategyUtils[strategy] /= (totalUtil * 10)
+        #     # strategyUtils[strategy] /= (totalUtil * self.config.size)
+        # # print(strategyUtils)
         logging.debug(
             f"\tt = {self.currentPeriod}, probabilities are {strategyUtils}, best strategy is {bestStrategy}")
 
         for agent in self.agentList:
-            if random.random() < strategyUtils[bestStrategy]:
+            if random.random() < updateProbabilityToBetterStrategy:
                 logging.debug(
                     f"Agent {agent.id} switched from {agent.Strategy.ID} to {bestStrategy}")
                 agent.Strategy.changeStrategy(bestStrategy)
