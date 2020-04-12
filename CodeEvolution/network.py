@@ -25,6 +25,7 @@ class Results:
         self.utilities = {}
         self.convergedAt = None
         self.mutantTracker = {}
+        self.interactionTracker = {}
 
 
 class Network:
@@ -69,7 +70,7 @@ class Network:
         """Must be implemented through the relent network type."""
         raise NotImplementedError("Check reputation.py for the implementations.")
 
-    def runSimulation(self):
+    def runSimulation(self, fullSeries=False):
         """Run full simulation for upto total number of simulations defined in the config object' or up until the
         system converges at pre-allocated randomly chosen convergence check intervals."""
 
@@ -111,9 +112,11 @@ class Network:
             columns={self.mainStratIDs[0]: 'Avg. Main Util.',
                      self.mainStratIDs[1]: 'Avg. Mutant Util.'}
         )
+        self.results.interactionTracker = pd.DataFrame(self.results.interactionTracker).transpose()
         final_result = pd.concat([self.results.strategyProportions,
                                   self.results.actions,
-                                  self.results.utilities],
+                                  self.results.utilities,
+                                  self.results.interactionTracker],
                                  axis=1,
                                  sort=False)
         result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
@@ -123,15 +126,24 @@ class Network:
         result_at_tmax['Main Initial Prop.'] = self.config.population.proportion
         result_at_tmax['Mutant ID'] = self.mainStratIDs[1]
         result_at_tmax['Mutant Initial Prop.'] = self.config.mutant.proportion
-        # result_at_tmax.name = 'Simulation'
         return result_at_tmax
 
-    def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter):
+    def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions):
 
         # Two agents chosen randomly from the population
         agent1, agent2 = self.chooseAgents()
         agent1ID = agent1.Strategy.ID
         agent2ID = agent2.Strategy.ID
+
+        # Classify interaction, mainVmain, mutantVmutant, mutantVmain
+        if agent1ID == self.mainStratIDs[0] and agent2ID == self.mainStratIDs[0]:
+            temp_strategy_interactions['Main Vs Main'] += 1
+        elif agent1ID != agent2ID:
+            temp_strategy_interactions['Mutant Vs Main'] += 1
+        elif agent1ID == self.mainStratIDs[1] and agent2ID == self.mainStratIDs[1]:
+            temp_strategy_interactions['Mutant Vs Mutant'] += 1
+        else:
+            logging.warning("Invalid interaction in social dilemma occurring!")
 
         # Get their reputations, two methods, globally available rep, or locally available rep
         agent1Reputation, agent2Reputation = self.getOpponentsReputation(agent1, agent2)
@@ -166,16 +178,23 @@ class Network:
         temp_actions = {'C': 0, 'D': 0}
         temp_utilities = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
         temp_strategy_interaction_counter = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
+        temp_strategy_interactions = {'Main Vs Main': 0, 'Mutant Vs Main': 0, 'Mutant Vs Mutant': 0}
 
         # Play repeated social dilemmas
-        self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter)
+        self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions)
         while random.random() < self.config.omega:
-            self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter)
+            self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions)
 
         # Save proportions of cooperations and defections in the time-step
         coop_defect_counter = sum(temp_actions.values())
         self.results.actions['C'].append(temp_actions['C']/coop_defect_counter)
         self.results.actions['D'].append(temp_actions['D']/coop_defect_counter)
+
+        # Convert number of strategy V strategy interactions to proportion
+        total = sum(temp_strategy_interactions.values())
+        for key, _ in temp_strategy_interactions.items():
+            temp_strategy_interactions[key] /= total
+        self.results.interactionTracker[self.currentPeriod] = temp_strategy_interactions
 
         # Save the average utility of each strategy
         avg_utilities = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
