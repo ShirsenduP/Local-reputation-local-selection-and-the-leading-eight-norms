@@ -54,6 +54,7 @@ class Config:
         self.alpha = alpha
         self.delta = delta
         self.mutationProbability = mutationProbability
+        self.sparseDensity = sparseDensity
         if sparseDensity:
             self.density = 2 * np.log(size) / size
         else:

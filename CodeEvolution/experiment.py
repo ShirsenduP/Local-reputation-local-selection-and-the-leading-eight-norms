@@ -113,6 +113,11 @@ class Experiment:
         if self.default.degree is not None or self.variable == 'degree':
             self.assignNewDensitiesFromDegree(tests)
 
+        if self.variable == 'size' and self.default.sparseDensity is True:
+            logging.warning('Size & sparseDensity flag enabled: Updating densities')
+            for config in tests:
+                config.density = 2*np.log(config.size)/config.size
+
         self.experiments = tuple(tests)
 
     def showExperiments(self, asString=False):
