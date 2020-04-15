@@ -26,6 +26,7 @@ class Results:
         self.convergedAt = None
         self.mutantTracker = {}
         self.interactionTracker = {}
+        self.reputationTracker = {}
 
 
 class Network:
@@ -114,10 +115,12 @@ class Network:
         )
         self.results.mutantTracker = pd.Series(self.results.mutantTracker, name='Mutants Added')
         self.results.interactionTracker = pd.DataFrame(self.results.interactionTracker).transpose()
+        self.results.reputationTracker = pd.DataFrame(self.results.reputationTracker).transpose()
         final_result = pd.concat([self.results.strategyProportions,
                                   self.results.actions,
                                   self.results.utilities,
                                   self.results.interactionTracker,
+                                  self.results.reputationTracker,
                                   self.results.mutantTracker],
                                  axis=1,
                                  sort=False)
@@ -186,11 +189,26 @@ class Network:
         temp_utilities = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
         temp_strategy_interaction_counter = {self.mainStratIDs[0]: 0, self.mainStratIDs[1]: 0}
         temp_strategy_interactions = {'Main Vs Main': 0, 'Mutant Vs Main': 0, 'Mutant Vs Mutant': 0}
+        temp_strategy_reputations = {'Main & Good': 0, 'Main & Bad': 0, 'Mutant & Good': 0, 'Mutant & Bad': 0}
 
         # Play repeated social dilemmas
         self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions)
         while random.random() < self.config.omega:
             self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions)
+
+        # Save proportions of strategists with a good/bad reputation
+        for agent in self.agentList:
+            if agent.Strategy.ID == self.mainStratIDs[0] and agent.currentReputation == 1:
+                temp_strategy_reputations['Main & Good'] += 1
+            elif agent.Strategy.ID == self.mainStratIDs[0] and agent.currentReputation == 0:
+                temp_strategy_reputations['Main & Bad'] += 1
+            elif agent.Strategy.ID == self.mainStratIDs[1] and agent.currentReputation == 1:
+                temp_strategy_reputations['Mutant & Good'] += 1
+            elif agent.Strategy.ID == self.mainStratIDs[1] and agent.currentReputation == 0:
+                temp_strategy_reputations['Mutant & Bad'] += 1
+        for key, _ in temp_strategy_reputations.items():
+            temp_strategy_reputations[key] /= self.config.size
+        self.results.reputationTracker[self.currentPeriod] = temp_strategy_reputations
 
         # Save proportions of cooperations and defections in the time-step
         coop_defect_counter = sum(temp_actions.values())
