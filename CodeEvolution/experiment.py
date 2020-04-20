@@ -189,3 +189,12 @@ class Experiment:
                 logging.info(
                     f'Changing density from {config.density} to {sparseDensity}.')
                 config.density = sparseDensity
+
+    @staticmethod
+    def degreesToDensity(size, list_of_degrees):
+        list_of_densities = []
+        for degree in list_of_degrees:
+            number_of_links = 0.5*size*degree
+            max_number_of_links = 0.5*size*(size-1)
+            list_of_densities.append(number_of_links/max_number_of_links)
+        return list_of_densities

@@ -6,7 +6,7 @@ from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiA
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.reputation import GlobalReputation, LocalReputation
 
-
+## ERDOS RENYI
 class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     """Erdos Renyi Network with Global Reputation and Global Evolution"""
 
@@ -54,6 +54,7 @@ class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
         self._generate(agentType=GrLeAgent)
 
 
+## D REGULAR LATTICE
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
     """Random d-regular lattice with Global Reputation and Global Evolution."""
 
@@ -64,6 +65,7 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
         self._generate(agentType=LrGeAgent)
 
 
+## POWER LAW NETWORK
 class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
     """Scale-free network generated using a power law distribution."""
 
@@ -74,6 +76,7 @@ class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
         self._generate(agentType=LrGeAgent)
 
 
+## WATTS STROGATZ SMALL WORLD NETWORK
 class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
     """Watts-Strogatz Small World model with Local Reputation and Global Evolution."""
 
