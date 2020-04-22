@@ -6,7 +6,10 @@ from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiA
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
 from CodeEvolution.reputation import GlobalReputation, LocalReputation
 
-## ERDOS RENYI
+#############################
+## Erdos Renyi Random Network
+#############################
+
 class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     """Erdos Renyi Network with Global Reputation and Global Evolution"""
 
@@ -53,10 +56,22 @@ class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
         super().__init__(_config)
         self._generate(agentType=GrLeAgent)
 
-
+#############################
 ## D REGULAR LATTICE
+#############################
+
+class GrGeRRLNetwork(RandomRegularLattice, GlobalReputation, GlobalEvolution, Network):
+    """Random d-regular lattice with global reputation and global evolution on a d-regular random lattice."""
+
+    name = "GrGeRRL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=GrGeAgent)
+
+
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
-    """Random d-regular lattice with Global Reputation and Global Evolution."""
+    """Random d-regular lattice with Local Reputation and Global Evolution on a d-regular random lattice."""
 
     name = "LrGeRRL"
 
@@ -65,9 +80,42 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
         self._generate(agentType=LrGeAgent)
 
 
+class LrLeRRLNetwork(RandomRegularLattice, LocalReputation, LocalEvolution, Network):
+    """Random d-regular lattice with Local Reputation and Local Evolution on a d-regular random lattice."""
+
+    name = "LrLeRRL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=LrLeAgent)
+
+
+class GrLeRRLNetwork(RandomRegularLattice, GlobalReputation, LocalEvolution, Network):
+    """Random d-regular lattice with Global Reputation and Local Evolution on a d-regular random lattice."""
+
+    name = "GrLeRRL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=GrLeAgent)
+
+
+#############################
 ## POWER LAW NETWORK
+#############################
+
+class GrGePLNetwork(BarabasiAlbert, GlobalReputation, GlobalEvolution, Network):
+    """Scale-free network generated using a power law distribution with global reputation and global evolution."""
+
+    name = "GrGePL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=GrGeAgent)
+
+
 class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
-    """Scale-free network generated using a power law distribution."""
+    """Scale-free network generated using a power law distribution with local reputation and global evolution."""
 
     name = "LrGePL"
 
@@ -76,7 +124,40 @@ class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
         self._generate(agentType=LrGeAgent)
 
 
+class LrLePLNetwork(BarabasiAlbert, LocalReputation, LocalEvolution, Network):
+    """Scale-free network generated using a power law distribution with local reputation and local evolution."""
+
+    name = "LrLePL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=LrLeAgent)
+
+
+class GrLePLNetwork(BarabasiAlbert, GlobalReputation, LocalEvolution, Network):
+    """Scale-free network generated using a power law distribution with global reputation and local reputation."""
+
+    name = "GrLePL"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=GrLeAgent)
+
+
+#####################################
 ## WATTS STROGATZ SMALL WORLD NETWORK
+#####################################
+
+class GrGeWSSWNetwork(WattsStrogatz, GlobalReputation, GlobalEvolution, Network):
+    """Watts-Strogatz Small World model with Global Reputation and Global Evolution."""
+
+    name = "GrGeWSSW"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=GrGeAgent)
+
+
 class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
     """Watts-Strogatz Small World model with Local Reputation and Global Evolution."""
 
@@ -85,3 +166,23 @@ class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
     def __init__(self, _config=None):
         super().__init__(_config)
         self._generate(agentType=LrGeAgent)
+
+
+class LrLeWSSWNetwork(WattsStrogatz, LocalReputation, LocalEvolution, Network):
+    """Watts-Strogatz Small World model with Local Reputation and Local Evolution."""
+
+    name = "LrLeWSSW"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=LrLeAgent)
+
+
+class GrLeWSSWNetwork(WattsStrogatz, GlobalReputation, LocalEvolution, Network):
+    """Watts-Strogatz Small World model with Global Reputation and Local Evolution."""
+
+    name = "GrLeWSSW"
+
+    def __init__(self, _config=None):
+        super().__init__(_config)
+        self._generate(agentType=GrLeAgent)
