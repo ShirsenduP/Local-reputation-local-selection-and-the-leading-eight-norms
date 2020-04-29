@@ -39,7 +39,8 @@ class GlobalEvolution:
 
         # strategies i and j, u(i) > u(j)
         # probability(switch to i) = [u(i)-u(j)] / [u(i)+u(j)]
-        updateProbabilityToBetterStrategy = self.config.alpha*(strategyUtils[bestStrategy]-strategyUtils[worseStrategy])/totalUtil
+        updateProbabilityToBetterStrategy = self.config.alpha * (
+                    strategyUtils[bestStrategy] - strategyUtils[worseStrategy]) / totalUtil
 
         # # probability of switching to strategy i is (utility of strategy i)/(total utility of all non-negative
         # # strategies)*(speed of evolution, larger the alpha, the slower the evolution)
@@ -119,4 +120,3 @@ class LocalEvolution:
                 continue
             else:
                 agent.Strategy.changeStrategy(strategy_mapping[agent])
-

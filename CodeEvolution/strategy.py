@@ -2,7 +2,6 @@ import logging
 
 
 class Strategy:
-    
     allStates = ['11', '10', '01', '00']
     allOutcomes = [['C', 'D', 'C', 'C'],
                    ['C', 'D', 'C', 'C'],
@@ -20,7 +19,8 @@ class Strategy:
     def __init__(self, strategyID):
         Strategy.totalCountOfStrategies += 1
         self.ID = strategyID
-        self.currentStrategy = dict((key, value) for key, value in zip(Strategy.allStates, Strategy.allOutcomes[strategyID]))
+        self.currentStrategy = dict(
+            (key, value) for key, value in zip(Strategy.allStates, Strategy.allOutcomes[strategyID]))
         Strategy.updateCensus(strategyID, None)
 
     def chooseAction(self, agent1Reputation, agent2Reputation):
@@ -61,4 +61,3 @@ class Strategy:
 
 if __name__ == "__main__":
     pass
-

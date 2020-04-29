@@ -1,10 +1,11 @@
 import logging
 
-from CodeEvolution.network import Network
 from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
-from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
+from CodeEvolution.network import Network
 from CodeEvolution.reputation import GlobalReputation, LocalReputation
+from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
+
 
 #############################
 ## Erdos Renyi Random Network
@@ -55,6 +56,7 @@ class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
     def __init__(self, _config=None):
         super().__init__(_config)
         self._generate(agentType=GrLeAgent)
+
 
 #############################
 ## D REGULAR LATTICE

@@ -1,21 +1,19 @@
 import random
 
-import matplotlib.pyplot as plt
 import numpy as np
 
-from CodeEvolution.models import LrGeERNetwork
 from CodeEvolution.config import Config, State
+from CodeEvolution.models import LrGeERNetwork
 
 
 class TestNetwork:
-
     # Set seed for reproducibility
     seed = 1  # Seed originally set to be 1
     random.seed(seed)
     np.random.seed(seed)
 
     # Constant parameters for all tests in this module
-    config = Config(initialState=State(0, 1, 8), # d=[1,0,1,1,1,0,1,0]
+    config = Config(initialState=State(0, 1, 8),  # d=[1,0,1,1,1,0,1,0]
                     size=6,
                     sparseDensity=True,
                     omegas=0.5,

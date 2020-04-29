@@ -1,20 +1,13 @@
-
-import pytest
 import random
-import logging
 
 import numpy as np
-import matplotlib.pyplot as plt
+import pytest
 
-import CodeEvolution
-from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork
-from CodeEvolution.agent import GrGeAgent
 from CodeEvolution.config import Config, State
-from CodeEvolution.experiment import Experiment
+from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork
 
 
 class TestNetwork:
-
     # Set seed for reproducibility
     seed = 1  # Seed originally set to be 1
     random.seed(seed)
@@ -41,21 +34,20 @@ class TestNetwork:
 
         # Check reputations
         agent1, agent2 = self.network.chooseAgents()
-        agent1_rep, agent2_rep = self.network.getOpponentsReputation(agent1, agent2) # 1, 0
+        agent1_rep, agent2_rep = self.network.getOpponentsReputation(agent1, agent2)  # 1, 0
         assert agent1_rep == agent1.currentReputation
         assert agent2_rep == agent2.currentReputation
 
         # Change an agents reputation
-        agent1.currentReputation = 0 # previously 1
-        agent2.currentReputation = 1 # previously 0
+        agent1.currentReputation = 0  # previously 1
+        agent2.currentReputation = 1  # previously 0
 
         # Check reputations
-        new_agent1_rep, new_agent2_rep = self.network.getOpponentsReputation(agent1, agent2) # 0, 1
+        new_agent1_rep, new_agent2_rep = self.network.getOpponentsReputation(agent1, agent2)  # 0, 1
         assert new_agent1_rep == agent1.currentReputation
         assert new_agent2_rep == agent2.currentReputation
 
     def test_correct_network_generation(self):
-
         # force network generation with density too low
         with pytest.raises(Exception):
             config = Config(size=200, densities=0, sparseDensity=False)

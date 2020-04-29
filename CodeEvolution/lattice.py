@@ -1,9 +1,9 @@
 import logging
 
-from CodeEvolution.network import Network
-from CodeEvolution.config import Config, State
-
 import networkx as nx
+
+from CodeEvolution.config import Config
+from CodeEvolution.network import Network
 
 
 class Lattice(Network):

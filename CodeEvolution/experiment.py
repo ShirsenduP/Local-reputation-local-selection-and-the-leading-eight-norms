@@ -1,19 +1,15 @@
-import logging
-import os
-import time
 import copy
+import json
+import logging
 
 import numpy as np
 import pandas as pd
 from tqdm import trange
-import json
 
-from CodeEvolution.strategy import Strategy
-from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork, LrLeERNetwork, LrGeRRLNetwork
 from CodeEvolution.config import Config
-from CodeEvolution.config import Population, State
-from CodeEvolution.structures import RandomRegularLattice
+from CodeEvolution.config import Population
 from CodeEvolution.socialdilemna import MyEncoder
+from CodeEvolution.structures import RandomRegularLattice
 
 
 class Experiment:
@@ -70,15 +66,15 @@ class Experiment:
 
         if export:
             # Export Results DataFrame to csv
-            results.to_csv(experimentName+'.csv', index=True, header=True)
+            results.to_csv(experimentName + '.csv', index=True, header=True)
 
             # Export experiment configs to txt file
             with open(f"{experimentName}.txt", "w+") as f:
                 f.write(self.description)
-                f.write("\n"+10*"=="+2*"\n")
+                f.write("\n" + 10 * "==" + 2 * "\n")
                 for config in self.experiments:
                     f.write(json.dumps(config.__dict__, cls=MyEncoder))
-                    f.write(2*"\n")
+                    f.write(2 * "\n")
             return results
         else:
             return results
@@ -116,7 +112,7 @@ class Experiment:
         if self.variable == 'size' and self.default.sparseDensity is True:
             logging.warning('Size & sparseDensity flag enabled: Updating densities')
             for config in tests:
-                config.density = 2*np.log(config.size)/config.size
+                config.density = 2 * np.log(config.size) / config.size
 
         self.experiments = tuple(tests)
 
@@ -164,7 +160,7 @@ class Experiment:
         strats = [round(strats[i], 3) for i in range(len(strats))]
         for i in strats:
             listOfStates.append((Population(ID=strategyID, proportion=i), Population(ID=mutantID,
-                                                                                     proportion=round(1-i, 3))))
+                                                                                     proportion=round(1 - i, 3))))
         listOfStates = tuple(listOfStates)
         return listOfStates
 
@@ -184,7 +180,7 @@ class Experiment:
         the densities."""
         for config in self.experiments:
             size = config.size
-            sparseDensity = 2 * np.log(size)/size
+            sparseDensity = 2 * np.log(size) / size
             if config.density != sparseDensity:
                 logging.info(
                     f'Changing density from {config.density} to {sparseDensity}.')
@@ -194,7 +190,7 @@ class Experiment:
     def degreesToDensity(size, list_of_degrees):
         list_of_densities = []
         for degree in list_of_degrees:
-            number_of_links = 0.5*size*degree
-            max_number_of_links = 0.5*size*(size-1)
-            list_of_densities.append(number_of_links/max_number_of_links)
+            number_of_links = 0.5 * size * degree
+            max_number_of_links = 0.5 * size * (size - 1)
+            list_of_densities.append(number_of_links / max_number_of_links)
         return list_of_densities

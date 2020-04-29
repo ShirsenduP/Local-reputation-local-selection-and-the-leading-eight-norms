@@ -1,14 +1,12 @@
 import collections
 import copy
-import random
 import logging
+import random
+from collections import deque
 
 import networkx as nx
 import numpy as np
 import pandas as pd
-
-from collections import deque
-from matplotlib import pyplot as plt
 
 from CodeEvolution.agent import Agent
 from CodeEvolution.config import Config
@@ -133,12 +131,13 @@ class Network:
             print(final_result.index)
             return final_result
         else:
-            result_at_tmax = copy.deepcopy(final_result.iloc[-1,:])
+            result_at_tmax = copy.deepcopy(final_result.iloc[-1, :])
             result_at_tmax['Tmax'] = self.results.convergedAt
             result_at_tmax['Mutants Added'] = sum(self.results.mutantTracker)
             return result_at_tmax
 
-    def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions):
+    def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter,
+                          temp_strategy_interactions):
 
         # Two agents chosen randomly from the population
         agent1, agent2 = self.chooseAgents()
@@ -180,7 +179,6 @@ class Network:
         agent1.currentUtility += payoff1
         agent2.currentUtility += payoff2
 
-
     def runSingleTimestep(self):
         """Run one single time-step with multiple interactions between randomly selected agents"""
 
@@ -192,9 +190,11 @@ class Network:
         temp_strategy_reputations = {'Main & Good': 0, 'Main & Bad': 0, 'Mutant & Good': 0, 'Mutant & Bad': 0}
 
         # Play repeated social dilemmas
-        self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions)
+        self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter,
+                               temp_strategy_interactions)
         while random.random() < self.config.omega:
-            self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter, temp_strategy_interactions)
+            self.playSocialDilemma(temp_actions, temp_utilities, temp_strategy_interaction_counter,
+                                   temp_strategy_interactions)
 
         # Save proportions of strategists with a good/bad reputation
         for agent in self.agentList:
@@ -212,8 +212,8 @@ class Network:
 
         # Save proportions of cooperations and defections in the time-step
         coop_defect_counter = sum(temp_actions.values())
-        self.results.actions['C'].append(temp_actions['C']/coop_defect_counter)
-        self.results.actions['D'].append(temp_actions['D']/coop_defect_counter)
+        self.results.actions['C'].append(temp_actions['C'] / coop_defect_counter)
+        self.results.actions['D'].append(temp_actions['D'] / coop_defect_counter)
 
         # Convert number of strategy V strategy interactions to proportion
         total = sum(temp_strategy_interactions.values())
@@ -227,12 +227,11 @@ class Network:
             if temp_strategy_interaction_counter[strategy] == 0 and temp_utilities[strategy] == 0:
                 avg_utilities[strategy] = 0
             else:
-                avg_utilities[strategy] = temp_utilities[strategy]/temp_strategy_interaction_counter[strategy]
+                avg_utilities[strategy] = temp_utilities[strategy] / temp_strategy_interaction_counter[strategy]
         self.results.utilities[self.currentPeriod] = avg_utilities
 
         # Save the proportions of strategies in the population
         self.results.strategyProportions[self.currentPeriod] = self._getCensus(proportions=True)
-
 
     def chooseAgents(self):
         agent1 = random.choice(self.agentList)
@@ -474,7 +473,6 @@ class Network:
         """Reset the utility and history of each agent in the population. To be used at the end of every timestep."""
         for agent in self.agentList:
             agent.currentUtility = 0
-
 
     def __del__(self):
         self.socialNorm = None

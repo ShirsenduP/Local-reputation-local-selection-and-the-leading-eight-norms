@@ -124,7 +124,6 @@ class RighiCliques(Structure):
         # logging.info(f"{self.name} network initialised with adjacency matrix.")
         # self.networkFromAdjacencyMatrix(agentType)
 
-
     def makeGraph(self, numberOfCliques):
         """Given the number of 4-cliques, _generate the graph."""
 
@@ -132,11 +131,13 @@ class RighiCliques(Structure):
             raise ValueError(f'The number of cliques ({numberOfCliques} must be even.')
 
         def incrementCounter(counter):
-            return counter+1
+            return counter + 1
+
         numberOfAgents = 0
+
         def create4Clique(numberOfAgents):
             clique = []
             for i in range(4):
-                clique.append(Agent(numberOfAgents+i, 0))
+                clique.append(Agent(numberOfAgents + i, 0))
 
             return clique

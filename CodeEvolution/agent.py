@@ -1,8 +1,7 @@
 import random
-import logging
 
-from CodeEvolution.reputation import GlobalReputation, LocalReputation
 from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
+from CodeEvolution.reputation import GlobalReputation, LocalReputation
 from CodeEvolution.strategy import Strategy
 
 
@@ -58,4 +57,3 @@ class GrLeAgent(LocalEvolution, GlobalReputation, Agent):
 
     def __init__(self, _id, _strategy):
         super().__init__(_id, _strategy)
-

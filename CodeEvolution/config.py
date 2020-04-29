@@ -1,7 +1,8 @@
-from CodeEvolution.socialdilemna import PrisonersDilemma
-
 from collections import namedtuple
+
 import numpy as np
+
+from CodeEvolution.socialdilemna import PrisonersDilemma
 
 Dilemma = namedtuple('Dilemma', ['type', 'benefit', 'cost'])
 # State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])
@@ -20,9 +21,11 @@ class State:
                f"proportion={self.proportion}, " \
                f"mutantID={self.mutantID})"
 
+
 class Config:
     """Configuration file describing a single parametrization of a simulation """
     yaml_tag = u'!Config'
+
     def __init__(self,
                  initialState: State = State(
                      mainID=0, proportion=1, mutantID=8),
@@ -92,4 +95,3 @@ class Config:
     #     s += f"Attachment = {self.attachment},\n"
     #     s += f"Small World = {self.smallWorld}"
     #     return s
-

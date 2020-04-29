@@ -1,14 +1,13 @@
-import numpy as np
-import matplotlib
-from CodeEvolution.config import Config, State
-from CodeEvolution.models import LrGeERNetwork
-
-import matplotlib.pyplot as plt
-import networkx as nx
-from matplotlib.animation import FuncAnimation
 import random
 
-from itertools import cycle
+import matplotlib
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
+from matplotlib.animation import FuncAnimation
+
+from CodeEvolution.config import Config, State
+from CodeEvolution.models import LrGeERNetwork
 
 matplotlib.use("TkAgg")
 np.random.seed(1)

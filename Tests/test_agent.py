@@ -1,16 +1,5 @@
-
-import pytest
-import random
-import logging
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-import CodeEvolution
-from CodeEvolution.models import GrGeERNetwork
 from CodeEvolution.agent import GrGeAgent
-from CodeEvolution.config import Config, State
-from CodeEvolution.experiment import Experiment
+
 
 class TestAgent:
 
@@ -25,8 +14,8 @@ class TestAgent:
     def test_agent_reference(self):
         """Ensure that agents are not being copied."""
 
-        agent1 = GrGeAgent(0,1)
-        agent2 = GrGeAgent(1,1)
+        agent1 = GrGeAgent(0, 1)
+        agent2 = GrGeAgent(1, 1)
         agent2.neighbours.append(agent1)
         agent1.neighbours.append(agent2)
 

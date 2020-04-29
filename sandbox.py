@@ -1,16 +1,13 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
-from CodeEvolution.models import GrGeERNetwork, LrGeERNetwork, GrLeERNetwork, LrLeERNetwork
 from CodeEvolution.config import Config, State
 from CodeEvolution.experiment import Experiment
+from CodeEvolution.models import GrGeERNetwork
 
 pd.set_option('display.width', 320)
 pd.set_option('display.max_columns', 320)
 
 if __name__ == "__main__":
-
     C = Config(
         size=100,
         initialState=State(0, 1, 8),
