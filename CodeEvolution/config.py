@@ -79,19 +79,3 @@ class Config:
 
     def __repr__(self):
         return str(self.__dict__)
-
-    # def __repr__(self):
-    #     s = f"{self.__class__.__name__}("
-    #     s += f"size={self.size},"
-    #     s += f"state={}
-    #     s += f"Social Norm ID = {self.socialNormID},\n"
-    #     s += f"Social Dilemma = {self.socialDilemma.__class__.__name__}(benefit={self.socialDilemma.benefit}, cost={self.socialDilemma.cost}),\n"
-    #     s += f"Omega = {self.omega},\n"
-    #     s += f"Max Periods = {self.maxPeriods},\n"
-    #     s += f"Update Probability = {self.alpha},\n"
-    #     s += f"Delta = {self.delta},\n"
-    #     s += f"Mutation Probability = {self.mutationProbability},\n"
-    #     s += f"Degree = {self.degree},\n"
-    #     s += f"Attachment = {self.attachment},\n"
-    #     s += f"Small World = {self.smallWorld}"
-    #     return s
