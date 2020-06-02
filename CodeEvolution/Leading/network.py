@@ -8,10 +8,10 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from CodeEvolution.agent import Agent
-from CodeEvolution.config import Config
-from CodeEvolution.socialnorm import SocialNorm
-from CodeEvolution.strategy import Strategy
+from Leading.agent import Agent
+from Leading.config import Config
+from Leading.socialnorm import SocialNorm
+from Leading.strategy import Strategy
 
 
 class Results:

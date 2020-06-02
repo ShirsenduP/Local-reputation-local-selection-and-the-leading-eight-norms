@@ -4,7 +4,7 @@ import random
 import networkx as nx
 from scipy import stats
 
-from CodeEvolution.agent import Agent
+from Leading.agent import Agent
 
 
 class Structure:

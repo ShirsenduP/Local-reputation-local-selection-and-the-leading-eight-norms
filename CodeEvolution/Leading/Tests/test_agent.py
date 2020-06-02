@@ -1,4 +1,4 @@
-from CodeEvolution.agent import GrGeAgent
+from Leading.agent import GrGeAgent
 
 
 class TestAgent:

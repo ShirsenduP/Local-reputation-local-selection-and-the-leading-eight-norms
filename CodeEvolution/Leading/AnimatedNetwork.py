@@ -6,8 +6,8 @@ import networkx as nx
 import numpy as np
 from matplotlib.animation import FuncAnimation
 
-from CodeEvolution.config import Config, State
-from CodeEvolution.models import LrGeERNetwork
+from Leading.config import Config, State
+from Leading.models import LrGeERNetwork
 
 matplotlib.use("TkAgg")
 np.random.seed(1)

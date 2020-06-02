@@ -1,10 +1,10 @@
 import logging
 
-from CodeEvolution.agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
-from CodeEvolution.evolution import GlobalEvolution, LocalEvolution
-from CodeEvolution.network import Network
-from CodeEvolution.reputation import GlobalReputation, LocalReputation
-from CodeEvolution.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
+from Leading.agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
+from Leading.evolution import GlobalEvolution, LocalEvolution
+from Leading.network import Network
+from Leading.reputation import GlobalReputation, LocalReputation
+from Leading.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
 
 
 #############################
