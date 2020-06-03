@@ -188,7 +188,20 @@ class Population:
 
     * As declared in the config dictionary
 
-    # TODO: Examples of configs
+    Examples:
+        Define a dictionary containing all the parameters for a single simulation. Create a Population object using
+        the parameter dictionary. Run the simulation.
+
+        >>> C = { \
+                "N": 1000, \
+                "m": 4, \
+                "k": 2, \
+                "t": 30, \
+                "composition": {"I": 1 / 3, "II": 1 / 3, "III": 1 / 3}, \
+                "socialnorm": "Defector", \
+                }
+        >>> P = Population(C)
+        >>> df = P.simulate()
 
     """
 

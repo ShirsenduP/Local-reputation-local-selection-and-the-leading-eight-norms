@@ -1,10 +1,10 @@
 import logging
 
-from Leading.agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
-from Leading.evolution import GlobalEvolution, LocalEvolution
-from Leading.network import Network
-from Leading.reputation import GlobalReputation, LocalReputation
-from Leading.structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
+from .agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
+from .evolution import GlobalEvolution, LocalEvolution
+from .network import Network
+from .reputation import GlobalReputation, LocalReputation
+from .structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
 
 
 #############################

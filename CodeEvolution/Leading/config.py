@@ -2,7 +2,7 @@ from collections import namedtuple
 
 import numpy as np
 
-from Leading.socialdilemna import PrisonersDilemma
+from .socialdilemna import PrisonersDilemma
 
 Dilemma = namedtuple('Dilemma', ['type', 'benefit', 'cost'])
 # State = namedtuple('State', ['mainID', 'proportion', 'mutantID'])

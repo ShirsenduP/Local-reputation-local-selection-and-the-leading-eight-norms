@@ -6,10 +6,10 @@ import numpy as np
 import pandas as pd
 from tqdm import trange
 
-from Leading.config import Config
-from Leading.config import Population
-from Leading.socialdilemna import MyEncoder
-from Leading.structures import RandomRegularLattice
+from .config import Config
+from .config import Population
+from .socialdilemna import MyEncoder
+from .structures import RandomRegularLattice
 
 
 class Experiment:

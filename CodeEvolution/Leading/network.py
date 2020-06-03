@@ -8,10 +8,10 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from Leading.agent import Agent
-from Leading.config import Config
-from Leading.socialnorm import SocialNorm
-from Leading.strategy import Strategy
+from .agent import Agent
+from .config import Config
+from .socialnorm import SocialNorm
+from .strategy import Strategy
 
 
 class Results:
@@ -479,3 +479,4 @@ class Network:
         self.currentPeriod = 0
         self.results = None
         self.hasConverged = False
+

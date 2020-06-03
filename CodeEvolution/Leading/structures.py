@@ -4,7 +4,7 @@ import random
 import networkx as nx
 from scipy import stats
 
-from Leading.agent import Agent
+from .agent import Agent
 
 
 class Structure:

@@ -1,8 +1,8 @@
 import random
 
-from Leading.evolution import GlobalEvolution, LocalEvolution
-from Leading.reputation import GlobalReputation, LocalReputation
-from Leading.strategy import Strategy
+from .evolution import GlobalEvolution, LocalEvolution
+from .reputation import GlobalReputation, LocalReputation
+from .strategy import Strategy
 
 
 class Agent:
