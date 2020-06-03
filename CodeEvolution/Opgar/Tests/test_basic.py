@@ -7,10 +7,10 @@ from Opgar import opgar
 
 def test_composition(test_config):
     dists = []
-    strats = list(test_config['composition'].keys())
+    strats = list(test_config.composition.keys())
     for i in range(100):
         P = opgar.Population(config=test_config)
-        assert len(P.agents) == test_config['N']
+        assert len(P.agents) == test_config.N
 
         count = Counter([agent.strategy for agent in P.agents])
         dists.append(count)
@@ -19,10 +19,10 @@ def test_composition(test_config):
     for strat in strats:
         for dist in dists:
             check[strat] += dist[strat]
-        check[strat] /= 100 * test_config['N']  # average population composition as a proportion of 1
+        check[strat] /= 100 * test_config.N  # average population composition as a proportion of 1
 
-    for key1, key2 in zip(check.keys(), test_config['composition'].keys()):
-        assert test_config['composition'][key2] == pytest.approx(check[key1], rel=1e-2, abs=1e-2)
+    for key1, key2 in zip(check.keys(), test_config.composition.keys()):
+        assert test_config.composition[key2] == pytest.approx(check[key1], rel=1e-2, abs=1e-2)
 
 
 def test_public_goods_game(test_config2):
@@ -42,19 +42,13 @@ def test_public_goods_game(test_config2):
         assert agent.reputation[-1] == -1
 
 
-def test_invalid_configs(test_config3):
-    for config in test_config3:
-        with pytest.raises(ValueError):
-            P = opgar.Population(config=config)
-
-
 def test_always_sums_to_one(test_config):
     P = opgar.Population(test_config)
     df = P.simulate()
 
     counts = df["Composition Count"]
     totals = counts.sum(axis=1)
-    assert (totals == test_config["N"]).all()
+    assert (totals == test_config.N).all()
 
 
 def test_reset_agents(test_config):

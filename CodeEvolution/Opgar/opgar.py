@@ -12,6 +12,67 @@ import pandas as pd
 import yaml
 
 
+def format_long():
+    """Show pandas dataframes in full."""
+    import pandas
+    pandas.set_option("display.max_rows", None)
+    pandas.set_option("display.max_columns", None)
+    pandas.set_option("display.width", None)
+
+
+class Configuration:
+    """Provides the functionality and error checking for all parameterizations of simulations."""
+
+    __slots__ = ["social_norm", "composition", "t", "k", "m", "N"]
+
+    def __init__(self, population_size: int, pgg_size: int, technology: float, rounds: int, composition: dict,
+                 norm: str):
+        """
+
+        Args:
+            population_size (int): The number of players in the population.
+            pgg_size (int): The number of players per Public Goods Game (PGG).
+            rounds (int): The length of the simulation.
+            technology (float): The growth factor to the group contribution in the PGG.
+            composition (dict): A dictionary of strategy and proportion key-value pairs. See _Strategy documentation.
+            norm (str): The specific social norm within the population. See _Norm documentation.
+        """
+
+        if norm not in _Norm.social_norm_names:
+            raise ValueError(f"Your choice of norm ('{norm}') is invalid.")
+        self.social_norm = norm
+
+        if sum(composition.values()) != 1:
+            raise ValueError(
+                f"Your choice of strategy proportions must sum to 1 (not '{sum(composition.values())}').")
+        for strategy in composition.keys():
+            if strategy not in _Strategy.names:
+                raise ValueError(f"Your choice of strategy ('{strategy}') is invalid.")
+            if composition[strategy] < 0 or composition[strategy] > 1:
+                raise ValueError(
+                    f"Your choice of strategy proportion ('{strategy}': {composition[strategy]}) is invalid.")
+        self.composition = composition
+
+        if rounds < 1:
+            raise ValueError(f"Your choice of rounds ('{rounds}') is invalid.")
+        self.t = rounds
+
+        if technology < 1:
+            raise ValueError(f"Your choice of technology ('{technology}') is invalid.")
+        self.k = technology
+
+        if population_size < 0:
+            raise ValueError(f"Your choice of population size ('{population_size}') is invalid.")
+        self.N = population_size
+
+        if pgg_size < 0 or pgg_size > population_size:
+            raise ValueError(f"Your choice of PGG size ('{pgg_size}') is invalid.")
+        if not population_size % pgg_size == 0:
+            raise ValueError(
+                f"The PGG size ('{pgg_size}') must be a divisor of the population size ('{population_size}').")
+        self.m = pgg_size
+
+
 class _Strategy:
     """
     The _Strategy class provides all the relevant behavioural strategy functions for agents deciding their actions.
@@ -198,7 +259,7 @@ class Population:
                 "k": 2, \
                 "t": 30, \
                 "composition": {"I": 1 / 3, "II": 1 / 3, "III": 1 / 3}, \
-                "socialnorm": "Defector", \
+                "social_norm": "Defector", \
                 }
         >>> P = Population(C)
         >>> df = P.simulate()
@@ -210,19 +271,16 @@ class Population:
         Create a Population object ready to start simulating.
 
         Args:
-            config (dict): Dictionary of simulation parameters.
+            config (opgar.Configuration): Object of simulation parameters.
         """
-        code, err = self._is_valid(config)
-        if code != 0:
-            raise ValueError(f"The configuration contains invalid parameters with error code {code} and error: {err}")
 
-        self.config = config
-        self.strategies = list(config['composition'].keys())
+        self.config = config  # poop
+        self.strategies = list(config.composition.keys())  # poop2
 
         # Generate agents with strategy distribution
-        self.agents = self._generate_population(config['N'], config['composition'])
-        self.socialnorm_type = config['socialnorm']
-        self.socialnorm = _Norm(config["socialnorm"])
+        self.agents = self._generate_population(config.N, config.composition)
+        self.social_norm_type = config.social_norm
+        self.social_norm = _Norm(config.social_norm)
 
     def simulate(self):
         """
@@ -230,10 +288,10 @@ class Population:
         Returns:
             Pandas DataFrame of simulation results
         """
-        all_results = {}.fromkeys(range(self.config['t']))
-        for t in range(self.config['t']):
+        all_results = {}.fromkeys(range(self.config.t))
+        for t in range(self.config.t):
             all_results[t] = self._play_public_good_game()
-            if self.socialnorm_type:
+            if self.social_norm_type:
                 self._update_reputations()
             self._evolve(all_results[t])
             self._reset_population()
@@ -246,13 +304,13 @@ class Population:
         Iterate through the population and update their reputations based on the social norm and their previous action.
         """
         # If we don't care about reputation
-        if self.socialnorm is None:
+        if self.social_norm is None:
             return
 
         for agent in self.agents:
             most_recent_action = agent.tracker[-1]
             current_reputation = agent.reputation
-            new_reputation = self.socialnorm.assign_reputation(most_recent_action)
+            new_reputation = self.social_norm.assign_reputation(most_recent_action)
             agent.reputation.append(new_reputation)
             logging.debug(f"A{agent.ID}(old_reputation={current_reputation}, new_reputation={new_reputation}")
 
@@ -274,12 +332,12 @@ class Population:
         }
 
         # Randomly allocate groups
-        player_IDs = np.arange(self.config['N'])
+        player_IDs = np.arange(self.config.N)
         shuffle(player_IDs)
-        groups_of_player_IDs = np.reshape(player_IDs, (int(self.config['N'] / self.config['m']), self.config['m']))
+        groups_of_player_IDs = np.reshape(player_IDs, (int(self.config.N / self.config.m), self.config.m))
 
         for group in groups_of_player_IDs:
-            avg_rep = sum([self.agents[ID].reputation[-1] for ID in group]) / self.config['m']
+            avg_rep = sum([self.agents[ID].reputation[-1] for ID in group]) / self.config.m
             group_contribution = 0
             absent_players_IDs = list()
 
@@ -298,13 +356,13 @@ class Population:
                 group_contribution += contribution
 
             # If there is 1 or less player *participating*, PGG is not played
-            participating_agents_count = self.config['m'] - len(absent_players_IDs)
+            participating_agents_count = self.config.m - len(absent_players_IDs)
             if participating_agents_count < 2:
                 # TODO: logging required here? Need to research good logging processes
                 continue
 
             # Create payoff per participating agent within the group
-            game_payoff = (self.config['k'] * group_contribution) / participating_agents_count
+            game_payoff = (self.config.k * group_contribution) / participating_agents_count
 
             # Distribute payoffs
             for playerID in group:
@@ -328,8 +386,7 @@ class Population:
             time_step_result["Average Payoffs"][strategy] = time_step_result["Payoffs"][strategy] / player_count
 
             # Get population composition as a proportion instead of relative size
-            time_step_result["Composition"][strategy] = time_step_result["Composition Count"][strategy] / self.config[
-                "N"]
+            time_step_result["Composition"][strategy] = time_step_result["Composition Count"][strategy] / self.config.N
 
         # Convert to sets
         reform = {(outerKey, innerKey): values for outerKey, innerDict in time_step_result.items() for innerKey, values
@@ -372,13 +429,13 @@ class Population:
             new_comp[strategy] = float(
                 compositions[strategy] + compositions[strategy] * (payoffs[strategy] - average_fitness))
         new_composition_proportion_rounded = Population._round_to_n_percent(new_comp,
-                                                                            self.config['N'])
+                                                                            self.config.N)
 
         composition_change = new_composition_proportion_rounded - result["Composition Count"]
         while composition_change.abs().sum() != 0:
 
             # Pick a random agent from the population
-            random_agent = self.agents[choice(range(self.config['N']))]
+            random_agent = self.agents[choice(range(self.config.N))]
             random_agent_strategy = random_agent.strategy
 
             # Check if this agent's strategy needs less players
@@ -428,9 +485,11 @@ class Population:
         proportions = Population._round_to_n_percent(composition, N)
 
         agents = []
+        id_counter = 0
         for strategy, count in proportions.items():
-            for i in range(int(count)):
-                agents.append(_Agent(ID=i, strategy=strategy))
+            for _ in range(int(count)):
+                agents.append(_Agent(ID=id_counter, strategy=strategy))
+                id_counter += 1
 
         return agents
 
@@ -474,13 +533,13 @@ class Population:
         # 5)
         # If social norm is not explicitly stated, then reputation is ignored
         acceptable_strategies_with_no_norm = set(_Strategy.names[:3])
-        if "socialnorm" not in config:
+        if "social_norm" not in config:
             if not set(config["composition"].keys()).union(acceptable_strategies_with_no_norm):
                 raise Exception("A social norm is not specified but the current strategies will need one.")
-            config["socialnorm"] = None
+            config["social_norm"] = None
 
         # If social norm is None, check there are no strategies that require one
-        if config["socialnorm"] == None:
+        if config["social_norm"] == None:
             for strategy in config["composition"].keys():
                 if strategy not in acceptable_strategies_with_no_norm:
                     return 5, f"Strategy {strategy} cannot be in a population with no social norm."
