@@ -4,6 +4,7 @@
 
 import copy
 import logging
+import random
 from datetime import datetime
 from random import choice, shuffle
 
@@ -71,6 +72,9 @@ class Configuration:
             raise ValueError(
                 f"The PGG size ('{pgg_size}') must be a divisor of the population size ('{population_size}').")
         self.m = pgg_size
+
+    def __repr__(self):
+        return f"Configuration(population_size={self.N}, pgg_size={self.m}, technology={self.k}, rounds={self.t}, composition={self.composition}, norm={self.social_norm})"
 
 
 class _Strategy:
@@ -274,8 +278,8 @@ class Population:
             config (opgar.Configuration): Object of simulation parameters.
         """
 
-        self.config = config  # poop
-        self.strategies = list(config.composition.keys())  # poop2
+        self.config = config
+        self.strategies = list(config.composition.keys())
 
         # Generate agents with strategy distribution
         self.agents = self._generate_population(config.N, config.composition)
@@ -600,7 +604,28 @@ class Experiment:
     """
 
     @staticmethod
-    def generate_experiments(name, default, description, variables, values, repeats, export):
+    def generate(name, default, description, variables, values, repeats, export):
+        """
+        Prepare an experiment on one (or more - not yet implemented) variables. Experiments are run using the time at
+        function calling as the seed for the experiment. If experiments are to be reproducible, export the yaml files to
+        save the seed state.
+
+        Args:
+            name (str): Name of the experiment.
+            default (Opgar.Configuration): Default population configuration for all experiments.
+            description (str): Description of the experiment.
+            variables (list): List of strings containing the variables to be tested.
+            values (list): List of values for the variable to be tested.
+            repeats (int): The number of times a single test should be repeated.
+            export (bool): If True, a yaml file of the experiment configuration will be exported.
+
+        Returns:
+            Experiment (dict): Contains the experiment configuration.
+        """
+
+        if type(variables) != list:
+            raise ValueError(f"Variables must be of type list (not '{type(variables)}').")
+
         Experiment = {
             "name": name,
             "default": default,
@@ -609,34 +634,64 @@ class Experiment:
             "values": values,
             "repeats": repeats,
             "experiments": None,
-            "date created": datetime.now()
+            "date created": datetime.now(),
         }
 
         if len(variables) == 1:
             tests = []
             for value in values:
                 temp = copy.deepcopy(default)
-                temp[variables] = value
+                setattr(temp, variables[0], value)
                 tests.append(temp)
         else:
-            raise NotImplementedError("Multiple variables not yet implemented. ")
+            tests = []
 
         # Store datetime as seed for experiment
-        Experiment["seed"] = Experiment["date created"]
+        Experiment["seed"] = datetime.strftime(Experiment["date created"], "%Y-%m-%d-%H-%M-%S")
         Experiment["experiments"] = {value: experiment for value, experiment in zip(values, tests)}
 
         if export:
             with open(Experiment["name"] + ".yml", "w") as f:
                 yaml.dump(Experiment, f, default_flow_style=False)
                 print("Exported yaml experiment")
-
         return Experiment
 
     @staticmethod
     def load_experiments(path):
+        """
+        Load in a yaml file containing an experiment configuration.
+        Args:
+            path (str): Path to yaml file containing the output of Experiment.generate.
+
+        Returns:
+            experiments (dict): Experiment configuration to be passed to Experiment.run_experiments.
+        """
         with open(path, "r") as f:
             experiments = yaml.load(f, Loader=yaml.Loader)
         return experiments
 
-# TODO: Verify evolution is by the correct mechanism -> replicator dynamics too fast??
-# TODO: Early convergence?
+    @staticmethod
+    def run_experiments(exps, export=False):
+        """
+        Run a series of experiments given the experiment dictionary.
+
+        Args:
+            exps (dict): Dictionary of experiment information (output from Experiment.generate or Experiment.load_experiments).
+            export (bool): If true, export the results as a csv file.
+
+        Returns:
+            df (pandas.DataFrame): Multi-index Dataframe containing results.
+        """
+
+        # set the seed according to the seed in the experiment yaml
+        random.seed(exps['seed'])
+        results = {}.fromkeys(exps['values'], 0)
+        for value, config in exps['experiments'].items():
+            P = Population(config)
+            results[value] = P.simulate()
+        df = pd.concat(results.values(), keys=results.keys(), axis=0, names=["Variable"])
+
+        if export:
+            df.to_csv(exps["name"] + ".csv")
+
+        return df
