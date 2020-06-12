@@ -53,6 +53,10 @@ class Network:
         self.nxGraph = None
         self.modeDegree = None
 
+        # Final Results
+        self.final_result_full = None
+        self.final_result = None
+
     def createNetwork(self, agentType):
         """Method (of some network structure) must be implemented in all sub-classes."""
         raise NotImplementedError("Check structures.py for the implementations.")
@@ -73,6 +77,10 @@ class Network:
         """Run full simulation for upto total number of simulations defined in the config object' or up until the
         system converges at pre-allocated randomly chosen convergence check intervals."""
 
+        if self.hasConverged:
+            logging.critical("Simulation results have already been returned.")
+            return
+
         while self.currentPeriod < self.config.maxPeriods and not self.hasConverged:
             logging.debug(f"T = {self.currentPeriod} - census: {self._getCensus()}")
             self.runSingleTimestep()
@@ -92,6 +100,9 @@ class Network:
             else:
                 self.currentPeriod += 1
                 self._resetAllAgents()
+
+        if not self.hasConverged:
+            self.hasConverged = True
 
         ##################
         # Clean up results
@@ -126,14 +137,16 @@ class Network:
         final_result['Main Initial Prop.'] = self.config.population.proportion
         final_result['Mutant ID'] = self.mainStratIDs[1]
         final_result['Mutant Initial Prop.'] = self.config.mutant.proportion
+        self.final_result_full = final_result
 
         if fullSeries:
-            print(final_result.index)
+            # print(final_result.index)
             return final_result
         else:
             result_at_tmax = copy.deepcopy(final_result.iloc[-1, :])
             result_at_tmax['Tmax'] = self.results.convergedAt
             result_at_tmax['Mutants Added'] = sum(self.results.mutantTracker)
+            self.final_result = result_at_tmax
             return result_at_tmax
 
     def playSocialDilemma(self, tempActions, temp_utilities, temp_strategy_interaction_counter,
