@@ -13,11 +13,15 @@ class Agent:
 
     def __init__(self, _id, _strategy):
         self.id = _id
-        self.Strategy = Strategy(_strategy)
+        self.Strategy = Strategy(_strategy)  # TODO: Refactor this so Strategy does not return an object
         self.currentReputation = random.choice(Agent.reputation)
         self.currentUtility = 0
         self.neighbours = []
         self.history = {}  # get LAST partner
+
+    def findBestLocalStrategy(self, copyTheBest=None):
+        """pooooooooooooooooop"""
+        return NotImplementedError("Must be implemented elsewhere")
 
     def __str__(self):
         s = f"A{self.id}(s={self.Strategy.ID}, "
