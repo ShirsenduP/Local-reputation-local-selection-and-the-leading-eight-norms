@@ -20,7 +20,6 @@ class Agent:
         self.history = {}  # get LAST partner
 
     def findBestLocalStrategy(self, copyTheBest=None):
-        """pooooooooooooooooop"""
         return NotImplementedError("Must be implemented elsewhere")
 
     def __str__(self):

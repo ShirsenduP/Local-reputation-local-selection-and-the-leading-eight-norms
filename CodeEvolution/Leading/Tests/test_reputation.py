@@ -2,8 +2,8 @@ import random
 
 import numpy as np
 
-from Leading.config import Config, State
-from Leading.models import LrGeERNetwork
+from CodeEvolution.Leading.config import Config, State
+from CodeEvolution.Leading.models import LrGeERNetwork
 
 
 class TestNetwork:

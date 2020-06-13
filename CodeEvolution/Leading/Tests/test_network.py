@@ -3,8 +3,8 @@ import random
 import numpy as np
 import pytest
 
-from Leading.config import Config, State
-from Leading.models import GrGeERNetwork, LrGeERNetwork
+from CodeEvolution.Leading import Config, State
+from CodeEvolution.Leading.models import GrGeERNetwork, LrGeERNetwork
 
 
 class TestNetwork:

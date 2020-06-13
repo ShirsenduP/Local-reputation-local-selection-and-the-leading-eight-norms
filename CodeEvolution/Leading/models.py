@@ -1,10 +1,58 @@
 import logging
 
-from .agent import GrGeAgent, LrGeAgent, LrLeAgent, GrLeAgent
+from .agent import Agent, GrGeAgent, LrGeAgent, GrLeAgent, LrLeAgent
 from .evolution import GlobalEvolution, LocalEvolution
 from .network import Network
 from .reputation import GlobalReputation, LocalReputation
 from .structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsStrogatz
+
+
+#############################
+## Model Constructor
+#############################
+
+
+class ceModel:
+    mMap = {
+        "structure": {
+            "erdos renyi": ErdosRenyi,
+            "reg lattice": RandomRegularLattice,
+            "small world": BarabasiAlbert,
+            "watts strogatz": WattsStrogatz,
+        },
+        "reputation": {
+            "global": GlobalReputation,
+            "local": LocalReputation,
+        },
+        "evolution": {
+            "global": GlobalEvolution,
+            "local": LocalEvolution,
+        }
+    }
+
+    @staticmethod
+    def build(config, structure, reputation, evolution):
+        structure = ceModel.mMap["structure"][structure]
+        reputation = ceModel.mMap["reputation"][reputation]
+        evolution = ceModel.mMap["evolution"][evolution]
+
+        logging.info(f"Beginning Model Creation -> "
+                     f"Network({structure.__name__}, "
+                     f"{reputation.__name__}, "
+                     f"{evolution.__name__})")
+
+        class ConcreteAgent(evolution, Agent):
+            def __init__(self, _id, _strategy):
+                super().__init__(_id, _strategy)
+
+        class ConcreteModel(structure, reputation, evolution, Network):
+            def __init__(self, _config):
+                logging.info("Concrete Model Created")
+                super().__init__(_config)
+
+        Model = ConcreteModel(config)
+        Model._generate(ConcreteAgent)
+        return Model
 
 
 #############################
@@ -14,12 +62,11 @@ from .structures import ErdosRenyi, RandomRegularLattice, BarabasiAlbert, WattsS
 class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
     """Erdos Renyi Network with Global Reputation and Global Evolution"""
 
-    name = "GrGe"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         config = _config
         if config.density != 1:
-            logging.warning(f'Changing GrGeER Network density from {config.density} to 1')
+            logging.warning(f'Changing GrGeER Network density from {round(config.density, 3)} to 1')
             config.density = 1  # Overwrite the density of any network run on GrGe to be fully connected
         if config.delta != 1:
             config.delta = 1
@@ -31,9 +78,8 @@ class GrGeERNetwork(ErdosRenyi, GlobalReputation, GlobalEvolution, Network):
 class LrGeERNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
     """Erdos Renyi Network with Local Reputation and Global Evolution (LrGe)"""
 
-    name = "LrGe"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrGeAgent)
 
@@ -41,9 +87,8 @@ class LrGeERNetwork(ErdosRenyi, LocalReputation, GlobalEvolution, Network):
 class LrLeERNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
     """Erdos Renyi Network with Local Reputation and Local Evolution (LrLe)"""
 
-    name = "LrLe"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrLeAgent)
 
@@ -51,9 +96,8 @@ class LrLeERNetwork(ErdosRenyi, LocalReputation, LocalEvolution, Network):
 class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
     """Erdos Renyi Network with Local Reputation and Global Evolution (GrLe)"""
 
-    name = "GrLe"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=GrLeAgent)
 
@@ -65,9 +109,8 @@ class GrLeERNetwork(ErdosRenyi, GlobalReputation, LocalEvolution, Network):
 class GrGeRRLNetwork(RandomRegularLattice, GlobalReputation, GlobalEvolution, Network):
     """Random d-regular lattice with global reputation and global evolution on a d-regular random lattice."""
 
-    name = "GrGeRRL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=GrGeAgent)
 
@@ -75,9 +118,8 @@ class GrGeRRLNetwork(RandomRegularLattice, GlobalReputation, GlobalEvolution, Ne
 class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Network):
     """Random d-regular lattice with Local Reputation and Global Evolution on a d-regular random lattice."""
 
-    name = "LrGeRRL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrGeAgent)
 
@@ -85,9 +127,8 @@ class LrGeRRLNetwork(RandomRegularLattice, LocalReputation, GlobalEvolution, Net
 class LrLeRRLNetwork(RandomRegularLattice, LocalReputation, LocalEvolution, Network):
     """Random d-regular lattice with Local Reputation and Local Evolution on a d-regular random lattice."""
 
-    name = "LrLeRRL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrLeAgent)
 
@@ -95,9 +136,8 @@ class LrLeRRLNetwork(RandomRegularLattice, LocalReputation, LocalEvolution, Netw
 class GrLeRRLNetwork(RandomRegularLattice, GlobalReputation, LocalEvolution, Network):
     """Random d-regular lattice with Global Reputation and Local Evolution on a d-regular random lattice."""
 
-    name = "GrLeRRL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=GrLeAgent)
 
@@ -109,9 +149,8 @@ class GrLeRRLNetwork(RandomRegularLattice, GlobalReputation, LocalEvolution, Net
 class GrGePLNetwork(BarabasiAlbert, GlobalReputation, GlobalEvolution, Network):
     """Scale-free network generated using a power law distribution with global reputation and global evolution."""
 
-    name = "GrGePL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=GrGeAgent)
 
@@ -119,9 +158,8 @@ class GrGePLNetwork(BarabasiAlbert, GlobalReputation, GlobalEvolution, Network):
 class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
     """Scale-free network generated using a power law distribution with local reputation and global evolution."""
 
-    name = "LrGePL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrGeAgent)
 
@@ -129,9 +167,8 @@ class LrGePLNetwork(BarabasiAlbert, LocalReputation, GlobalEvolution, Network):
 class LrLePLNetwork(BarabasiAlbert, LocalReputation, LocalEvolution, Network):
     """Scale-free network generated using a power law distribution with local reputation and local evolution."""
 
-    name = "LrLePL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrLeAgent)
 
@@ -139,9 +176,8 @@ class LrLePLNetwork(BarabasiAlbert, LocalReputation, LocalEvolution, Network):
 class GrLePLNetwork(BarabasiAlbert, GlobalReputation, LocalEvolution, Network):
     """Scale-free network generated using a power law distribution with global reputation and local reputation."""
 
-    name = "GrLePL"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=GrLeAgent)
 
@@ -153,9 +189,8 @@ class GrLePLNetwork(BarabasiAlbert, GlobalReputation, LocalEvolution, Network):
 class GrGeWSSWNetwork(WattsStrogatz, GlobalReputation, GlobalEvolution, Network):
     """Watts-Strogatz Small World model with Global Reputation and Global Evolution."""
 
-    name = "GrGeWSSW"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=GrGeAgent)
 
@@ -163,9 +198,8 @@ class GrGeWSSWNetwork(WattsStrogatz, GlobalReputation, GlobalEvolution, Network)
 class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
     """Watts-Strogatz Small World model with Local Reputation and Global Evolution."""
 
-    name = "LrGeWSSW"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrGeAgent)
 
@@ -173,9 +207,8 @@ class LrGeWSSWNetwork(WattsStrogatz, LocalReputation, GlobalEvolution, Network):
 class LrLeWSSWNetwork(WattsStrogatz, LocalReputation, LocalEvolution, Network):
     """Watts-Strogatz Small World model with Local Reputation and Local Evolution."""
 
-    name = "LrLeWSSW"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=LrLeAgent)
 
@@ -183,8 +216,7 @@ class LrLeWSSWNetwork(WattsStrogatz, LocalReputation, LocalEvolution, Network):
 class GrLeWSSWNetwork(WattsStrogatz, GlobalReputation, LocalEvolution, Network):
     """Watts-Strogatz Small World model with Global Reputation and Local Evolution."""
 
-    name = "GrLeWSSW"
-
     def __init__(self, _config=None):
+        logging.warning(f"Statically defined class {self.__class__.__name__} is deprecated. Use ceModel instead. ")
         super().__init__(_config)
         self._generate(agentType=GrLeAgent)
