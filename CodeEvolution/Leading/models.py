@@ -31,10 +31,10 @@ class ceModel:
     }
 
     @staticmethod
-    def build(config, structure, reputation, evolution):
-        structure = ceModel.mMap["structure"][structure]
-        reputation = ceModel.mMap["reputation"][reputation]
-        evolution = ceModel.mMap["evolution"][evolution]
+    def build(config):
+        structure = ceModel.mMap["structure"][config.structure]
+        reputation = ceModel.mMap["reputation"][config.reputation]
+        evolution = ceModel.mMap["evolution"][config.evolution]
 
         logging.info(f"Beginning Model Creation -> "
                      f"Network({structure.__name__}, "
