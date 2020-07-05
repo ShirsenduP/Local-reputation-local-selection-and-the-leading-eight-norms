@@ -23,6 +23,7 @@ class Strategy:
             (key, value) for key, value in zip(Strategy.allStates, Strategy.allOutcomes[strategyID]))
         Strategy.updateCensus(strategyID, None)
 
+    # TODO: turn into a static method, not instantiated for each agent
     def chooseAction(self, agent1Reputation, agent2Reputation):
         stateKey = str(agent1Reputation) + str(agent2Reputation)
         return self.currentStrategy[stateKey]
@@ -32,6 +33,7 @@ class Strategy:
         self.ID = newStrategyID
         self.currentStrategy = dict((key, value) for key, value in zip(self.allStates, self.allOutcomes[newStrategyID]))
 
+    # TODO: Better view of agents by strategy in Network class
     @classmethod
     def updateCensus(cls, newID, oldID):
         if newID in Strategy.census.keys():
