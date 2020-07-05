@@ -16,7 +16,7 @@ class TestNetwork:
     # Constant parameters for all tests in this module
     config = Config(initialState=State(0, 1, 8),
                     size=6,
-                    densities=1,
+                    density=1,
                     omegas=0.5,
                     maxPeriods=2,
                     delta=1,
