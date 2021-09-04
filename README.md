@@ -19,7 +19,7 @@ Uninstall with `pip uninstall CodeEvolution`.
 
 ## Tutorial
 
-Running a single simulation is fairly straightforward. 
+Running a single simulation is fairly straightforward. Examples are also found in `Examples/`.
 
 1. Import the package
 
@@ -53,8 +53,8 @@ Running a single simulation is fairly straightforward.
         reputation="global", # Options: ["global", "local"] (see reputation.py)
         evolution="global", # Options: ["global", "local"] (see evolution.py)
         size=300,
-        initialState=ce.State(mainID=0, proportion=1, mutantID=8),
-        socialDilemma=ce.config.Dilemma(type="PD", benefit=2, cost=1),
+        initialState=ce.State(mainID=0, proportion=1, mutantID=8),  # (see strategy.py)
+        socialDilemma=ce.config.Dilemma(type="PD", benefit=2, cost=1), # Only the "PD" type is available
         omegas=0.99,
         maxPeriods=2000,
         alpha=0.1, 
@@ -84,7 +84,7 @@ Running a single simulation is fairly straightforward.
     ```
 
 ## Results
-Here is an example set of results (returned as a pandas Series) that would be returned if `fullSeries=False` in the `runSimulation` method.
+Here is an example set of results (returned as a pandas Series) that would be returned if `fullSeries=False` in the `runSimulation` method. If `fullSeries=True`, then most of the variables described below will exist in a pandas DataFrame instead as a time series. 
 
     ```python
     Main Prop.                 0.993333     # Proportion of the main strategy
