@@ -3,9 +3,9 @@ from setuptools import setup
 setup(
     name="CodeEvolution",
     version="2020.06.01",
-    packages=["leading"],
+    packages=["CodeEvolution"],
     package_dir={
-        "leading": "CodeEvolution/leading",
+        "CodeEvolution": "CodeEvolution",
     },
     install_requires=[
         "matplotlib",
