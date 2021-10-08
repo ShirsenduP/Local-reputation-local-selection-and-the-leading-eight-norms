@@ -112,3 +112,7 @@ Here is an example set of results (returned as a pandas Series) that would be re
 ## Contributors
 Shirsendu Podder, UCL, _ucabpod@ucl.ac.uk_ \
 Simone Righi, UCL, _s.righi@ucl.ac.uk_ 
+
+If you use parts of our code, please acknowledge us by citing our paper.
+
+> Podder, S., Righi, S. & Takács, K. Local reputation, local selection, and the leading eight norms. Sci Rep 11, 16560 (2021). https://doi.org/10.1038/s41598-021-95130-3
