@@ -5,3 +5,4 @@ CodeEvolution.egg-info/
 build/
 dist/
 .vscode/*
+./.vscode/settings.json
