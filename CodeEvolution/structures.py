@@ -34,7 +34,7 @@ class Structure:
             agent.history = {}.fromkeys(agent.neighbours)
 
         agentDegrees = self.adjMatrix.sum(axis=0)
-        self.modeDegree = stats.mode(agentDegrees)[0][0]
+        self.modeDegree = stats.mode(agentDegrees, keepdims=True)[0][0]
 
 
 class ErdosRenyi(Structure):
@@ -128,7 +128,7 @@ class RighiCliques(Structure):
         """Given the number of 4-cliques, _generate the graph."""
 
         if numberOfCliques % 2 != 0:
-            raise ValueError(f'The number of cliques ({numberOfCliques} must be even.')
+            raise ValueError(f"The number of cliques ({numberOfCliques} must be even.")
 
         def incrementCounter(counter):
             return counter + 1
