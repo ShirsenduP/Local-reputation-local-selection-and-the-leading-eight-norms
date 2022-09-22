@@ -4,3 +4,4 @@ __pycache__/
 CodeEvolution.egg-info/
 build/
 dist/
+.vscode/*
